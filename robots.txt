@@ -1,6 +1,12 @@
 # Kulsums Collection
 User-agent: *
 Allow: /
+Disallow: /cart
+Disallow: /checkout
+Disallow: /wishlist
+Disallow: /search
+Disallow: /track
+Disallow: /order/
 
 # AI search assistants
 User-agent: OAI-SearchBot
