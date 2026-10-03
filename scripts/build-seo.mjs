@@ -3,7 +3,8 @@
 //
 // For every live product it writes products/<name>.html, so https://yoursite/products/<name> is a real page
 // with its own title, description, photo, price and Google product data, readable without JavaScript.
-// Also: collections/<name>.html, pages/*.html, offers.html and the other shop pages, 404.html, sitemap.xml, robots.txt.
+// Also: collections/<name>.html, pages/*.html, offers.html and the other shop pages, 404.html, sitemap.xml, robots.txt,
+// and the Google Merchant Center feed: merchant-feed.tsv (for Google Sheets) and merchant-feed.xml (for a direct fetch).
 // Each page is index.html with the right details filled in, so the full store still opens on top of it.
 // Uses only the public data the store already shows to shoppers (the same public key as config.js).
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, unlinkSync } from "node:fs";
@@ -136,4 +137,52 @@ const aiSearch = ["OAI-SearchBot", "ChatGPT-User", "Claude-SearchBot", "Claude-U
 const aiTrain = ["GPTBot", "ClaudeBot", "Google-Extended", "Applebot-Extended", "CCBot", "meta-externalagent", "Bytespider", "Amazonbot"];
 const rule = (bots, allow) => bots.map((b) => `User-agent: ${b}\n${allow ? "Allow" : "Disallow"}: /`).join("\n\n");
 writeFileSync(join(root, "robots.txt"), `# ${brand}\nUser-agent: *\nAllow: /\nDisallow: ${ROOT}cart\nDisallow: ${ROOT}checkout\nDisallow: ${ROOT}wishlist\nDisallow: ${ROOT}search\nDisallow: ${ROOT}track\nDisallow: ${ROOT}order/\n\n# AI search assistants\n${rule(aiSearch, st.seo?.aiSearch !== false)}\n\n# AI model training\n${rule(aiTrain, !!st.seo?.aiTraining)}\n\nSitemap: ${abs("sitemap.xml")}\n`);
+
+// ---------- Google Merchant Center feed (merchant-feed.tsv for Google Sheets, merchant-feed.xml for a direct fetch) ----------
+const GOOGLE_CAT = {
+  sarees: "Apparel & Accessories > Clothing > Traditional & Ceremonial Clothing > Saris & Lehengas",
+  lehengas: "Apparel & Accessories > Clothing > Traditional & Ceremonial Clothing > Saris & Lehengas",
+  suits: "Apparel & Accessories > Clothing > Traditional & Ceremonial Clothing",
+  kurtis: "Apparel & Accessories > Clothing > Shirts & Tops",
+  dupattas: "Apparel & Accessories > Clothing Accessories > Scarves & Shawls",
+  western: "Apparel & Accessories > Clothing", kids: "Apparel & Accessories > Clothing", men: "Apparel & Accessories > Clothing",
+  bags: "Apparel & Accessories > Handbags, Wallets & Cases > Handbags", jewellery: "Apparel & Accessories > Jewelry",
+  footwear: "Apparel & Accessories > Shoes", home: "Home & Garden > Decor",
+};
+const guessCat = (c, p) => { const t = `${c?.name || ""} ${p.title}`.toLowerCase();
+  return GOOGLE_CAT[c?.id] || GOOGLE_CAT[c?.parent] || (/saree|sari|lehenga/.test(t) ? GOOGLE_CAT.sarees : /kurti|kurta|top|tunic/.test(t) ? GOOGLE_CAT.kurtis : /suit|salwar|anarkali|sharara/.test(t) ? GOOGLE_CAT.suits
+    : /dupatta|stole|shawl/.test(t) ? GOOGLE_CAT.dupattas : /jewel|necklace|earring|jhumka|bangle/.test(t) ? GOOGLE_CAT.jewellery : /bag|clutch|potli/.test(t) ? GOOGLE_CAT.bags : /footwear|jutti|sandal|chappal/.test(t) ? GOOGLE_CAT.footwear : ""); };
+const COLOURS = ["black","white","off white","cream","ivory","beige","gold","golden","silver","grey","red","maroon","wine","pink","rani pink","baby pink","peach","coral","orange","rust","mustard","yellow","lemon","green","bottle green","olive","mint","sea green","teal","turquoise","blue","navy","sky blue","royal blue","purple","lavender","lilac","mauve","magenta","brown","multicolour","multicolor"];
+const tc = (w) => w.replace(/\b\w/g, (m) => m.toUpperCase());
+function feedRow(p) {
+  const c = catById[p.category], price = Number(p.sellOverride), imgs = (p.media?.imgs || [imgOf(p)]).filter((u) => /^https?:\/\//.test(u || ""));
+  if (!(price > 0) || !imgs.length) return null; // Merchant Center needs a price and a photo
+  const text = `${p.title}\n${p.storeDesc || ""}`, low = text.toLowerCase();
+  const material = ((p.storeDesc || "").match(/^(?:fabric|material)\s*:\s*(.+)$/im) || [])[1]?.split(/[,/]| and /)[0].trim() || "";
+  const named = (p.colors || []).map((x) => x?.name).filter((n) => n && !/^colou?r \d+$/i.test(n));
+  const found = COLOURS.filter((w) => new RegExp(`\\b${w}\\b`).test(low)).filter((w, i, a) => !a.some((o) => o !== w && o.includes(w))).sort((a, b) => low.search(new RegExp(`\\b${a}\\b`)) - low.search(new RegExp(`\\b${b}\\b`)));   // in the order the description mentions them
+  const colour = [...new Set([...named, ...found.map(tc)])].slice(0, 3).join("/");
+  const mrp = Number(p.mrp), onSale = mrp > price;
+  const isNew = fresh.includes(p), kids = c?.id === "kids" || c?.parent === "kids", men = c?.id === "men" || c?.parent === "men", home = c?.id === "home";
+  const band = price < 500 ? "under_500" : price < 1000 ? "500_999" : price < 2000 ? "1000_1999" : "2000_plus";
+  const body = String(p.storeDesc || "").split(/\n+/).map((l) => l.trim().replace(/[.!]?$/, ".")).filter((l) => l.length > 1).join(" ");
+  const desc = cut([body, `From ${brand}.`].filter(Boolean).join(" "), 4900);
+  return {
+    id: p.code || p.id, title: cut(p.title, 150), description: desc || p.title, link: abs(`products/${p._slug}`), image_link: imgs[0],
+    additional_image_link: imgs.slice(1, 11).join(","), availability: p.stock === "out" ? "out_of_stock" : "in_stock",
+    price: `${(onSale ? mrp : price).toFixed(2)} INR`, sale_price: onSale ? `${price.toFixed(2)} INR` : "", brand, condition: "new",
+    google_product_category: guessCat(c, p), product_type: c ? (c.parent && catById[c.parent] ? `${catById[c.parent].name} > ${c.name}` : c.name) : "",
+    gender: home ? "" : men ? "male" : kids ? "unisex" : "female", age_group: home ? "" : kids ? "kids" : "adult",
+    color: colour, material: tc(material.toLowerCase()), identifier_exists: "no",
+    custom_label_0: c?.name || "", custom_label_1: isNew ? "new_arrival" : "", custom_label_2: band,
+  };
+}
+const rows = products.map(feedRow).filter(Boolean), skipped = products.length - rows.length;
+const COLS = ["id","title","description","link","image_link","additional_image_link","availability","price","sale_price","brand","condition","google_product_category","product_type","gender","age_group","color","material","identifier_exists","custom_label_0","custom_label_1","custom_label_2"];
+const cell = (v) => String(v ?? "").replace(/[\t\r\n]+/g, " ").replace(/^[=+\-@]+/, "").trim();
+writeFileSync(join(root, "merchant-feed.tsv"), [COLS.join("\t"), ...rows.map((r) => COLS.map((k) => cell(r[k])).join("\t"))].join("\n") + "\n");
+const x = (v) => esc(cell(v));
+writeFileSync(join(root, "merchant-feed.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0"><channel>\n<title>${x(brand)}</title><link>${x(SITE)}</link><description>${x(st.seo?.description || st.tagline || brand)}</description>\n${rows.map((r) =>
+  `<item>${COLS.map((k) => k === "additional_image_link" ? r[k].split(",").filter(Boolean).map((u) => `<g:additional_image_link>${x(u)}</g:additional_image_link>`).join("") : r[k] ? `<g:${k}>${x(r[k])}</g:${k}>` : "").join("")}</item>`).join("\n")}\n</channel></rss>\n`);
+console.log(`Merchant feed: ${rows.length} products${skipped ? `, ${skipped} left out because they have no selling price or no online photo` : ""}`);
 console.log(`Built ${products.length} product pages, ${mainCats.length + 1} collections, sitemap with ${urls.length} addresses, for ${SITE}`);
