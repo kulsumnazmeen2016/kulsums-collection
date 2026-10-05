@@ -26,10 +26,8 @@ jobs:
         run: |
           git config user.name "kulsums-seo-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A products collections pages sitemap.xml robots.txt merchant-feed.tsv merchant-feed.xml 404.html offers.html stories.html videos.html news.html combos.html cart.html checkout.html wishlist.html track.html search.html
+          git add -A products collections pages sitemap.xml robots.txt merchant-feed.tsv merchant-feed.xml 404.html offers.html stories.html videos.html news.html combos.html cart.html checkout.html wishlist.html track.html search.html emi.html hi.html
           if git diff --cached --quiet; then echo "Nothing changed"; exit 0; fi
           git commit -m "Update SEO pages"
           git pull --rebase
           git push
-
-         
