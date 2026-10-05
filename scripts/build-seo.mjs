@@ -202,6 +202,3 @@ writeFileSync(join(root, "merchant-feed.xml"), `<?xml version="1.0" encoding="UT
   `<item>${COLS.map((k) => k === "additional_image_link" ? r[k].split(",").filter(Boolean).map((u) => `<g:additional_image_link>${x(u)}</g:additional_image_link>`).join("") : r[k] ? `<g:${k}>${x(r[k])}</g:${k}>` : "").join("")}</item>`).join("\n")}\n</channel></rss>\n`);
 console.log(`Merchant feed: ${rows.length} products${skipped ? `, ${skipped} left out because they have no selling price or no online photo` : ""}`);
 console.log(`Built ${products.length} product pages, ${mainCats.length + 1} collections, sitemap with ${urls.length} addresses, for ${SITE}`);
-
-
-
