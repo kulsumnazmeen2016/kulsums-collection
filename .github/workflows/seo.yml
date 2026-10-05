@@ -31,3 +31,5 @@ jobs:
           git commit -m "Update SEO pages"
           git pull --rebase
           git push
+
+     
