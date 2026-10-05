@@ -44,6 +44,16 @@ const catSlug = (c) => c.slug || (/^[a-z0-9-]{2,40}$/.test(c.id) ? c.id : slugif
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const cut = (s, n) => { s = String(s || "").replace(/\s+/g, " ").trim(); return s.length > n ? s.slice(0, n - 1).replace(/\s\S*$/, "") + "…" : s; };
 const money = (n) => (n == null || n === "" ? "" : "₹" + Number(n).toLocaleString("en-IN"));
+// Page titles and descriptions (the same rules as the store): what it is, price, key details, why buy here.
+const titleCase = (t) => String(t).replace(/\b\w/g, (m) => m.toUpperCase());
+const CAT_SEO = { kids: "Kids Wear", men: "Men's Wear", home: "Home Decor", western: "Western Wear", jewellery: "Jewellery", footwear: "Footwear" };
+const catPlural = (c) => CAT_SEO[c?.id] || CAT_SEO[c?.parent] || titleCase(String(c?.name || "").replace(/\s*&.*$/, "").trim() || "Collection");
+const spec = (p, k) => ((p.storeDesc || "").match(new RegExp(`^${k}\\s*:\\s*(.+)$`, "im")) || [])[1]?.trim() || "";
+const trustLine = () => [st.payments?.cod?.enabled !== false && "Cash on delivery", Number(st.shipping?.freeAbove) > 0 && `free shipping above ${money(st.shipping.freeAbove)}`].filter(Boolean).join(", ");
+function productTitle(p, c) { const a = `${p.title} | Buy ${catPlural(c)} Online | ${brand}`; return c && c.id !== "others" && a.length <= 68 ? a : `${p.title} | ${brand}`; }
+function productDesc(p) { const fab = spec(p, "fabric"), work = spec(p, "work"), size = spec(p, "size"), price = p.sellOverride;
+  const facts = [fab && `${fab} fabric`, work && `${work.toLowerCase()}${/work$/i.test(work) ? "" : " work"}`, size && (/^age/i.test(size) ? `for ${size.toLowerCase()}` : `sizes ${size}`)].filter(Boolean).join(", ");
+  return cut(`Buy ${p.title} online at ${brand}${price != null ? ` for ${money(price)}` : ""}.${facts ? " " + facts.charAt(0).toUpperCase() + facts.slice(1) + "." : ""}${trustLine() ? " " + trustLine() + "." : ""}`, 158); }
 const imgOf = (p) => { const u = p.media?.imgs?.[0] || p.media?.th || ""; return /^https?:\/\//.test(u) ? u : ""; };
 
 const catById = Object.fromEntries(cats.map((c) => [c.id, c]));
@@ -64,7 +74,10 @@ function fixPaths(html) {
   return html.split(/(<script\b[^>]*>[\s\S]*?<\/script>)/i).map((part, i) => (i % 2 ? part.replace(/(<script\b[^>]*\bsrc=")(?!https?:|\/|data:)([^"]+)"/i, `$1${ROOT}$2"`)
     : part.replace(/\b(src|href|content)="(?!https?:|data:|#|\/|mailto:|tel:|\$|width=|index,|summary|website|en_IN|#)([\w./-]+\.(?:js|png|jpe?g|webp|svg|ico|txt|json|xml|html))"/g, `$1="${ROOT}$2"`))).join("");
 }
-function page({ title, desc, url, image, type = "website", noindex = false, ld = [], body = "" }) {
+// Public settings without large embedded pictures, for the data each page carries.
+const slimSettings = JSON.parse(JSON.stringify(st, (k, v) => (typeof v === "string" && v.startsWith("data:") && v.length > 2000 ? undefined : v)));
+const slimProduct = ({ fp, vendorPrice, description, ...p }) => p;   // only what shoppers can see
+function page({ title, desc, url, image, type = "website", noindex = false, ld = [], body = "", preload = null }) {
   let h = fixPaths(template);
   const set = (re, val) => { h = re.test(h) ? h.replace(re, val) : h.replace("</head>", val + "\n</head>"); };
   set(/<title>[\s\S]*?<\/title>/, `<title>${esc(title)}</title>`);
@@ -75,7 +88,8 @@ function page({ title, desc, url, image, type = "website", noindex = false, ld =
   set(/<meta property="og:type"[^>]*>/, `<meta property="og:type" content="${type}">`);
   if (image) set(/<meta property="og:image"[^>]*>/, `<meta property="og:image" content="${esc(image)}">`);
   const extra = [`<link rel="canonical" href="${esc(url)}">`, `<meta property="og:url" content="${esc(url)}">`, `<meta name="twitter:title" content="${esc(title)}">`, `<meta name="twitter:description" content="${esc(desc)}">`,
-    image ? `<meta name="twitter:image" content="${esc(image)}">` : "", ld.length ? `<script type="application/ld+json">${JSON.stringify(ld.length === 1 ? ld[0] : { "@context": "https://schema.org", "@graph": ld }).replace(/</g, "\\u003c")}</script>` : ""].filter(Boolean).join("\n");
+    image ? `<meta name="twitter:image" content="${esc(image)}">` : "",
+    preload ? `<script type="application/json" id="kc-preload">${JSON.stringify({ settings: slimSettings, categories: cats, products: (preload.products || []).map(slimProduct) }).replace(/</g, "\\u003c")}</script>` : "", ld.length ? `<script type="application/ld+json">${JSON.stringify(ld.length === 1 ? ld[0] : { "@context": "https://schema.org", "@graph": ld }).replace(/</g, "\\u003c")}</script>` : ""].filter(Boolean).join("\n");
   h = h.replace("</head>", `${MARK}\n${extra}\n</head>`);
   if (body) h = h.replace(/<div id="app">[\s\S]*?<\/div><\/div>/, `<div id="app"><main class="shop-main ssr" id="main" style="max-width:1100px;margin:0 auto;padding:24px 20px;font-family:system-ui,sans-serif">${body}</main></div>`);
   return h;
@@ -90,17 +104,19 @@ const out = new Map();
 const put = (file, html) => out.set(file, html);
 for (const p of products) {
   const c = catById[p.category] || { id: "others", name: "Products" }, url = abs(`products/${p._slug}`), img = imgOf(p), price = p.sellOverride;
-  const desc = cut(`${p.title}${price != null ? " at " + money(price) : ""}. ${String(p.storeDesc || "").replace(/\n+/g, ". ")}`, 160);
+  const desc = productDesc(p);
   const ld = [{ "@context": "https://schema.org", "@type": "Product", name: p.title, sku: p.code || p.id, url, image: (p.media?.imgs || [img]).filter((u) => /^https?:/.test(u || "")).slice(0, 5),
     description: cut(p.storeDesc || p.title, 500), brand: { "@type": "Brand", name: brand }, category: c.name,
     ...(price != null ? { offers: { "@type": "Offer", url, priceCurrency: "INR", price: String(price), availability: p.stock === "out" ? "https://schema.org/OutOfStock" : "https://schema.org/InStock", itemCondition: "https://schema.org/NewCondition", seller: { "@id": abs("#org") } } } : {}) },
     { "@context": "https://schema.org", ...crumbsLD([["Home", SITE], [c.name, abs(`collections/${catSlug(c)}`)], [p.title, url]]) }];
-  put(`products/${p._slug}.html`, page({ title: `${p.title} | ${brand}`, desc, url, image: img, type: "product", ld,
+  put(`products/${p._slug}.html`, page({ title: productTitle(p, c), desc, url, image: img, type: "product", ld, preload: { products: [p, ...products.filter((x) => x !== p && x.category === p.category).slice(0, 8)] },
     body: `${nav()}<p><a href="${ROOT}">Home</a> / <a href="${ROOT}collections/${catSlug(c)}">${esc(c.name)}</a> / ${esc(p.title)}</p><article><h1>${esc(p.title)}</h1>${img ? `<img src="${esc(img)}" alt="${esc(p.title)}" width="480" height="600">` : ""}${price != null ? `<p><b>${money(price)}</b>${p.stock === "out" ? " · Sold out" : " · In stock"}</p>` : ""}${String(p.storeDesc || "").split("\n").filter(Boolean).map((l) => `<p>${esc(l)}</p>`).join("")}<p><a href="${ROOT}collections/${catSlug(c)}">More ${esc(c.name.toLowerCase())}</a></p></article>` }));
 }
 function collection(slug, name, list, intro) {
   const url = abs(`collections/${slug}`);
-  put(`collections/${slug}.html`, page({ title: `${name} | ${brand}`, desc: cut(`Shop ${name.toLowerCase()} at ${brand}. ${intro || st.seo?.description || st.tagline || ""} ${list.length} designs available.`, 160), url, image: imgOf(list[0] || {}),
+  const fabs = [...new Set(list.map((p) => spec(p, "fabric")).filter(Boolean))].slice(0, 3);
+  put(`collections/${slug}.html`, page({ title: slug === "new-arrivals" ? `New Arrivals | Latest Designs | ${brand}` : `${titleCase(name)} | Buy ${catPlural({ name })} Online | ${brand}`, preload: { products: list.slice(0, 60) },
+    desc: cut(`Shop ${list.length} ${name.toLowerCase()} online at ${brand}${fabs.length ? `, in ${fabs.join(", ")}` : ""}. Handpicked designs, delivered across India${trustLine() ? ` with ${trustLine().toLowerCase()}` : ""}.`, 158), url, image: imgOf(list[0] || {}),
     ld: [{ "@context": "https://schema.org", "@type": "CollectionPage", name, url, mainEntity: { "@type": "ItemList", itemListElement: list.slice(0, 50).map((p, i) => ({ "@type": "ListItem", position: i + 1, url: abs(`products/${p._slug}`), name: p.title })) } },
       { "@context": "https://schema.org", ...crumbsLD([["Home", SITE], [name, url]]) }],
     body: `${nav()}<h1>${esc(name)}</h1><p>${list.length} designs</p><ul>${list.map(card).join("")}</ul>` }));
@@ -111,11 +127,11 @@ for (const c of cats.filter((x) => x.parent && catOn(x) && products.some((p) => 
 const pol = st.policies || {}, sup = st.support || {};
 const info = [["about-us", "About us", pol.about], ["shipping", "Shipping", pol.shipping], ["returns", "Returns and exchanges", pol.returns],
   ["contact", "Contact us", [sup.whatsapp && `WhatsApp: ${sup.whatsapp}`, sup.phone && `Phone: ${sup.phone}`, sup.email && `Email: ${sup.email}`, sup.hours].filter(Boolean).join("\n")]];
-for (const [slug, name, text] of info) put(`pages/${slug}.html`, page({ title: `${name} | ${brand}`, desc: cut(text || `${name} at ${brand}.`, 160), url: abs(`pages/${slug}`),
+for (const [slug, name, text] of info) put(`pages/${slug}.html`, page({ title: `${name} | ${brand}`, preload: { products: [] }, desc: cut(text || `${name} at ${brand}.`, 160), url: abs(`pages/${slug}`),
   ld: [{ "@context": "https://schema.org", ...crumbsLD([["Home", SITE], [name, abs(`pages/${slug}`)]]) }], body: `${nav()}<h1>${esc(name)}</h1>${String(text || "").split("\n").filter(Boolean).map((l) => `<p>${esc(l)}</p>`).join("")}` }));
 for (const [file, name, d] of [["offers", "Offers", `Current offers and coupon codes at ${brand}.`], ["stories", "Customer reviews and stories", `Real reviews from ${brand} customers.`], ["videos", "Videos", `Collection videos from ${brand}.`], ["news", "Announcements", `News and new collections from ${brand}.`], ["combos", "Combo deals", `Save more with combo deals at ${brand}.`]])
   put(`${file}.html`, page({ title: `${name} | ${brand}`, desc: d, url: abs(file), body: `${nav()}<h1>${esc(name)}</h1><p>${esc(d)}</p>` }));
-for (const [file, name] of [["cart", "Your bag"], ["checkout", "Checkout"], ["wishlist", "Wishlist"], ["track", "Track your order"], ["search", "Search"]])
+for (const [file, name] of [["cart", "Your bag"], ["checkout", "Checkout"], ["wishlist", "Wishlist"], ["track", "Track your order"], ["search", "Search"], ["emi", "Your EMI plan"], ["hi", "Welcome"]])
   put(`${file}.html`, page({ title: `${name} | ${brand}`, desc: st.seo?.description || st.tagline || brand, url: abs(file), noindex: true }));
 put("404.html", page({ title: `Page not found | ${brand}`, desc: st.seo?.description || brand, url: SITE, noindex: true }));
 
@@ -136,7 +152,7 @@ writeFileSync(join(root, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>
 const aiSearch = ["OAI-SearchBot", "ChatGPT-User", "Claude-SearchBot", "Claude-User", "PerplexityBot", "Perplexity-User", "DuckAssistBot"];
 const aiTrain = ["GPTBot", "ClaudeBot", "Google-Extended", "Applebot-Extended", "CCBot", "meta-externalagent", "Bytespider", "Amazonbot"];
 const rule = (bots, allow) => bots.map((b) => `User-agent: ${b}\n${allow ? "Allow" : "Disallow"}: /`).join("\n\n");
-writeFileSync(join(root, "robots.txt"), `# ${brand}\nUser-agent: *\nAllow: /\nDisallow: ${ROOT}cart\nDisallow: ${ROOT}checkout\nDisallow: ${ROOT}wishlist\nDisallow: ${ROOT}search\nDisallow: ${ROOT}track\nDisallow: ${ROOT}order/\n\n# AI search assistants\n${rule(aiSearch, st.seo?.aiSearch !== false)}\n\n# AI model training\n${rule(aiTrain, !!st.seo?.aiTraining)}\n\nSitemap: ${abs("sitemap.xml")}\n`);
+writeFileSync(join(root, "robots.txt"), `# ${brand}\nUser-agent: *\nAllow: /\nDisallow: ${ROOT}cart\nDisallow: ${ROOT}checkout\nDisallow: ${ROOT}wishlist\nDisallow: ${ROOT}search\nDisallow: ${ROOT}track\nDisallow: ${ROOT}order/\nDisallow: ${ROOT}emi\nDisallow: ${ROOT}hi\n\n# AI search assistants\n${rule(aiSearch, st.seo?.aiSearch !== false)}\n\n# AI model training\n${rule(aiTrain, !!st.seo?.aiTraining)}\n\nSitemap: ${abs("sitemap.xml")}\n`);
 
 // ---------- Google Merchant Center feed (merchant-feed.tsv for Google Sheets, merchant-feed.xml for a direct fetch) ----------
 const GOOGLE_CAT = {
@@ -186,3 +202,6 @@ writeFileSync(join(root, "merchant-feed.xml"), `<?xml version="1.0" encoding="UT
   `<item>${COLS.map((k) => k === "additional_image_link" ? r[k].split(",").filter(Boolean).map((u) => `<g:additional_image_link>${x(u)}</g:additional_image_link>`).join("") : r[k] ? `<g:${k}>${x(r[k])}</g:${k}>` : "").join("")}</item>`).join("\n")}\n</channel></rss>\n`);
 console.log(`Merchant feed: ${rows.length} products${skipped ? `, ${skipped} left out because they have no selling price or no online photo` : ""}`);
 console.log(`Built ${products.length} product pages, ${mainCats.length + 1} collections, sitemap with ${urls.length} addresses, for ${SITE}`);
+
+
+
