@@ -3631,7 +3631,7 @@ async function pOrders(m,q){
         <input type="text" data-o="tracking" value="${esc(o.tracking)}" placeholder="Courier and tracking number or link" style="flex:1 1 240px" aria-label="Tracking">
         <button class="btn sm primary" data-act="orderSave">Save</button>
         <button class="btn sm" data-act="billOpen">Bill</button>
-        <button class="btn sm" data-act="msgOpen">${ICON.wa} Message customer</button>${isAdmin()&&emiEligible(o)?'<button class="btn sm" data-act="offerEmi">Offer EMI</button>':''}
+        <button class="btn sm" data-act="msgOpen">${ICON.wa} Message customer</button>${isAdmin()&&emiOn()&&!o.emi&&o.payment?.status!=='paid'&&o.status!=='cancelled'?(emiEligible(o)?'<button class="btn sm" data-act="offerEmi">Offer EMI</button>':`<button class="btn sm" disabled title="EMI is for orders of ${money(Number(EMI().minOrder)||10000)} or more. Change this in Settings, EMI plans.">Offer EMI <span class="small">(${money(Number(EMI().minOrder)||10000)}+)</span></button>`):''}
         <button class="btn sm ${o.status==='placed'&&!o.adminSent?'accent':''}" data-act="orderToMe">${ICON.wa} Send to my WhatsApp</button>
         ${!['placed','cancelled'].includes(o.status)?`<button class="btn sm" data-act="addrToMe">${ICON.wa} Address to my WhatsApp</button>`:''}
         <button class="btn sm" data-act="orderEdit">Edit</button>${isAdmin()?'<button class="btn sm ghost danger" data-act="orderDelete">Delete</button>':''}</div>
