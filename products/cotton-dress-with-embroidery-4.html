@@ -1272,6 +1272,88 @@ body[data-view="hi"] .guide{display:none}
 .qa{display:flex;flex-direction:column;gap:12px;max-width:760px}
 .qa-ph{position:relative;width:84px;height:105px;border-radius:10px;overflow:hidden;border:1px solid var(--rule)}.qa-ph img{width:100%;height:100%;object-fit:cover}
 .ap-more{margin-top:18px;max-width:900px}.ap-more>summary{cursor:pointer;padding:8px 0}
+
+/* ---------- phone layout ---------- */
+.tabbar,.buybar{display:none}
+@media (max-width:760px){
+  body.shop-shell{--tabh:62px}
+  body.shop-shell #app{padding-bottom:calc(var(--tabh) + env(safe-area-inset-bottom))}
+  body.shop-shell.has-buybar #app{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:110;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border-top:1px solid var(--rule);padding:4px 4px calc(4px + env(safe-area-inset-bottom));box-shadow:0 -6px 20px rgba(21,17,12,.06)}
+  body.has-buybar .tabbar{display:none}
+  .tab{all:unset;box-sizing:border-box;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:52px;color:var(--muted);font-size:.7rem;font-weight:700;position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent;border-radius:12px}
+  .tab svg{width:23px;height:23px}.tab.on{color:var(--aubergine)}.tab.on svg{stroke-width:2.2}
+  .tab.on::before{content:"";position:absolute;top:-4px;width:28px;height:3px;border-radius:0 0 3px 3px;background:var(--gold-dark)}
+  .tab:focus-visible{outline:2px solid var(--gold-dark)}
+  .tab-n{position:absolute;top:3px;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:99px;background:var(--rose);color:#fff;font-size:.66rem;display:grid;place-items:center;padding:0 5px}
+  .buybar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:110;gap:8px;align-items:center;background:#fff;border-top:1px solid var(--rule);padding:10px 12px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -6px 20px rgba(21,17,12,.08)}
+  .bb-price{display:flex;flex-direction:column;line-height:1.1;margin-right:auto;min-width:0}.bb-price b{font-size:1.15rem}
+  .buybar .btn{padding:12px 16px;font-size:.95rem}
+  body.shop-shell .head-actions{display:none}
+  body.shop-shell .fab{bottom:calc(var(--tabh) + 14px + env(safe-area-inset-bottom))!important;right:14px}
+  body.shop-shell .guide{bottom:calc(var(--tabh) + 8px + env(safe-area-inset-bottom))!important;right:10px}
+  body.shop-shell.has-buybar .fab{bottom:calc(86px + env(safe-area-inset-bottom))!important}
+  body.shop-shell.has-buybar .guide{bottom:calc(80px + env(safe-area-inset-bottom))!important}
+  body.shop-shell .toast{bottom:calc(var(--tabh) + 16px + env(safe-area-inset-bottom));width:max-content;max-width:calc(100vw - 24px)}
+  body.shop-shell .bot{bottom:calc(var(--tabh) + 10px + env(safe-area-inset-bottom))}
+  /* header: one tidy band */
+  .shop-head .in{padding-top:8px;padding-bottom:10px;gap:8px}
+  .brand-logo{width:38px;height:38px}
+  .shop-search input{font-size:16px}
+  /* banner: compact, picture on top */
+  .hero-car{border-radius:18px;margin-bottom:18px}
+  .slide{padding:20px 18px 46px;gap:12px}
+  .slide h1{font-size:1.75rem}.slide h2{font-size:1.5rem}.slide p{font-size:.95rem;margin:8px 0 14px}
+  .slide .art .big-logo{width:min(150px,46%)}
+  .slide .art .arch{width:min(170px,52%)}
+  .slide .sprice{font-size:1.3rem;margin:4px 0 12px}
+  .hero-cta{width:100%;justify-content:center}
+  /* product cards: comfortable taps */
+  .card .body{padding:10px}.card .t{font-size:.92rem;line-height:1.3}
+  .card .row{flex-direction:column;align-items:stretch;gap:6px}.card .row .btn{width:100%;min-height:40px}
+  .card .heart{width:38px;height:38px}
+  .pdp-gallery,.pdp{gap:16px}
+}
+/* the Shop sheet */
+#shopSheetWrap{position:fixed;inset:0;z-index:300;pointer-events:none}
+#shopSheetWrap.open{pointer-events:auto}
+.sheet-back{position:absolute;inset:0;background:rgba(21,17,12,.45);opacity:0;transition:opacity .2s}
+#shopSheetWrap.open .sheet-back{opacity:1}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:82vh;display:flex;flex-direction:column;background:var(--surface);border-radius:22px 22px 0 0;transform:translateY(100%);transition:transform .25s cubic-bezier(.3,.8,.3,1);padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -10px 30px rgba(0,0,0,.2)}
+#shopSheetWrap.open .sheet{transform:none}
+@media (min-width:761px){.sheet{left:50%;right:auto;width:440px;transform:translate(-50%,100%)}#shopSheetWrap.open .sheet{transform:translate(-50%,0)}}
+.sheet-grab{width:44px;height:5px;border-radius:99px;background:var(--rule);margin:8px auto 0}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;padding:6px 16px 4px}.sheet-head b{font-family:var(--display);font-weight:400;font-size:1.4rem}
+.sheet-body{overflow-y:auto;padding:4px 10px 16px}
+.sheet-row{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:54px;padding:8px 12px;border-radius:12px;text-decoration:none;color:var(--aubergine)}
+.sheet-row:hover,.sheet-row:focus-visible{background:var(--paper)}.sheet-row span{display:flex;flex-direction:column}.sheet-row span span{color:var(--muted);font-size:.82rem}
+.sheet-row.sub{min-height:44px;padding-left:28px;font-size:.95rem}.sheet-row i{font-style:normal;color:var(--gold-dark);font-size:1.4rem}
+.tab-n[hidden]{display:none!important}
+.sheet-sep{height:1px;background:var(--rule);margin:8px 12px}.sheet-wa{margin:10px 6px 0}
+@media (prefers-reduced-motion:reduce){.sheet,.sheet-back{transition:none}}
+body.sheet-open{overflow:hidden}
+
+/* ---------- staff on phones ---------- */
+@media (max-width:640px){
+  .side{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-content:start;align-items:center;height:auto;min-height:0}
+  .side-menu-btn{white-space:nowrap}
+  .side .idfind{grid-column:2;min-width:0}.side .idfind input{width:100%;font-size:16px}
+  .side-menu-btn b{max-width:24vw}
+  .side .side-nav{grid-column:1/-1}
+  .staff-main{padding:16px 12px 90px}
+  .staff-main h1{font-size:1.9rem}
+  /* Products: one card per product instead of a wide table */
+  .staff-main table.tbl.ptbl,.ptbl tbody{display:block;overflow:visible}
+  .ptbl thead{display:none}
+  .ptbl tr{display:grid;grid-template-columns:26px 64px minmax(0,1fr);gap:6px 10px;padding:12px 4px;border-bottom:1px solid var(--rule);align-items:start}
+  .ptbl td{display:block;padding:0;border:0;min-width:0}
+  .ptbl td:nth-child(1){grid-row:1/span 6}.ptbl td:nth-child(2){grid-row:1/span 6}.ptbl td:nth-child(2) img{width:64px;height:80px;object-fit:cover;border-radius:8px}
+  .ptbl td:nth-child(n+3){grid-column:3}
+  .ptbl td:nth-child(n+4){display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.9rem}
+  .ptbl td:nth-child(4)::before{content:"Category";}.ptbl td:nth-child(5)::before{content:"Vendor price";}.ptbl td:nth-child(6)::before{content:"Selling price";}.ptbl td:nth-child(7)::before{content:"Stock";}
+  .ptbl td:nth-child(n+4)::before{color:var(--muted);font-size:.78rem;font-weight:700;min-width:84px}
+  .ptbl td select,.ptbl td input[type=number]{max-width:100%;flex:1 1 140px}
+}
 </style>
 <!-- generated by scripts/build-seo.mjs -->
 <link rel="canonical" href="https://kulsumscollection.com/products/cotton-dress-with-embroidery-4">
@@ -1916,8 +1998,8 @@ const thumbTag=(p,cls='',alt='')=>`<img data-th="${p.id}" class="${cls}" alt="${
 
 // ================= visibility rules =================
 function isVisible(p){
-  const c=catById(p.category);
-  if(!p.published||!catOn(c))return false;
+  const c=S.categories.find(x=>x.id===p.category);
+  if(!p.published||!catOn(c)||!String(p.title||'').trim())return false;
   if(p.stock==='out'&&S.settings.catalog.hideOutOfStock)return false;
   return true;
 }
@@ -2528,7 +2610,7 @@ function cardHTML(p){
     ${p.stock==='out'?'<span class="oos">Sold out</span>':''}
     ${f.wishlist?`<button class="heart ${on?'on':''}" data-act="wish" data-id="${p.id}" aria-pressed="${on}" aria-label="${on?'Remove from':'Save to'} wishlist">${ICON.heart}</button>`:''}
     <div class="body"><span class="cat">${esc(c.name)}</span><a class="t" href="#/p/${p.id}">${esc(p.title)}</a>${cardRating(p)}
-      ${productColours(p).length>1?`<span class="cdots" title="${esc(productColours(p).join(', '))}">${uniqueColours(p).map(c=>`<i style="background:${esc(c.hex)}"></i>`).join('')}<span>${productColours(p).length} colours</span></span>`:''}
+      ${productColours(p).length>1?`<span class="cdots">${productColours(p).length} colours</span>`:''}
       ${comboBadge(p)}${mrpHTML(p,minPrice(p))}<div class="row"><span class="price">${price!=null?esc(priceLabel(p)):'<span class="price-req">Price on request</span>'}</span>
       ${canBuy&&productColours(p).length<2?`<button class="btn sm primary" data-act="add" data-id="${p.id}">Add to cart</button>`:canBuy?`<a class="btn sm primary" href="#/p/${p.id}">Choose colour</a>`:''}</div>
       ${adminBar(p)}</div>
@@ -2545,6 +2627,7 @@ async function renderShop(parts,q){
   const V={hi:(m,a,q)=>vHi(m,q),emi:(m,a,q)=>vEmi(m,q),notfound:vNotFound,'':vHome,combos:vCombos,news:vNews,stories:vStories,offers:vOffers,videos:vVideos,c:vCategory,p:vProduct,search:vSearch,cart:vCart,checkout:vCheckout,order:vOrder,track:vTrack,wishlist:vWish,info:vInfo};
   document.body.dataset.view=view||'home';
   await (V[view||'']||vHome)(main,arg,q);
+  mountShell(view||'');closeShopSheet();
   if(BOT.open)renderBot();
   prettifyLinks($('#app'));hydrate(main);hydrateFull(main);hydratePosters(main);hydrate($('.ribbon')||main);startMotion();
   if(typeof guideAfterRender==='function')guideAfterRender(parts,q);
@@ -2572,7 +2655,7 @@ function carouselSlides(){
 function heroHTML(){
   const st=S.settings,b=st.banner,vis=visibleProducts(),hasNew=st.menus.newArrivals&&vis.length>0;
   const cta=vis.length?`<a class="btn accent hero-cta" href="${hasNew?'#/c/new':'#/c/'+(mainMenus()[0]?.id||'')}">${hasNew?'Shop new arrivals':'Start shopping'} <span aria-hidden="true">→</span></a>`:'';
-  const prods=[];   // the home page shows no products, so the banner has no product slides
+  const prods=b.enabled?carouselSlides():[];   // the banner slides through your featured and newest pieces
   const slides=[`<div class="slide" role="group" aria-roledescription="slide" aria-label="1 of ${prods.length+1}">
       <div><h1>${esc(st.tagline)}</h1><p>${esc(st.heroText)}</p>${cta}</div>
       <div class="art"><img class="big-logo" src="${logoSrc()}" alt="${esc(st.brand)} logo"></div></div>`,
@@ -2680,7 +2763,7 @@ let STORE_SELECT=false,SS_PAGE=[];const SS=new Set();
 function stBarHTML(){
   const n=SS_PAGE.length,k=SS.size,on=SS_PAGE.filter(id=>SS.has(id)).length;
   return `<label><input type="checkbox" data-act-change="stSelAll" ${n&&on===n?'checked':''} aria-label="Select all ${n} on this page"> Select all ${n} on this page</label>
-    ${k?`<b>${k} selected</b><button class="btn sm" data-act="stRemove">Remove from store</button><select data-act-change="stCat" aria-label="Move selected to category"><option value="">Move to category…</option>${catOptions('')}</select><button class="btn sm ghost" data-act="stClear">Clear</button>`:'<span class="small muted">Admin: tick products to remove them from the store or move them together.</span>'}`;
+    ${k?`<b>${k} selected</b><button class="btn sm" data-act="stRemove">Remove from store</button><select data-act-change="stCat" aria-label="Move selected to category"><option value="">Move to category…</option>${catOptions('',false)}</select><button class="btn sm ghost" data-act="stClear">Clear</button>`:'<span class="small muted">Admin: tick products to remove them from the store or move them together.</span>'}`;
 }
 function stSync(){const bar=$('#stBar');if(bar)bar.innerHTML=stBarHTML();$$('input[data-act-change=stSel]').forEach(c=>{c.checked=SS.has(c.dataset.id);});}
 function gridSel(list){
@@ -2826,6 +2909,7 @@ function addToCart(id,qty=1,colour){
 function updateBadges(){
   const c=$('#cartCount');if(c){c.textContent=cartCount();c.hidden=!cartCount();}
   const w=$('#wishCount');if(w){w.textContent=S.wish.length;w.hidden=!S.wish.length;}
+  const tc=$('#tabCart');if(tc){tc.textContent=cartCount();tc.hidden=!cartCount();}const tw=$('#tabWish');if(tw){tw.textContent=S.wish.length;tw.hidden=!S.wish.length;}
 }
 function vCart(main){
   const f=F();
@@ -3108,6 +3192,7 @@ const reviewCount=()=>S.products.filter(awaitingReview).length+S.videos.filter(v
 const vendorById=id=>S.vendors.find(v=>v.id===id);
 
 async function renderStaff(parts,q){
+  document.body.classList.remove('shop-shell','has-buybar');
   document.title='Staff | '+S.settings.brand;
   {let m=document.head.querySelector('meta[name=robots]');if(!m){m=document.createElement('meta');m.name='robots';document.head.appendChild(m);}m.content='noindex,nofollow';}
   const app=$('#app');
@@ -3228,8 +3313,9 @@ function pageSlice(list,page){const pages=Math.max(1,Math.ceil(list.length/PAGE_
   return {pg,pages,items:list.slice((pg-1)*PAGE_SIZE,pg*PAGE_SIZE),from:list.length?(pg-1)*PAGE_SIZE+1:0,to:Math.min(list.length,pg*PAGE_SIZE)};}
 // Add many products to the store, or take them out, in one go (with Undo)
 async function bulkStore(ids,op){
-  const set=new Set(ids),ps=S.products.filter(p=>set.has(p.id));if(!ps.length)return false;
+  const set=new Set(ids);let ps=S.products.filter(p=>set.has(p.id));if(!ps.length)return false;
   const snap=ps.map(p=>({p,published:p.published,reviewed:p.reviewed,removedAt:p.removedAt}));
+  if(op==='add')ps=blockToast(ps);
   ps.forEach(p=>{if(op==='add'){p.published=true;p.reviewed=true;delete p.removedAt;}else{p.published=false;p.reviewed=true;p.removedAt=Date.now();}});
   if(!await saveProducts())return false;
   const n=ps.length,plural=n===1?'':'s',closed=op==='add'?ps.filter(p=>!catOn(catById(p.category))).length:0;
@@ -3307,7 +3393,7 @@ function plRow({p,n,s},o){
       ${o.seeSell&&sell!=null?`<span class="sell">Selling at ${money(sell)}</span>`:''}</div>
     <div class="acts">${o.canEdit?`<button class="btn sm" data-act="plEdit">Edit</button>`:''}${isAdmin()&&p.published?`<button class="btn sm" data-act="storeRemove" data-id="${p.id}">Remove from store</button>`:''}${isAdmin()&&!p.published&&p.reviewed?`<button class="btn sm" data-act="storeRestore" data-id="${p.id}">Put back in store</button>`:''}${o.canEdit?`<button class="btn sm danger" data-act="plDelete">Delete</button>`:''}</div></div>`;
 }
-const catOptions=sel=>catsFlat().map(c=>`<option value="${c.id}" ${c.id===sel?'selected':''}>${esc(catLabel(c))}${catOn(c)?'':' (menu off)'}</option>`).join('');
+const catOptions=(sel,blank=true)=>(blank&&!S.categories.some(c=>c.id===sel)?'<option value="" selected>Choose a category…</option>':'')+catsFlat().filter(c=>catOn(c)||c.id===sel).map(c=>`<option value="${c.id}" ${c.id===sel?'selected':''}>${esc(catLabel(c))}${catOn(c)?'':' (switched off)'}</option>`).join('');   // categories that are switched off cannot be chosen
 
 // ---------- import ----------
 function pImport(m){
@@ -3331,7 +3417,7 @@ function renderImportBody(){
       <label class="field">Add to<select data-imp="existing"><option value="">A new vendor</option>${S.vendors.map(v=>`<option value="${v.id}" ${c.existing===v.id?'selected':''}>${esc(v.name)} (existing)</option>`).join('')}</select></label>
       <label class="field">Vendor phone<input type="tel" data-imp="phone" value="${esc(c.vendor.phone||'')}"></label>
       <label class="field">Photos from<select data-imp="sender"><option value="*">Everyone</option>${names.map(n=>`<option ${c.sender===n?'selected':''}>${esc(n)}</option>`).join('')}</select></label>
-      <label class="field">Description is<select data-imp="order"><option value="after" ${c.order==='after'?'selected':''}>After the photo</option><option value="before" ${c.order==='before'?'selected':''}>Before the photo</option></select></label>
+      <label class="field">Description is<select data-imp="order"><option value="auto" ${!c.order||c.order==='auto'?'selected':''}>Found for each product (recommended)</option><option value="after" ${c.order==='after'?'selected':''}>Always after the photos</option><option value="before" ${c.order==='before'?'selected':''}>Always before the photos</option></select></label>
       <div style="display:flex;align-items:flex-end;gap:8px"><button class="btn sm" data-act="impAll" data-v="1">Select all</button><button class="btn sm" data-act="impAll" data-v="0">Select none</button><button class="btn sm danger" data-act="impRemove">Remove chat</button></div>
     </div>
     <p class="small muted" style="margin:12px 0 0">${c.rows.filter(r=>r.mergedInto==null).length} products found${c.variantGroups?`, including ${c.variantGroups} colour variation${c.variantGroups===1?'':'s'} grouped into their products`:''}. Skipped ${c.stickers} stickers and ${c.skipped} non-product messages.${c.dups?` ${c.dups} look like products already in the catalog and are unticked.`:''} <span id="dupStatus"></span></p>
@@ -3355,7 +3441,7 @@ function renderImportBody(){
   <div>${c.vrows.map((r,i)=>`<div class="imp-row ${r.include?'':'off'} ${r.sel?'vsel-on':''}" data-v="${i}">
       <input type="checkbox" data-imp-vsel ${r.sel?'checked':''} aria-label="Select this video">
       <video src="${r.file.url}" preload="metadata" muted playsinline controls style="width:84px;height:100px;object-fit:cover;border-radius:8px;background:#000"></video>
-      <div><div class="d">${esc(r.description)||'<span class="muted">No caption</span>'}</div><div class="small muted">${(r.file.size/1048576).toFixed(1)} MB${r.big?' <span class="pill bad">Too large, will be skipped</span>':''}</div></div>
+      <div><div class="d">${esc(r.description)||'<span class="muted">No caption</span>'}</div><div class="small muted">${(r.file.size/1048576).toFixed(1)} MB${r.big?' <span class="pill bad">Too large, will be skipped</span>':''}${r.row!=null?` <span class="pill info">Sent with product ${c.rows.slice(0,r.row+1).filter(x=>x.mergedInto==null).length}</span>`:''}</div></div>
       <label class="field" style="grid-column:span 2"><span class="small">Video title</span><input type="text" data-imp-vrow="title" value="${esc(r.title)}"></label>
     </div>`).join('')}</div>`:''}
   <div class="vbar" style="position:sticky;bottom:0;background:var(--paper);border-top:2px solid var(--aubergine);border-bottom:0;margin-top:10px">
@@ -3369,7 +3455,7 @@ async function readZipChat(file){
   const entries=Object.values(zip.files).filter(f=>!f.dir&&!f.name.startsWith('__MACOSX'));
   const txts=entries.filter(f=>/\.txt$/i.test(f.name));const chatTxt=txts.find(f=>/chat/i.test(f.name))||txts[0];
   if(!chatTxt)throw new Error('there is no chat .txt file inside. Export the chat again with Attach media.');
-  const c={id:uid('ic'),fileName:file.name,fileKey:file.name+'|'+file.size,files:new Map(),vfiles:new Map(),vrows:[],stickers:0,order:'after',sender:'*',vendor:{},rows:[]};
+  const c={id:uid('ic'),fileName:file.name,fileKey:file.name+'|'+file.size,files:new Map(),vfiles:new Map(),vrows:[],stickers:0,order:'auto',sender:'*',vendor:{},rows:[]};
   for(const f of entries){const base=f.name.split('/').pop();
     if(VID_EXT.test(base)){const ext=base.split('.').pop().toLowerCase();const blob=await f.async('blob');
       c.vfiles.set(base.toLowerCase(),{name:base,ext,mime:VID_MIME[ext],size:blob.size,blob,url:URL.createObjectURL(new Blob([blob],{type:VID_MIME[ext]}))});continue;}
@@ -3385,13 +3471,13 @@ async function readZipChat(file){
   buildImportRows(c);return c;
 }
 function buildImportRows(c){
-  const {products,skipped}=groupProducts(c.messages,c.files,{order:c.order,sender:c.sender});
-  c.skipped=skipped;c.dups=0;c.dupChecked=false;
-  c.rows=products.map(p=>{const pr=extractPrice(p.description),bare=pr?null:barePrice(p.description);return {images:p.images,description:p.description,sender:p.sender,date:p.date,
-    price:pr?pr.value:bare,currency:pr?pr.currency:'',match:pr?pr.match:'',category:categorize(p.description),include:true,dup:false};});
+  const a=analyseChat(c.messages,c.files,c.vfiles,{order:c.order||'auto',sender:c.sender});const products=a.products;
+  c.skipped=a.skipped;c.dups=0;c.dupChecked=false;
+  c.rows=products.map(p=>{const pr=extractPrice(p.description),bare=pr?null:barePrice(p.description);return {images:p.images,description:p.description,sender:p.sender,date:p.date,msgIdx:p.msgIdx,
+    price:pr?pr.value:bare,currency:pr?pr.currency:'',match:pr?pr.match:'',category:'',include:true,dup:false};});   // the category is chosen by you
   c.rows.forEach(initVariantRow);c.grouped=false;
-  c.vrows=extractVideos(c.messages,c.vfiles,{sender:c.sender}).map(v=>{const big=v.file.size>VIDEO_MAX_MB*1048576;
-    return {file:v.file,description:v.description,title:videoTitle(v.description,c.vendor.name),include:!big,big};});
+  c.vrows=a.videos.map(v=>{const big=v.file.size>VIDEO_MAX_MB*1048576;
+    return {file:v.file,description:v.description,msgIdx:v.msgIdx,row:v.productIndex,title:videoTitle(v.description,c.vendor.name),include:!big,big};});
 }
 function checkDuplicates(c){if(!c.dupP)c.dupP=runPhotoChecks(c);return c.dupP;}
 async function runPhotoChecks(c){
@@ -3438,7 +3524,7 @@ async function saveImport(){
     else if(c.vendor.phone&&!v.phone)v.phone=c.vendor.phone;
     for(const r of c.rows.filter(r=>r.include)){
       txt.textContent=`Saving ${done+1} of ${total}…`;
-      const id=uid('p');const imgs=r.images.filter(f=>f.ext!=='heic').slice(0,12);
+      const id=uid('p');r._pid=id;const imgs=r.images.filter(f=>f.ext!=='heic').slice(0,12);
       try{
         const full=[],fps=[],colors=[];let th=null;
         for(const [i,f] of imgs.entries()){fileProd.set(f.name.toLowerCase(),{p:id,i});const {data,img}=await compressImage(f.url,1100,0.8);full.push(data);fps.push(packFP(f.fp||fingerprint(img)));
@@ -3446,7 +3532,7 @@ async function saveImport(){
           if(i===0)th=(await compressImage(f.url,360,0.74)).data;}
         const cat=r.category;
         const prod={id,code:'KC'+(codeSeq++),vendorId:v.id,description:r.description,match:r.match,vendorPrice:r.price??(r.imagePrices||[]).find(x=>x!=null)??null,currency:r.currency||S.settings.currency,
-          category:cat,catManual:cat!==categorize(r.description),title:autoTitle(r.description,cat,numberColours(colors)),storeDesc:'',sellOverride:null,stock:'in',
+          category:cat||'',catManual:!!cat,title:'',storeDesc:'',sellOverride:null,stock:'in',
           colors:numberColours(colors),mrp:extractMRP(r.description),published:false,reviewed:false,featured:false,createdAt:Date.now(),imageCount:full.length,fp:fps,sender:r.sender,chatDate:r.date};
         if(th)await Media.putProduct(prod,th,full);
         S.products.push(prod);
@@ -3458,7 +3544,7 @@ async function saveImport(){
       txt.textContent=`Saving video ${vidsDone+1}… ${done+1} of ${total}`;
       try{const id=uid('vd');const poster=await videoPoster(r.file.url);
         const vid={id,vendorId:v.id,title:r.title||'Video',desc:stripVendorBits(r.description),vendorDesc:r.description,mime:r.file.mime,size:r.file.size,chunks:0,
-          duration:poster?.duration||0,published:false,reviewed:false,productId:null,createdAt:Date.now()};
+          duration:poster?.duration||0,published:false,reviewed:false,productId:(()=>{const pr=r.row!=null?c.rows[r.row]:null;return pr?(pr.mergedInto!=null?c.rows[pr.mergedInto]?._pid:pr._pid)||null:null;})(),createdAt:Date.now()};
         await Media.putVideo(vid,r.file.blob,poster?.data);S.videos.push(vid);fileVid.set(r.file.name.toLowerCase(),id);
         await saveVideos();vidsDone++;
       }catch{failed++;}
@@ -3495,17 +3581,17 @@ function pProducts(m,q){
   ${sel.length?`<div class="filters panel" style="padding:10px 14px;position:sticky;top:0;z-index:6"><b>${sel.length} selected</b>
     <button class="btn sm primary" data-act="bulk" data-op="publish">Add to store</button><button class="btn sm" data-act="bulk" data-op="hide">Remove from store</button>
     <button class="btn sm" data-act="bulk" data-op="out">Mark sold out</button><button class="btn sm" data-act="bulk" data-op="in">Mark in stock</button>
-    <select data-act-change="bulkCat" aria-label="Move to category"><option value="">Move to category…</option>${catOptions('')}</select>
+    <select data-act-change="bulkCat" aria-label="Move to category"><option value="">Move to category…</option>${catOptions('',false)}</select>
     ${sel.length>1?'<button class="btn sm" data-act="pfMerge">Group as colours of one product</button>':''}
     <button class="btn sm danger" data-act="bulk" data-op="delete">Delete</button><button class="btn sm ghost" data-act="bulk" data-op="clear">Clear selection</button></div>`:''}
   <div class="filters" style="margin-top:-6px"><a class="btn sm primary" href="#/staff/add">Add a product</a><button class="btn sm" data-act="pfManualExport">Spreadsheet of products added by hand (${S.products.filter(isManual).length})</button></div>
   <p class="small muted">${list.length} products${list.length>PAGE_SIZE?`, showing ${pgd.from} to ${pgd.to}`:''} ${list.length>pgd.items.length&&sel.length<list.length?`<button class="btn sm ghost" data-act="pfSelEvery">Select all ${list.length} on every page</button>`:''} <button class="btn sm ghost" data-act="tidyTitles" title="Rebuild titles from descriptions for products whose title you have not typed yourself">Tidy titles from descriptions</button></p>
   ${pagerButtons(pgd.pg,pgd.pages,'pfPage')}
-  ${list.length?`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th><input type="checkbox" data-act-change="selAll" aria-label="Select all shown" ${pgd.items.length&&pgd.items.every(p=>PF.sel.has(p.id))?'checked':''}></th><th></th><th>Product</th><th>Category</th><th>Vendor price</th><th>Selling price</th><th>Stock</th><th>In store</th></tr></thead><tbody>
+  ${list.length?`<div style="overflow-x:auto"><table class="tbl ptbl"><thead><tr><th><input type="checkbox" data-act-change="selAll" aria-label="Select all shown" ${pgd.items.length&&pgd.items.every(p=>PF.sel.has(p.id))?'checked':''}></th><th></th><th>Product</th><th>Category</th><th>Vendor price</th><th>Selling price</th><th>Stock</th><th>In store</th></tr></thead><tbody>
   ${pgd.items.map(p=>{const sp=sellPrice(p);return `<tr data-id="${p.id}">
     <td><input type="checkbox" data-act-change="sel" ${PF.sel.has(p.id)?'checked':''} aria-label="Select ${esc(p.title)}"></td>
     <td>${thumbTag(p)}</td>
-    <td><button class="btn ghost sm" style="padding:0;white-space:normal;text-align:left" data-act="prodEdit">${esc(p.title)}</button><div class="small muted">${esc(p.code)}, ${esc(vendorById(p.vendorId)?.name||'')}</div></td>
+    <td><button class="btn ghost sm" style="padding:0;white-space:normal;text-align:left" data-act="prodEdit">${esc(p.title)||'<span class="rp-bad">Add a title</span>'}</button><div class="small muted">${esc(p.code)}, ${esc(vendorById(p.vendorId)?.name||'')}</div></td>
     <td><select data-act-change="prodCat" aria-label="Category">${catOptions(p.category)}</select>${needsCatCheck(p)?'<div class="small" style="color:var(--warn)">Check category</div>':''}</td>
     <td>${p.vendorPrice!=null?money(p.vendorPrice):'<span class="muted">None</span>'}</td>
     <td><input type="number" min="0" data-act-change="prodSell" value="${p.sellOverride??''}" placeholder="${autoSell(p.vendorPrice)??'Set price'}" style="width:110px" aria-label="Selling price"><button type="button" class="linkish small" data-act="qeOpen" data-id="${p.id}" style="display:block;margin-top:4px">Edit price and description</button><div class="small muted">${p.sellOverride!=null&&p.sellOverride!==''?'Set by you':sp!=null?esc(markupFor(p).label):''}${p.market?.rec&&sp!==p.market.rec.price?`<div class="small" style="color:var(--gold-dark)">Market suggests ${money(p.market.rec.price)}</div>`:''}</div></td>
@@ -3669,7 +3755,7 @@ function rvProductCard(p){
         <div class="small muted" style="max-height:5.6em;overflow:hidden;white-space:pre-wrap;margin-top:4px">${esc(p.description)}</div>
         ${sp==null?'<span class="pill bad" style="margin-top:6px">Needs a price</span>':''}</div></div>
     <div class="fields">
-      <label class="field">Title customers see<input type="text" data-rv="title" value="${esc(p.title)}"></label>
+      <label class="field">Title customers see <span class="req">*</span><input type="text" data-rv="title" value="${esc(p.title)}" placeholder="Type the title"></label>
       <label class="field">Your product ID<input type="text" data-rv="myId" value="${esc(p.myId||'')}" placeholder="${esc(nextMyId().id)}" autocomplete="off"></label>
       <div class="grid2"><label class="field">Category<select data-rv="category">${catOptions(p.category)}</select></label>
         <label class="field">Selling price<input type="number" min="0" data-rv="sellOverride" value="${p.sellOverride??''}" placeholder="${autoSell(p.vendorPrice)??'Set price'}"></label></div>
@@ -3848,8 +3934,11 @@ async function loadStaffMgr(){
 function statusLabel(p){if(isVisible(p))return 'Live in store';if(awaitingReview(p))return 'Waiting for review';if(!p.published)return 'Removed from store';if(!catOn(catById(p.category)))return 'Menu closed';return p.stock==='out'&&S.settings.catalog.hideOutOfStock?'Sold out (hidden)':'Not live';}
 const catText=p=>p.description||p.title||'';
 // Also flags a product placed by hand in the wrong kind of category, like a saree under Jewellery.
-function needsCatCheck(p){const i=categorizeInfo(catText(p));if(p.catManual)return !i.none&&catFamily(i.id)!==catFamily(p.category)&&i.matched.some(f=>f.id===i.id&&f.strong)&&!i.ambiguous;return i.none||i.ambiguous||i.id!==p.category;}
-function catHint(desc,chosen,manual){
+function needsCatCheck(p){return !p.category||!S.categories.some(c=>c.id===p.category)||!catOn(catById(p.category));}
+function needsCatCheckOld(p){const i=categorizeInfo(catText(p));if(p.catManual)return !i.none&&catFamily(i.id)!==catFamily(p.category)&&i.matched.some(f=>f.id===i.id&&f.strong)&&!i.ambiguous;return i.none||i.ambiguous||i.id!==p.category;}
+function catHint(desc,chosen,manual){return '';   // categories are chosen by you, not guessed
+}
+function catHintOld(desc,chosen,manual){
   const i=categorizeInfo(desc);
   if(manual||chosen!==i.id)return `<span class="small muted" style="display:block;margin-top:4px">Category set by you</span>`;
   if(i.none)return `<span class="small" style="display:block;margin-top:4px;color:var(--warn)"><span class="pill warn">Check category</span> No category word found in the description</span>`;
@@ -3870,9 +3959,9 @@ function tidyTitles(force){
 }
 async function migrateText(){
   const ver=S.settings.textVersion||0;if(!isAdmin()||ver>=5||S.migrating)return;S.migrating=true;
-  if(ver===4){let k=0;S.products.forEach(p=>{if(p.titleManual)return;const t=makeTitle(p);if(t&&t!==p.title){p.title=t;k++;}});S.settings.textVersion=5;await saveProducts();await saveSettings();if(k)toast(`Improved ${k} automatic product title${k===1?'':'s'}. Titles you typed were not changed.`);S.migrating=false;return;}
-  const n=ver<2?tidyTitles(false):0,m=ver<3?recatAll():0;let k=0;
-  if(ver<4)S.products.forEach(p=>{const before=JSON.stringify(p.colors||[]);p.colors=numberColours(p.colors);if(JSON.stringify(p.colors)!==before)k++;if(!p.titleManual){const t=makeTitle(p);if(t&&t!==p.title){p.title=t;k++;}}});
+  if(ver===4){S.settings.textVersion=5;await saveSettings();S.migrating=false;return;}
+  const n=0,m=0;let k=0;   // titles and categories are yours: never changed automatically
+  if(ver<4)S.products.forEach(p=>{const before=JSON.stringify(p.colors||[]);p.colors=numberColours(p.colors);if(JSON.stringify(p.colors)!==before)k++;});
   S.settings.textVersion=5;if(k)toast('Colour names changed to Color 1, Color 2, and colours taken out of automatic titles.');
   await saveProducts();await saveVideos();await saveSettings();
   const msg=[n&&`Tidied ${n} product title${n===1?'':'s'}.`,m&&`Moved ${m} product${m===1?'':'s'} to the right category.`].filter(Boolean).join(' ');
@@ -4202,7 +4291,7 @@ const ACT={
     const wa=$('#pdpWA');if(wa){const u=new URL(wa.href);u.searchParams.set('text',wa.dataset.base+' in '+el.dataset.c+'\n'+productURL(S.products.find(x=>x.id===parseHash().parts[1])));wa.href=u.toString();}},
   storeRemove:async el=>{const p=S.products.find(x=>x.id===el.dataset.id);if(!p)return;p.published=false;p.reviewed=true;p.removedAt=Date.now();
     await saveProducts();toast(`Removed from the store: ${p.title}. It is still saved, and you can put it back any time.`,async()=>{p.published=true;await saveProducts();route();});route();},
-  storeRestore:async el=>{const p=S.products.find(x=>x.id===el.dataset.id);if(!p)return;p.published=true;p.reviewed=true;delete p.removedAt;
+  storeRestore:async el=>{const p=S.products.find(x=>x.id===el.dataset.id);if(!p)return;if(publishBlock(p)){toast(publishBlock(p)+' first: open the product to finish it.');return;}p.published=true;p.reviewed=true;delete p.removedAt;
     await saveProducts();toast(`${p.title} is back in the store${catOn(catById(p.category))?'':', but its menu is off. Turn it on under Menus and categories'}`);route();},
   pdpQty:el=>{const s=$('#pdpQty');s.textContent=Math.max(1,Math.min(20,+s.textContent+ +el.dataset.d));},
   pdpImg:el=>{$$('#pdpThumbs button').forEach(b=>b.classList.toggle('on',b===el));const m=$('#pdpMain');const src=el.querySelector('img').src;if(src)m.src=src;},
@@ -4387,12 +4476,12 @@ const ACT={
     if(!confirm(`Delete all ${ids.length} waiting videos? This cannot be undone.`))return;const n=await deleteVideos(ids);toast(`Deleted ${n} video${n===1?'':'s'}`);route();},
   recentClear:async()=>{S.recent=[];await saveRecent();route();},
   rvEdit:el=>openProductEditor(S.products.find(p=>p.id===el.closest('.rv').dataset.id)),
-  rvPublish:async el=>{const p=S.products.find(x=>x.id===el.closest('.rv').dataset.id);p.published=true;p.reviewed=true;delete p.stage;p.approvedBy=S.email||'Admin';p.approvedAt=Date.now();await saveProducts();
+  rvPublish:async el=>{const p=S.products.find(x=>x.id===el.closest('.rv').dataset.id);if(publishBlock(p)){toast(publishBlock(p)+' before publishing.');el.closest('.rv').querySelector(!String(p.title||'').trim()?'[data-rv=title]':'[data-rv=category]')?.focus();return;}p.published=true;p.reviewed=true;delete p.stage;p.approvedBy=S.email||'Admin';p.approvedAt=Date.now();await saveProducts();
     toast(`Published: ${p.title}${catOn(catById(p.category))?'':'. Its menu is off, so turn it on to show it.'}`,async()=>{p.published=false;p.reviewed=false;await saveProducts();route();});route();},
   rvDelete:el=>{deleteProducts([el.closest('.rv').dataset.id]).then(route);},
   rvPublishAll:async()=>{const list=S.products.filter(p=>awaitingReview(p)&&(!RV.vendor||p.vendorId===RV.vendor));
     if(!confirm(`Publish all ${list.length} products? Customers will see them straight away.`))return;
-    list.forEach(p=>{p.published=true;p.reviewed=true;});await saveProducts();toast(`Published ${list.length} products`,async()=>{list.forEach(p=>{p.published=false;p.reviewed=false;});await saveProducts();route();});route();},
+    const pub=blockToast(list);if(!pub.length)return;pub.forEach(p=>{p.published=true;p.reviewed=true;});await saveProducts();toast(`Published ${pub.length} products`,async()=>{pub.forEach(p=>{p.published=false;p.reviewed=false;});await saveProducts();route();});route();},
   rvvPublish:async el=>{const v=S.videos.find(x=>x.id===el.closest('.rv').dataset.vid);v.published=true;v.reviewed=true;await saveVideos();toast('Video published');route();},
   rvvHide:async el=>{const v=S.videos.find(x=>x.id===el.closest('.rv').dataset.vid);v.published=false;v.reviewed=true;await saveVideos();toast('Video hidden from store');route();},
   rvvPublishAll:async()=>{const list=S.videos.filter(v=>!v.published&&!v.reviewed&&(!RV.vendor||v.vendorId===RV.vendor));
@@ -5786,7 +5875,7 @@ function pFix(m){
   ${sel.length?`<div class="panel fx-bulk"><b>${sel.length} selected</b>
     <select data-act-change="fxBulkVendor" aria-label="Set vendor"><option value="">Set vendor…</option>${S.vendors.map(v=>`<option value="${v.id}">${esc(v.name)}</option>`).join('')}<option value="__new">+ New vendor…</option></select>
     <span style="display:inline-flex;gap:6px"><input type="number" min="0" id="fxBulkPrice" placeholder="Vendor price" style="width:130px" aria-label="Vendor price for selected"><button class="btn sm" data-act="fxBulkPrice">Set price</button></span>
-    <select data-act-change="fxBulkCat" aria-label="Set category"><option value="">Set category…</option>${catOptions('')}</select>
+    <select data-act-change="fxBulkCat" aria-label="Set category"><option value="">Set category…</option>${catOptions('',false)}</select>
     ${sel.length>1?'<button class="btn sm" data-act="fxMerge">Group as colours of one product</button>':''}
     ${isAdmin()?'<button class="btn sm primary" data-act="fxBulkPublish">Publish</button>':''}
     <button class="btn sm ghost" data-act="fxClear">Clear selection</button></div>`:''}
@@ -5812,8 +5901,8 @@ Object.assign(ACT,{
   fxClear:()=>{FX.sel.clear();route();},
   fxBulkPrice:async()=>{const v=$('#fxBulkPrice').value;if(v===''){toast('Enter a vendor price first.');return;}
     S.products.filter(p=>FX.sel.has(p.id)).forEach(p=>{p.vendorPrice=Number(v);});await saveProducts();toast(`Vendor price set for ${FX.sel.size} products`);route();},
-  fxBulkPublish:async()=>{const list=S.products.filter(p=>FX.sel.has(p.id)),ok=list.filter(p=>!missPrice(p)&&!missPhoto(p));
-    ok.forEach(p=>{p.published=true;p.reviewed=true;});await saveProducts();toast(`Published ${ok.length}${list.length>ok.length?`. ${list.length-ok.length} still need a price or photo`:''}`);route();},
+  fxBulkPublish:async()=>{const list=S.products.filter(p=>FX.sel.has(p.id));let ok=list.filter(p=>!missPrice(p)&&!missPhoto(p));
+    ok=blockToast(ok);ok.forEach(p=>{p.published=true;p.reviewed=true;});await saveProducts();toast(`Published ${ok.length}${list.length>ok.length?`. ${list.length-ok.length} still need a price or photo`:''}`);route();},
   fxMerge:async el=>{const ids=newest(S.products.filter(p=>FX.sel.has(p.id))).reverse().map(p=>p.id);
     if(!confirm(`Combine these ${ids.length} products into one product with ${ids.length} or more colours? The first one keeps its title and description.`))return;
     el.disabled=true;el.textContent='Combining…';try{const main=await mergeProducts(ids);FX.sel.clear();toast(`Combined into “${main.title}” with ${productColours(main).length||main.imageCount} colours`);}catch(e){toast('Could not combine: '+e.message);}route();},
@@ -6172,7 +6261,7 @@ function pAddProduct(m){
       <label class="field">Your product ID<input type="text" name="myId" placeholder="${esc(nextMyId().id)}" autocomplete="off"></label>
       <label class="field full">Title customers see <span class="req">*</span><input type="text" name="title" required placeholder="For example, Chanderi Silk Kurti Set with Gota Work"></label>
       <label class="field">Vendor<select name="vendorId" id="apVendor">${vendorOptions('')}</select></label>
-      <label class="field">Category<select name="category" id="apCat">${catOptions('others')}</select><span class="hint" id="apCatHint"></span></label>
+      <label class="field">Category<select name="category" id="apCat">${catOptions('')}</select><span class="hint" id="apCatHint"></span></label>
       <label class="field">Vendor price (₹)<input type="number" min="0" name="vendorPrice" id="apVP" placeholder="Your cost"></label>
       <label class="field">MRP (₹) <span class="hint">Only if the vendor gave one</span><input type="number" min="0" name="mrp"></label>
       <label class="field">Selling price (₹) <span class="hint" id="apSellHint">Leave empty to use your markup</span><input type="number" min="0" name="sellOverride"></label>
@@ -6202,7 +6291,7 @@ async function saveManualProduct(){
   try{
     const vp=fd.get('vendorPrice')===''?null:Number(fd.get('vendorPrice')),so=fd.get('sellOverride')===''?null:Number(fd.get('sellOverride'));
     const id=uid('p'),colors0=AP.photos.map(ph=>({...(ph.colour||{name:'',hex:'#ddd'}),...(ph.price!=null&&ph.price!==''&&Number(ph.price)!==vp?{vendorPrice:Number(ph.price)}:{})})),colors=numberColours(colors0);
-    const publish=isAdmin()&&!!fd.get('publish')&&AP.photos.length>0;
+    const publish=isAdmin()&&!!fd.get('publish')&&AP.photos.length>0&&!!fd.get('category')&&catOn(catById(fd.get('category')));
     const mi=String(fd.get('myId')||'').trim();if(mi&&idTaken(mi)){err.textContent=`${mi} is already used by another product.`;AP.saving=false;btn.disabled=false;btn.textContent='Save product';return;}
     const prod={id,code:nextCode(),...(mi?{myId:mi}:{}),vendorId:vendorId||null,title,titleManual:true,description:String(fd.get('description')||'').trim(),storeDesc:String(fd.get('storeDesc')||'').trim(),
       vendorPrice:vp??(AP.photos.find(p=>p.price!=null)?.price??null),sellOverride:so,mrp:fd.get('mrp')===''?null:Number(fd.get('mrp')),category:fd.get('category'),catManual:true,
@@ -6631,14 +6720,14 @@ Object.assign(ACT,{
   oaClose:()=>{OA.list=[];showOrderAlert();},
   oaNotify:async()=>{try{await Notification.requestPermission();}catch{}showOrderAlert();},
   rvAi:async el=>{const p=prodById(el.closest('.rv').dataset.id);el.disabled=true;el.textContent='Writing…';
-    try{const r=await aiWriteText(p);p.title=r.title;p.titleManual=true;p.storeDesc=r.description;p.aiText=Date.now();if(r.category&&!p.catManual)p.category=r.category;await saveProducts();toast('Written with AI. Check it, then publish.');route();}
+    try{const r=await aiWriteText(p);p.title=r.title;p.titleManual=true;p.storeDesc=r.description;p.aiText=Date.now();await saveProducts();toast('Written with AI. Check it, then publish.');route();}
     catch(e){toast(e.message);el.disabled=false;el.textContent='Write with AI';}},
   rvAiAll:async el=>{if(AIW.running){AIW.stop=true;el.textContent='Stopping…';return;}
     const list=S.products.filter(p=>awaitingReview(p)&&!p.aiText&&(!RV.vendor||p.vendorId===RV.vendor)&&p.description);if(!list.length){toast('Every waiting product already has AI text.');return;}
     if(!confirm(`Write titles and descriptions with AI for ${list.length} products? Each one is a small charge on your Claude account.`))return;
     AIW.running=true;AIW.stop=false;let ok=0,fail=0;
     for(const p of list){if(AIW.stop)break;el.textContent=`Writing ${ok+fail+1} of ${list.length}… (tap to stop)`;
-      try{const r=await aiWriteText(p);p.title=r.title;p.titleManual=true;p.storeDesc=r.description;p.aiText=Date.now();if(r.category&&!p.catManual)p.category=r.category;ok++;if(ok%5===0)await saveProducts();}catch(e){fail++;if(/key|reach/i.test(e.message)){toast(e.message);break;}}}
+      try{const r=await aiWriteText(p);p.title=r.title;p.titleManual=true;p.storeDesc=r.description;p.aiText=Date.now();ok++;if(ok%5===0)await saveProducts();}catch(e){fail++;if(/key|reach/i.test(e.message)){toast(e.message);break;}}}
     await saveProducts();AIW.running=false;toast(`Wrote ${ok} product${ok===1?'':'s'}${fail?`. ${fail} could not be written`:''}`);route();},
   peAi:async el=>{const f=$('#peForm'),p=prodById(f.dataset.pid);el.disabled=true;el.textContent='Writing…';
     try{const r=await aiWriteText({...p,description:$('[name=description]',f)?.value??p.description});$('[name=title]',f).value=r.title;$('[name=storeDesc]',f).value=r.description;if(r.category&&f.category)f.category.value=r.category;toast('Filled in. Save to keep it.');}
@@ -7384,9 +7473,9 @@ async function openWorkbench(id,list){
         ${dm?`<div class="dup-warn" role="note"><b>Looks like a duplicate</b> of ${esc(dm.other.title)} (${esc(dm.other.code||'')}), ${Math.round(dm.score*100)}% match.</div>`:''}
         ${p.backNote&&st==='edit'?`<div class="wb-back" role="note"><b>Sent back:</b> ${esc(p.backNote)}</div>`:''}</section>
       <section class="wb-col wb-edit">
-        <label class="field">Title customers see<div style="display:flex;gap:6px"><input name="title" value="${esc(p.title)}" style="flex:1"><button type="button" class="btn sm" data-act="wbSuggest" title="Make a title from the vendor’s message">Suggest</button></div></label>
+        <label class="field">Title customers see <span class="req">*</span><div style="display:flex;gap:6px"><input name="title" value="${esc(p.title)}" style="flex:1" placeholder="Type the title, for example Pink Rayon Kurti Set"><button type="button" class="btn sm" data-act="wbSuggest" title="Make a title from the vendor’s message">Suggest</button></div></label>
         <div class="grid2"><label class="field">Your product ID<input type="text" name="myId" value="${esc(p.myId||'')}" placeholder="${esc(nextMyId().id)}" autocomplete="off"></label>
-          <label class="field">Category<select name="category">${S.categories.filter(c=>c.enabled!==false||c.id===p.category).map(c=>`<option value="${c.id}" ${c.id===p.category?'selected':''}>${esc(c.name)}</option>`).join('')}</select></label>
+          <label class="field">Category <span class="req">*</span><select name="category">${catOptions(p.category)}</select></label>
           <label class="field">Selling price<input name="sell" type="number" min="0" inputmode="decimal" value="${p.sellOverride??''}" placeholder="${sellPrice({...p,sellOverride:null})??''} (automatic)"></label>
           <label class="field">Stock<select name="stock"><option value="in" ${p.stock!=='out'?'selected':''}>In stock</option><option value="out" ${p.stock==='out'?'selected':''}>Sold out</option></select></label>
           <label class="field">Vendor<select name="vendorId"><option value="">No vendor</option>${S.vendors.map(x=>`<option value="${x.id}" ${x.id===p.vendorId?'selected':''}>${esc(x.name)}</option>`).join('')}<option value="__new">+ New vendor…</option></select></label>
@@ -7394,7 +7483,7 @@ async function openWorkbench(id,list){
           <label class="field">MRP (₹) <span class="hint">Shows a discount when higher</span><input name="mrp" type="number" min="0" value="${p.mrp??''}"></label></div>
         <div id="wbCols">${wbColsHTML()}</div>
         <label class="field">The vendor’s message <span class="hint">Only staff see this. Prices and numbers are never shown to customers.</span><textarea name="description" rows="5">${esc(p.description||'')}</textarea></label>
-        <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn sm" data-act="wbRedo">Fill in again from the message</button><button type="button" class="btn sm" data-act="wbAi">Write with AI</button></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn sm" data-act="wbRedo">Read the prices again</button><button type="button" class="btn sm" data-act="wbAi">Write with AI</button></div>
         <label class="field">Description customers see<span class="hint">Leave empty to use the automatic one (shown faintly).</span><textarea name="storeDesc" rows="8" placeholder="${esc(auto)}">${esc(p.storeDesc||'')}</textarea></label>
         <label class="switch"><span class="txt"><b>Show in the home page banner</b></span><input type="checkbox" name="featured" ${p.featured?'checked':''}></label>
         <label class="field">Note for the approver (optional)<input name="note" value="${esc(p.editNote||'')}" placeholder="For example: price checked with the vendor"></label>
@@ -7445,7 +7534,7 @@ Object.assign(ACT,{
   wbPrev:()=>wbGo(WB.i-1),wbNext:()=>wbGo(WB.i+1),
   wbSave:async()=>{if(!await wbApply())return;await saveProducts();const m=$('#wbMsg');m.style.color='var(--ok)';m.textContent='Saved.';},
   wbReady:async()=>{const p=await wbApply();if(!p)return;p.stage='ready';p.readyBy=S.email||(isAdmin()?'Admin':'Employee');p.readyAt=Date.now();delete p.backNote;await saveProducts();await wbAfter('Sent for approval');},
-  wbApprove:async()=>{const p=await wbApply();if(!p)return;if(!p.imageCount){$('#wbMsg').style.color='var(--rose)';$('#wbMsg').textContent='Add a photo before publishing.';await saveProducts();return;}p.published=true;p.reviewed=true;delete p.stage;delete p.backNote;p.approvedBy=S.email||'Admin';p.approvedAt=Date.now();await saveProducts();await wbAfter(p.published?'Approved and published':'Kept out of the store as a duplicate');},
+  wbApprove:async()=>{const p=await wbApply();if(!p)return;const why=publishBlock(p);if(why){$('#wbMsg').style.color='var(--rose)';$('#wbMsg').textContent=why+' before publishing.';await saveProducts();(!String(p.title||'').trim()?$('#wbForm [name=title]'):$('#wbForm [name=category]'))?.focus();return;}p.published=true;p.reviewed=true;delete p.stage;delete p.backNote;p.approvedBy=S.email||'Admin';p.approvedAt=Date.now();await saveProducts();await wbAfter(p.published?'Approved and published':'Kept out of the store as a duplicate');},
   wbBack:async()=>{const note=prompt('What should be changed? This note is shown to whoever edits it.','');if(note===null)return;const p=await wbApply();if(!p)return;p.stage='edit';p.backNote=note.trim()||'Please check this product again.';await saveProducts();await wbAfter('Sent back for editing');},
   wbDelete:async()=>{const p=prodById($('#wbForm').dataset.pid);if(!confirm(`Delete “${p.title}”? This cannot be undone.`))return;WB.edited=false;await deleteProducts([p.id]);WB.list=WB.list.filter(x=>x!==p.id);WB.dirty=true;
     if(WB.list.length){WB.i=Math.min(WB.i,WB.list.length-1);openWorkbench(WB.list[WB.i],WB.list);}else $('#wbDlg').close();},
@@ -7453,8 +7542,8 @@ Object.assign(ACT,{
   rvFull:el=>{const id=el.closest('.rv').dataset.id;openWorkbench(id,$$('.rv[data-id]').map(x=>x.dataset.id));},
   rvReady:async el=>{const p=prodById(el.closest('.rv').dataset.id);p.stage='ready';p.readyBy=S.email||(isAdmin()?'Admin':'Employee');p.readyAt=Date.now();delete p.backNote;await saveProducts();toast('Sent for approval');route();},
   rvStage:el=>{RV.stage=el.dataset.s;route();},
-  rvApproveAll:async()=>{const list=S.products.filter(p=>awaitingReview(p)&&p.stage==='ready'&&(!RV.vendor||p.vendorId===RV.vendor));if(!list.length)return;
-    if(!confirm(`Approve and publish all ${list.length} products that are ready?`))return;const who=S.email||'Admin',now=Date.now();list.forEach(p=>{p.published=true;p.reviewed=true;delete p.stage;p.approvedBy=who;p.approvedAt=now;});await saveProducts();toast(`Published ${list.filter(p=>p.published).length}`);route();},
+  rvApproveAll:async()=>{let list=S.products.filter(p=>awaitingReview(p)&&p.stage==='ready'&&(!RV.vendor||p.vendorId===RV.vendor));if(!list.length)return;
+    if(!confirm(`Approve and publish all ${list.length} products that are ready?`))return;list=blockToast(list);const who=S.email||'Admin',now=Date.now();list.forEach(p=>{p.published=true;p.reviewed=true;delete p.stage;p.approvedBy=who;p.approvedAt=now;});await saveProducts();toast(`Published ${list.filter(p=>p.published).length}`);route();},
   rvSendBack:async el=>{const p=prodById(el.closest('.rv').dataset.id);const note=prompt('What should be changed?','');if(note===null)return;p.stage='edit';p.backNote=note.trim()||'Please check this product again.';await saveProducts();toast('Sent back for editing');route();},
 });
 
@@ -7722,7 +7811,7 @@ async function openQuickProduct(p,isNew,k=null){
       <label class="field qp-newv" hidden>New vendor's name<input type="text" name="newVendor"></label>
       <label class="field">Vendor price (₹)<input type="number" min="0" name="vendorPrice" value="${p.vendorPrice??''}"></label>
       <label class="field">Selling price (₹)<input type="number" min="0" name="sell" value="${p.sellOverride??''}" placeholder="${isNew?'From the vendor price':sellPrice({...p,sellOverride:null})??''}"></label>
-      <label class="field">Category<select name="category">${S.categories.filter(c=>c.enabled!==false||c.id===p.category).map(c=>`<option value="${c.id}" ${c.id===(p.category||'others')?'selected':''}>${esc(c.name)}</option>`).join('')}</select></label>
+      <label class="field">Category<select name="category">${catOptions(isNew?'':p.category)}</select></label>
       <label class="field">Your product ID<input type="text" name="myId" value="${esc(p.myId||'')}" placeholder="${esc(nextMyId().id)}" autocomplete="off"></label>
       <label class="field">Stock<select name="stock"><option value="in" ${p.stock!=='out'?'selected':''}>In stock</option><option value="out" ${p.stock==='out'?'selected':''}>Sold out</option></select></label></div>
     <label class="field">Vendor's description or notes<textarea name="description" rows="3">${esc(p.description||'')}</textarea></label>
@@ -7757,7 +7846,7 @@ async function qpSave(){
     Object.assign(p,{title,vendorId:vendorId||null,vendorPrice:vp,sellOverride:sell,category:f.category.value,stock:f.stock.value,description:f.description.value.trim()});
     if(myId)p.myId=myId;else delete p.myId;if(f.category.value!==categorize(p.description||title))p.catManual=true;
     if(isNew){const where=f.where.value;Object.assign(p,{code:nextCode(),currency:S.settings.currency,storeDesc:'',colors:[],createdAt:Date.now(),featured:false,fromOrder:true,
-        published:where==='live',reviewed:where!=='review',private:where==='private',imageCount:0});S.products.push(p);}
+        published:where==='live'&&!publishBlock({...p,imageCount:QP.photos.length}),reviewed:where!=='review',private:where==='private',imageCount:0});S.products.push(p);}
     const before=isNew?[]:((await getImages(p.id).catch(()=>null))||[]);
     if(QP.photos.length&&(isNew||JSON.stringify(before)!==JSON.stringify(QP.photos))){
       const fps=[];for(const u of QP.photos){try{fps.push(packFP(fingerprint(await loadImg(u))));}catch{fps.push(null);}}
@@ -8429,7 +8518,8 @@ function seoCollectionDesc(c,list){const st=S.settings,fab=[...new Set(list.flat
   return cut(`Shop ${list.length} ${name} online at ${st.brand}${fab.length?`, in ${fab.join(', ')}`:''}. Handpicked designs, delivered across India${trust?` with ${trust}`:''}.`,158);}
 
 // ----- import page: the WhatsApp message(s) each product came from -----
-function rowMessages(c,r){const names=new Set(r.images.map(f=>f.name.toLowerCase())),hit=[];
+function rowMessages(c,r){if(r.msgIdx?.length){const a=Math.min(...r.msgIdx),b=Math.max(...r.msgIdx);return c.messages.slice(a,b+1).filter((m,k)=>r.msgIdx.includes(a+k)||m.sender===r.sender&&!splitAttachments(m.text,c.files).files.length&&false);}
+  const names=new Set(r.images.map(f=>f.name.toLowerCase())),hit=[];
   c.messages.forEach((m,i)=>{const sp=splitAttachments(m.text,c.files);if(sp.files.some(f=>names.has(f.name.toLowerCase())))hit.push(i);});
   if(!hit.length)return [];
   let a=Math.min(...hit),b=Math.max(...hit);const desc=String(r.description||'').toLowerCase(),inDesc=m=>{const sp=splitAttachments(m.text,c.files);return !sp.files.length&&sp.rest.length>2&&desc.includes(sp.rest.toLowerCase().slice(0,40));};
@@ -8652,11 +8742,10 @@ Object.assign(ACT,{
   wbPhMain:el=>{const i=+el.dataset.i;WB.imgs.unshift(WB.imgs.splice(i,1)[0]);WB.cols.unshift(WB.cols.splice(i,1)[0]);WB.cur=0;wbRedrawPhotos();},
   wbPhLeft:el=>{const i=+el.dataset.i;[WB.imgs[i-1],WB.imgs[i]]=[WB.imgs[i],WB.imgs[i-1]];[WB.cols[i-1],WB.cols[i]]=[WB.cols[i],WB.cols[i-1]];wbRedrawPhotos();},
   wbAi:async el=>{const f=$('#wbForm'),p=prodById(f.dataset.pid);el.disabled=true;const t=el.textContent;el.textContent='Writing…';
-    try{const r=await aiWriteText({...p,description:f.description.value,category:f.category.value});f.title.value=r.title;f.storeDesc.value=r.description;if(r.category)f.category.value=r.category;WB.edited=true;wbPreview();toast('Written with AI. Check it, then save.');}
+    try{const r=await aiWriteText({...p,description:f.description.value,category:f.category.value});f.title.value=r.title;f.storeDesc.value=r.description;WB.edited=true;wbPreview();toast('Written with AI. Check it, then save.');}
     catch(e){toast(e.message);}el.disabled=false;el.textContent=t;},
-  wbRedo:()=>{const f=$('#wbForm'),p=prodById(f.dataset.pid),desc=f.description.value,cat=categorize(desc)||f.category.value;
-    f.category.value=cat;f.title.value=makeTitle({...p,description:desc,category:cat,colors:WB.cols,titleManual:false});const pr=extractPrice(desc);const vp=pr?pr.value:barePrice(desc);if(vp!=null)f.vendorPrice.value=vp;
-    const mrp=extractMRP(desc);if(mrp)f.mrp.value=mrp;f.storeDesc.value='';WB.edited=true;wbPreview();toast('Filled in again from the vendor’s message.');},
+  wbRedo:()=>{const f=$('#wbForm'),desc=f.description.value;const pr=extractPrice(desc);const vp=pr?pr.value:barePrice(desc);if(vp!=null)f.vendorPrice.value=vp;
+    const mrp=extractMRP(desc);if(mrp)f.mrp.value=mrp;f.storeDesc.value='';WB.edited=true;wbPreview();toast('Prices filled in again from the vendor’s message.');},
 });
 
 // ================= Quick add: photos, the vendor's message and the vendor's name =================
@@ -8665,12 +8754,12 @@ const qaPhotosHTML=()=>QA.photos.map((p,i)=>`<div class="qa-ph"><img src="${p.da
 async function qaAdd(files){for(const f of files){if(!/^image\//.test(f.type)||QA.photos.length>=12)continue;const u=URL.createObjectURL(f);
   try{const {data,img}=await compressImage(u,1100,0.8);QA.photos.push({data,fp:fingerprint(img),colour:dominantColour(img)});}catch{}URL.revokeObjectURL(u);}const b=$('#qaPhotos');if(b)b.innerHTML=qaPhotosHTML();}
 function quickAddHTML(){return `<form class="panel qa" id="qaForm" novalidate><h2 style="margin-top:0">Quick add</h2>
-  <p class="small muted" style="margin:0">Add the photos, paste the vendor’s message, and type the vendor’s name. Everything else is filled in for you: title, category, prices, colours, your product ID and the description. Then you check it and publish.</p>
+  <p class="small muted" style="margin:0">Add the photos, paste the vendor’s message, and type the vendor’s name. The prices, colours, your product ID and the description are filled in for you. Then you add the title, choose the category and publish.</p>
   <label class="vp-drop" id="qaDrop" tabindex="0"><input type="file" id="qaFiles" accept="image/*" multiple hidden><b>1. Photos</b><span class="small muted">Choose, drag them here, or copy a photo and press Ctrl+V. The first is the main photo.</span></label>
   <div class="qp-photos" id="qaPhotos">${qaPhotosHTML()}</div>
   <label class="field"><b>2. The vendor’s message</b><span class="hint">Paste it as they sent it, with the rate. Prices and phone numbers are never shown to customers.</span><textarea name="desc" rows="6" placeholder="Pure rayon kurti with pant and dupatta&#10;Size M to XXL&#10;Rate 450"></textarea></label>
   <label class="field"><b>3. Vendor’s name</b><input type="text" name="vendor" list="qaVendors" autocomplete="off" placeholder="Start typing, or a new name"><datalist id="qaVendors">${S.vendors.map(v=>`<option value="${esc(v.name)}">`).join('')}</datalist></label>
-  <label class="small" style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="ai" id="qaAi"> Polish the title and description with AI (needs your Claude key on the Market prices page)</label>
+  <label class="small" style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="ai" id="qaAi"> Suggest a title and description with AI (needs your Claude key on the Market prices page)</label>
   <p class="small" id="qaErr" style="color:var(--rose);margin:0" role="alert"></p>
   <div><button class="btn primary" id="qaGo">Fill in everything</button></div></form>`;}
 async function quickAddCreate(){if(QA.busy)return;const f=$('#qaForm'),err=$('#qaErr'),desc=f.desc.value.trim(),vname=f.vendor.value.trim();
@@ -8678,16 +8767,16 @@ async function quickAddCreate(){if(QA.busy)return;const f=$('#qaForm'),err=$('#q
   QA.busy=true;const btn=$('#qaGo');btn.disabled=true;btn.textContent='Filling in…';err.textContent='';
   try{let vendorId=null;if(vname){let v=S.vendors.find(x=>x.name.trim().toLowerCase()===vname.toLowerCase());
       if(!v){v={id:uid('v'),name:vname,phone:'',contact:'',email:'',tax:'',address:'',notes:'',createdAt:Date.now()};S.vendors.push(v);await saveVendors();}vendorId=v.id;}
-    const cat=categorize(desc||'')||'others',colors=numberColours(QA.photos.map(p=>p.colour||{name:'',hex:'#ddd'})),pr=extractPrice(desc),vp=pr?pr.value:barePrice(desc);
+    const cat='',colors=numberColours(QA.photos.map(p=>p.colour||{name:'',hex:'#ddd'})),pr=extractPrice(desc),vp=pr?pr.value:barePrice(desc);
     const {id:myId,n}=nextMyId();IDS().next=n+1;
     const p={id:uid('p'),code:nextCode(),myId,vendorId,description:desc,storeDesc:'',category:cat,colors,vendorPrice:vp??null,mrp:extractMRP(desc),sellOverride:null,stock:'in',featured:false,
       published:false,reviewed:false,createdAt:Date.now(),imageCount:QA.photos.length,fp:QA.photos.map(x=>packFP(x.fp)),source:'quick',addedBy:S.email||(isAdmin()?'Admin':'Employee')};
-    p.title=makeTitle(p);
+    p.title='';   // you write the title
     if(QA.photos.length)await Media.putProduct(p,(await compressImage(QA.photos[0].data,360,0.74)).data,QA.photos.map(x=>x.data));
     S.products.push(p);await saveProducts();await saveSettings();
-    if(f.ai.checked&&desc){btn.textContent='Writing with AI…';try{const r=await aiWriteText(p);p.title=r.title;p.titleManual=true;p.storeDesc=r.description;p.aiText=Date.now();if(r.category)p.category=r.category;await saveProducts();}catch(e){toast('AI could not write it ('+e.message+'). The automatic title and description are used.');}}
+    if(f.ai.checked&&desc){btn.textContent='Writing with AI…';try{const r=await aiWriteText(p);p.title=r.title;p.titleManual=true;p.storeDesc=r.description;p.aiText=Date.now();await saveProducts();}catch(e){toast('AI could not write it ('+e.message+'). The automatic title and description are used.');}}
     QA.photos=[];f.reset();$('#qaPhotos').innerHTML='';
-    WB.tab='edit';await openWorkbench(p.id,[p.id]);toast('Filled in. Check everything, then publish.');}
+    WB.tab='edit';await openWorkbench(p.id,[p.id]);setTimeout(()=>$('#wbForm [name=title]')?.focus(),200);toast('Filled in. Add the title and category, then publish.');}
   catch(e){err.textContent='Could not create it: '+e.message;}
   QA.busy=false;btn.disabled=false;btn.textContent='Fill in everything';}
 document.addEventListener('submit',e=>{if(e.target.id==='qaForm'){e.preventDefault();quickAddCreate();}});
@@ -8697,5 +8786,119 @@ document.addEventListener('dragleave',e=>{e.target.closest?.('#qaDrop')?.classLi
 document.addEventListener('drop',e=>{const z=e.target.closest?.('#qaDrop');if(!z)return;e.preventDefault();z.classList.remove('over');qaAdd([...e.dataTransfer.files]);});
 document.addEventListener('paste',e=>{if(!$('#qaForm')||$('dialog[open]'))return;const fs=[...(e.clipboardData?.files||[])].filter(x=>/^image\//.test(x.type));if(fs.length){e.preventDefault();qaAdd(fs);}});
 Object.assign(ACT,{qaDel:el=>{QA.photos.splice(+el.dataset.i,1);$('#qaPhotos').innerHTML=qaPhotosHTML();}});
+
+// ================= matching descriptions to photos and videos in an imported chat =================
+// Vendors write the description before the photos, after them, as a caption on a photo, or next to a video,
+// and often mix these in one chat. This works it out product by product:
+//   1. Photos and videos sent together (no text between, within about two minutes) are one product.
+//   2. A caption on a photo belongs to its product.
+//   3. Each text message goes to the photos just before it or just after it. Which one is decided for the whole
+//      chat by trying both and keeping the one that gives the most products a description, then corrected
+//      message by message (a product that already has a caption does not take another; timing breaks ties).
+//   4. Stickers and words like "next" or "ok" separate products. Messages from other people are never descriptions.
+function msgMinutes(m){const d=String(m.date||'').split(/[\/.\-]/).map(Number),t=String(m.time||'').match(/(\d{1,2})[:.](\d{2})(?:[:.]\d{2})?\s*([ap])?/i);
+  let h=t?+t[1]:0;const mi=t?+t[2]:0;if(t&&t[3]){const pm=/p/i.test(t[3]);if(pm&&h<12)h+=12;if(!pm&&h===12)h=0;}
+  const y=d[2]>31?d[2]:d[0]>31?d[0]:(d[2]||0);return ((y%100)*400+(d[1]||0)*31+(d[0]||0))*1440+h*60+mi;}
+function analyseChat(msgs,fileMap,vmap,{order='auto',sender='*',ignore=new Set(DEFAULT_IGNORE)}={}){
+  let omitted=0,skipped=0;const bySender=new Map();
+  msgs.forEach((m,i)=>{if(sender!=='*'&&m.sender!==sender)return;
+    const sp=splitAttachments(m.text,fileMap);if(sp.omitted)omitted++;
+    const vids=[...new Set((m.text.match(/[^\s<>:"*?|\\\/]+\.(?:mp4|mov|3gp|m4v|webm)/gi)||[]).map(t=>t.toLowerCase()))].filter(t=>vmap.has(t)).map(t=>vmap.get(t));
+    const text=cleanText(sp.rest.replace(/[^\s<>:"]+\.(?:mp4|mov|3gp|m4v|webm)/gi,''),ignore),t=msgMinutes(m);
+    const e=sp.files.length||vids.length?{k:'m',i,t,imgs:sp.files,vids,cap:text,date:m.date}:text?{k:'t',i,t,text}:{k:'x',i,t};
+    if(e.k==='x'&&!sp.otherMedia&&sp.rest)skipped++;
+    if(!bySender.has(m.sender))bySender.set(m.sender,[]);bySender.get(m.sender).push(e);});
+  const products=[],videos=[];
+  for(const [who,evs] of bySender){
+    // 1-2: blocks of media and of text
+    const B=[];let cur=null;
+    evs.forEach((e,j)=>{
+      if(e.k==='m'){
+        let join=cur&&cur.k==='m'&&Math.abs(e.t-cur.tEnd)<=2;                 // photos of one product are sent together
+        if(join&&cur.cap&&e.cap&&e.cap!==cur.cap)join=false;                 // two different captions: two products
+        if(join&&e.cap&&!cur.cap&&Math.abs(e.t-cur.tEnd)>1)join=false;       // a new caption a little later: a new product
+        if(join&&cur.cap&&!e.cap){                                            // a photo after a captioned one: same product only if sent together
+          const nx=evs.slice(j+1).find(x=>!(x.k==='m'&&!x.cap));
+          if(Math.abs(e.t-cur.tEnd)>2||(nx&&nx.k==='t'&&Math.abs(nx.t-e.t)<=10))join=false;}
+        if(join){cur.items.push(e);cur.tEnd=e.t;if(e.cap&&!cur.cap)cur.cap=e.cap;}
+        else{cur={k:'m',items:[e],tStart:e.t,tEnd:e.t,cap:e.cap||'',texts:[]};B.push(cur);}}
+      else if(e.k==='t'){const gap=Math.abs(e.t-(cur?.tEnd??-1e9)),more=e.text.length<=40||/^\s*(rate|price|mrp|size|sizes|fabric|work|length|₹|rs\.?|inr)\b/i.test(e.text);   // the rate or size sent a little later
+        if(cur&&cur.k==='t'&&(gap<=1||(gap<=3&&more))){cur.parts.push(e.text);cur.idx.push(e.i);cur.tEnd=e.t;}
+        else{cur={k:'t',parts:[e.text],idx:[e.i],tStart:e.t,tEnd:e.t};B.push(cur);}}
+      else{cur={k:'x'};B.push(cur);}});
+    // 3: where each text block could go
+    const T=B.map((b,j)=>b.k!=='t'?null:{b,prev:B[j-1]?.k==='m'?B[j-1]:null,next:B[j+1]?.k==='m'?B[j+1]:null}).filter(Boolean).filter(x=>x.prev||x.next);
+    const assign=o=>T.map(x=>o==='after'?(x.prev||x.next):(x.next||x.prev));
+    const score=o=>{const got=new Map();assign(o).forEach((m,k)=>got.set(m,(got.get(m)||0)+1));const ms=B.filter(b=>b.k==='m');
+      const covered=ms.filter(m=>m.cap||got.get(m)).length,doubled=[...got].filter(([m,n])=>n>1||(n&&m.cap)).length,gap=T.reduce((a,x,k)=>{const m=assign(o)[k];return a+Math.min(Math.abs(x.b.tStart-m.tEnd),Math.abs(x.b.tEnd-m.tStart));},0);
+      return covered*1000-doubled*100-gap;};
+    const o=order==='before'||order==='after'?order:(score('before')>score('after')?'before':'after');
+    const pick=assign(o);
+    T.forEach((x,k)=>{let m=pick[k];const other=m===x.prev?x.next:x.prev;
+      if(order==='auto'&&other){const taken=m.cap||m.texts.length,otherFree=!other.cap&&!other.texts.length;
+        const near=mm=>Math.min(Math.abs(x.b.tStart-mm.tEnd),Math.abs(x.b.tEnd-mm.tStart));
+        if((taken&&otherFree)||(near(other)<=2&&near(m)>=5)||(near(m)>20&&near(other)<=3))m=other;}   // sent right after (or before) its photos
+      x.to=m;m.texts.push(x.b);});
+    if(order==='auto')T.forEach(x=>{const m=x.to,other=m===x.prev?x.next:x.prev;   // one product got two descriptions while its neighbour got none
+      if(other&&(m.texts.length>1||m.cap)&&!other.cap&&!other.texts.length){m.texts.splice(m.texts.indexOf(x.b),1);other.texts.push(x.b);x.to=other;}});
+    // 4: products and videos
+    for(const m of B.filter(b=>b.k==='m')){
+      const desc=[m.cap,...m.texts.map(t=>t.parts.join('\n'))].filter(Boolean).join('\n').trim();
+      const idx=[...m.items.map(e=>e.i),...m.texts.flatMap(t=>t.idx)].sort((a,b)=>a-b);
+      const imgs=m.items.flatMap(e=>e.imgs),vids=m.items.flatMap(e=>e.vids);
+      let prod=null;if(imgs.length){prod={sender:who,date:m.items[0].date,images:imgs,description:desc,msgIdx:idx};products.push(prod);}
+      vids.forEach(file=>videos.push({file,sender:who,date:m.items[0].date,description:desc,prod,msgIdx:idx}));}
+  }
+  products.sort((a,b)=>a.msgIdx[0]-b.msgIdx[0]);
+  videos.sort((a,b)=>a.msgIdx[0]-b.msgIdx[0]);
+  return {products,videos:videos.map(({prod,...v})=>({...v,productIndex:prod?products.indexOf(prod):null})),omitted,skipped};
+}
+
+// What stops a product going live. The store also hides anything that fails these.
+function publishBlock(p){if(!String(p.title||'').trim())return 'Add a title';
+  const c=S.categories.find(x=>x.id===p.category);if(!c)return 'Choose a category';if(!catOn(c))return `${c.name} is switched off. Choose a category that is switched on`;
+  if(!p.imageCount&&!p.media?.imgs?.length)return 'Add a photo';return '';}
+function blockToast(list){const bad=list.filter(p=>publishBlock(p));if(bad.length)toast(`${bad.length} product${bad.length===1?' was':'s were'} not published: ${publishBlock(bad[0])}${bad.length>1?' (and others)':''}. Open ${bad.length===1?'it':'them'} to finish.`);return list.filter(p=>!publishBlock(p));}
+
+// ================= phone layout: bottom tab bar, Shop sheet, sticky buy bar =================
+// Most shoppers are on phones, so the main actions sit at the bottom of the screen, within thumb reach.
+const TAB_ICON={home:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
+  shop:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'};
+function tabbarHTML(view){const f=F(),on=k=>k===view?'on':'',cur=view==='checkout'?'cart':view;
+  return `<nav class="tabbar" aria-label="Shop menu">
+    <a class="tab ${cur===''?'on':''}" href="#/" ${cur===''?'aria-current="page"':''}>${TAB_ICON.home}<span>Home</span></a>
+    <button type="button" class="tab ${cur==='c'?'on':''}" data-act="shopSheet" aria-haspopup="dialog">${TAB_ICON.shop}<span>Shop</span></button>
+    <button type="button" class="tab ${cur==='search'?'on':''}" data-act="tabSearch">${ICON.search}<span>Search</span></button>
+    ${f.wishlist?`<a class="tab ${on('wishlist')}" href="#/wishlist">${ICON.heart}<span>Wishlist</span><b class="tab-n" id="tabWish" ${S.wish.length?'':'hidden'}>${S.wish.length}</b></a>`:''}
+    ${f.cart?`<a class="tab ${cur==='cart'?'on':''}" href="#/cart">${ICON.cart}<span>Bag</span><b class="tab-n" id="tabCart" ${cartCount()?'':'hidden'}>${cartCount()}</b></a>`:''}</nav>`;}
+function shopSheetHTML(){const st=S.settings,f=F(),cats=mainMenus(),row=(h,t,sub='')=>`<a class="sheet-row" href="${h}"><span><b>${esc(t)}</b>${sub?`<span>${esc(sub)}</span>`:''}</span><i aria-hidden="true">›</i></a>`;
+  const vis=visibleProducts();
+  return `<div class="sheet-back" data-act="sheetClose"></div><div class="sheet" role="dialog" aria-modal="true" aria-label="Shop"><div class="sheet-grab" aria-hidden="true"></div>
+    <div class="sheet-head"><b>Shop</b><button type="button" class="btn sm ghost" data-act="sheetClose" aria-label="Close">✕</button></div>
+    <div class="sheet-body">
+      ${st.menus.newArrivals&&vis.length?row('#/c/new','New arrivals','Our newest pieces'):''}
+      ${cats.map(c=>{const subs=subMenus(c),n=vis.filter(p=>catGroupIds(c).includes(p.category)).length;return row(`#/c/${c.id}`,c.name,`${n} design${n===1?'':'s'}`)+subs.map(k=>`<a class="sheet-row sub" href="#/c/${k.id}"><span>${esc(k.name)}</span><i aria-hidden="true">›</i></a>`).join('');}).join('')}
+      <div class="sheet-sep"></div>
+      ${st.menus.offers&&f.ads&&activeAds().length?row('#/offers','Offers'):''}${st.menus.combos&&typeof liveRules==='function'&&liveRules().length?row('#/combos','Combo deals'):''}
+      ${f.tracking&&st.menus.track?row('#/track','Track your order'):''}${st.menus.about?row('#/info/about','About us'):''}${st.menus.contact?row('#/info/contact','Contact us'):''}
+      ${supportWA()?`<a class="btn primary block sheet-wa" href="${waLink(supportWA(),'Hi '+st.brand+', ')}" target="_blank" rel="noopener">${ICON.wa} Chat with us on WhatsApp</a>`:''}</div></div>`;}
+function openShopSheet(){let w=$('#shopSheetWrap');if(!w){w=document.createElement('div');w.id='shopSheetWrap';document.body.appendChild(w);}
+  w.innerHTML=shopSheetHTML();prettifyLinks(w);requestAnimationFrame(()=>w.classList.add('open'));document.body.classList.add('sheet-open');setTimeout(()=>w.querySelector('.sheet-row')?.focus(),250);}
+function closeShopSheet(){const w=$('#shopSheetWrap');if(!w||!w.classList.contains('open'))return;w.classList.remove('open');document.body.classList.remove('sheet-open');setTimeout(()=>{if(!w.classList.contains('open'))w.innerHTML='';},250);}
+document.addEventListener('click',e=>{if(e.target.closest?.('#shopSheetWrap a'))closeShopSheet();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeShopSheet();});
+// a sticky Add to cart / Buy now bar on product pages (phones)
+function buyBar(){const add=$('#main [data-act=addQty]');if(!add)return '';const buy=$('#main [data-act=buyNow]');
+  return `<div class="buybar" role="region" aria-label="Buy"><div class="bb-price"><span class="small muted">Price</span><b id="bbPrice">${esc($('#pdpPrice')?.textContent||'')}</b></div>
+    <button type="button" class="btn primary" data-act="bbAdd">Add to cart</button>${buy?'<button type="button" class="btn accent" data-act="bbBuy">Buy now</button>':''}</div>`;}
+function mountShell(view){document.body.classList.add('shop-shell');document.body.classList.toggle('has-buybar',false);
+  const app=$('#app');app.insertAdjacentHTML('beforeend',tabbarHTML(view||''));
+  if(view==='p'){const bb=buyBar();if(bb){app.insertAdjacentHTML('beforeend',bb);document.body.classList.add('has-buybar');
+    const pr=$('#pdpPrice');if(pr)new MutationObserver(()=>{const b=$('#bbPrice');if(b)b.textContent=pr.textContent;}).observe(pr,{childList:true,subtree:true,characterData:true});}}}
+Object.assign(ACT,{
+  shopSheet:()=>openShopSheet(),sheetClose:()=>closeShopSheet(),
+  tabSearch:()=>{window.scrollTo({top:0,behavior:'smooth'});const q=$('#shopQ');if(q){setTimeout(()=>q.focus(),250);}},
+  bbAdd:()=>$('#main [data-act=addQty]')?.click(),bbBuy:()=>$('#main [data-act=buyNow]')?.click(),
+});
 </script>
 </body></html>
