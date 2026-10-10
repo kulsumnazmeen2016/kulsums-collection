@@ -30,6 +30,38 @@ const data = await kv(["kc:settings", "kc:categories", "kc:catalog"]);
 const st = data["kc:settings"] || {};
 const cats = data["kc:categories"] || [];
 const catalog = data["kc:catalog"] || [];
+
+// ---------- check every photo before Google sees it ----------
+// A photo whose file is missing (404) is left out of the pages and the Merchant feed, so Google never turns a product
+// down for a broken photo. A product with no working photo is left out of the feed until its photos are fixed.
+// Only a clear "not found" counts: if Supabase cannot be reached, nothing is left out.
+const photoUrls = [...new Set(catalog.flatMap((p) => [p.media?.th, ...(p.media?.imgs || [])]).filter((u) => /^https?:\/\//.test(u || "")))];
+const missing = new Set();
+{
+  let i = 0;
+  const check = async () => {
+    while (i < photoUrls.length) {
+      const u = photoUrls[i++];
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          const r = await fetch(u, { method: "HEAD", signal: AbortSignal.timeout(15000) });
+          if (r.status === 400 || r.status === 404) missing.add(u);
+          break;
+        } catch { /* try once more, then count it as fine */ }
+      }
+    }
+  };
+  await Promise.all(Array.from({ length: 16 }, check));
+}
+const brokenProducts = [];
+for (const p of catalog) {
+  if (!p.media) continue;
+  const before = (p.media.imgs || []).length + (p.media.th ? 1 : 0);
+  p.media = { ...p.media, imgs: (p.media.imgs || []).filter((u) => !missing.has(u)), th: missing.has(p.media.th) ? "" : p.media.th };
+  if ((p.media.imgs.length + (p.media.th ? 1 : 0)) < before) brokenProducts.push(p);
+}
+console.log(`Photos checked: ${photoUrls.length}, missing: ${missing.size}`);
+if (brokenProducts.length) console.log(`Products with missing photos (open the staff area and use Products > Check and fix photos): ${brokenProducts.map((p) => p.code || p.title).join(", ")}`);
 const brand = st.brand || "Kulsums Collection";
 const cname = existsSync(join(root, "CNAME")) ? read("CNAME").trim() : "";
 let SITE = String(process.env.SITE_URL || st.seo?.siteUrl || (cname ? `https://${cname}` : "")).trim().replace(/[#?].*$/, "").replace(/\/?$/, "/");
@@ -202,3 +234,7 @@ writeFileSync(join(root, "merchant-feed.xml"), `<?xml version="1.0" encoding="UT
   `<item>${COLS.map((k) => k === "additional_image_link" ? r[k].split(",").filter(Boolean).map((u) => `<g:additional_image_link>${x(u)}</g:additional_image_link>`).join("") : r[k] ? `<g:${k}>${x(r[k])}</g:${k}>` : "").join("")}</item>`).join("\n")}\n</channel></rss>\n`);
 console.log(`Merchant feed: ${rows.length} products${skipped ? `, ${skipped} left out because they have no selling price or no online photo` : ""}`);
 console.log(`Built ${products.length} product pages, ${mainCats.length + 1} collections, sitemap with ${urls.length} addresses, for ${SITE}`);
+
+
+
+
