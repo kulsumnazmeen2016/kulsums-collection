@@ -2438,22 +2438,113 @@ async function repairPhotos(report){
   const work=async()=>{while(i<list.length){const p=list[i++];out.checked++;report?.(out.checked,list.length);
     const urls=[p.media.th,...(p.media.imgs||[])];let bad=false;for(const u of urls){if(!(await photoOk(u))){bad=true;break;}}
     if(!bad)continue;
-    const {data}=await sb.storage.from(BUCKET).list(`p/${p.id}`,{limit:1000});
+    const {data,error}=await sb.storage.from(BUCKET).list(`p/${p.id}`,{limit:1000});
+    if(error){out.unchecked=(out.unchecked||0)+1;continue;}   // could not look: never report it as lost
     const groups={};for(const f of data||[]){const m=f.name.match(/^([a-z0-9]+)-(th|\d+)\.jpg$/);if(!m)continue;(groups[m[1]]=groups[m[1]]||{imgs:[]});if(m[2]==='th')groups[m[1]].th=f.name;else groups[m[1]].imgs[+m[2]]=f.name;}
     const best=Object.entries(groups).filter(([,g])=>g.th&&g.imgs[0]).sort((a,b)=>parseInt(b[0],36)-parseInt(a[0],36))[0];
-    if(!best){out.lost.push(p);continue;}
+    if(!best){out.lost.push(p);if(!p.photoLost){p.photoLost=Date.now();out.flagged=(out.flagged||0)+1;}continue;}
     const g=best[1],names=g.imgs.filter(Boolean),url=n=>sb.storage.from(BUCKET).getPublicUrl(`p/${p.id}/${n}`).data.publicUrl;
     p.media={th:url(g.th),imgs:names.map(url),paths:[g.th,...names].map(n=>`p/${p.id}/${n}`)};
     if(p.imageCount!==names.length){p.imageCount=names.length;if(p.colors&&p.colors.length>names.length)p.colors=p.colors.slice(0,names.length);p.fp=(p.fp||[]).slice(0,names.length);}
-    dropImageCache(p.id);out.fixed++;}};
+    delete p.photoLost;dropImageCache(p.id);out.fixed++;}};
   await Promise.all(Array.from({length:6},work));
-  if(out.fixed)await saveProducts();
+  if(out.fixed||out.flagged)await saveProducts();
   return out;
 }
+
+// ---------- restore lost photos from the vendor's WhatsApp photos ----------
+// Every product keeps a fingerprint of each of its photos. Photos chosen here (WhatsApp chat exports as .zip,
+// or photos from the phone) are fingerprinted the same way and matched back to the right product and position.
+const RS={files:[],found:null,busy:false};
+const RS_MIN=0.8;   // the same photo resaved by WhatsApp scores 0.87 or more; the same design in another colour scores under 0.65
+const fpFastOne=f=>f&&f.d&&f.a&&f.h?{d0:parseInt(f.d.slice(0,8),16)>>>0,d1:parseInt(f.d.slice(8,16),16)>>>0,a0:parseInt(f.a.slice(0,8),16)>>>0,a1:parseInt(f.a.slice(8,16),16)>>>0,h:f.h}:null;
+const lostProducts=()=>S.products.filter(p=>p.photoLost);
+function restoreDlgHTML(note=''){
+  const lost=lostProducts(),noFp=lost.filter(p=>!(p.fp||[]).some(fpFastOne));
+  const f=RS.found;
+  return `<div class="dlg" style="max-width:640px"><h2 style="margin-top:0">Restore lost photos</h2>
+    ${lost.length?`<p><b>${lost.length}</b> product${lost.length===1?' has':'s have'} lost ${lost.length===1?'its':'their'} photos: ${lost.slice(0,8).map(p=>esc(p.myId||p.code||p.title||'')).join(', ')}${lost.length>8?'…':''}</p>
+    <p class="small muted">Choose the vendors' WhatsApp chat exports (.zip) these products came from, or the photos themselves (from WhatsApp or your gallery). You can choose many at once. Each photo is matched to the right product and position by its fingerprint, so the order does not matter and other photos are ignored.</p>
+    ${noFp.length?`<p class="small" style="color:var(--rose)">${noFp.length} of them have no fingerprint saved (${noFp.slice(0,5).map(p=>esc(p.myId||p.code||p.title||'')).join(', ')}), so add their photos in Full view.</p>`:''}
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" data-act="rsArchive">Rebuild from chat archive</button>
+    <label class="btn" style="display:inline-flex">Choose chats or photos<input type="file" id="rsFiles" accept="image/*,.zip,application/zip" multiple hidden></label></div>
+    <p class="small muted" style="margin-top:6px">The chat archive keeps its own copy only of photos that were not turned into products when the chat was imported. If a photo is not there, choose the vendor's chat export or the photos instead.</p>`
+    :`<p>No products are marked as having lost photos.</p><p class="small muted">Select Check and fix photos first. It marks any product whose photos are gone.</p>`}
+    <p id="rsNote" class="small" role="status">${note}</p>
+    ${f?`<div class="rs-res"><p><b>Found photos for ${f.done.length} of ${lost.length} product${lost.length===1?'':'s'}</b>${f.partial.length?`, and some photos for ${f.partial.length} more`:''}.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;max-height:220px;overflow:auto">${[...f.done,...f.partial].map(r=>`<figure style="margin:0;width:74px;text-align:center"><img src="${r.prev}" alt="" style="width:74px;height:92px;object-fit:cover;border-radius:6px"><figcaption class="small">${esc(r.p.myId||r.p.code||'')}<br>${r.n}/${r.of}</figcaption></figure>`).join('')}</div></div>`:''}
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap">
+      <button class="btn" data-act="dlgClose">Close</button>
+      ${f&&(f.done.length||f.partial.length)?`<button class="btn primary" data-act="rsSave">Put these photos back</button>`:''}</div></div>`;
+}
+async function openRestore(){const d=$('#dlg');d.classList.remove('video-dlg');RS.found=null;RS.slots=null;
+  if(!lostProducts().length&&HOSTED){d.innerHTML=restoreDlgHTML('Checking your photos first…');d.showModal();
+    try{await repairPhotos((n,all)=>{const x=$('#rsNote');if(x)x.textContent=`Checking photos: ${n} of ${all}…`;});PHOTO_CHECKED=true;}catch{}}
+  d.innerHTML=restoreDlgHTML();if(!d.open)d.showModal();}
+// Search the photos kept in Chats (already saved online, with fingerprints), so nothing needs choosing.
+async function rsScanArchive(say){
+  const lost=lostProducts().map(p=>({p,fps:(p.fp||[]).map(fpFastOne)})).filter(x=>x.fps.some(Boolean));
+  const slots=new Map();let n=0;const chats=await loadChatList();
+  for(const [ci,c] of chats.entries()){say(`Searching chat ${ci+1} of ${chats.length}: ${c.name||''}…`);const chat=await loadChat(c.id);if(!chat)continue;
+    for(const mm of chat.messages||[])for(const a of mm.a||[]){if(!a.u||!a.f)continue;n++;const fp=fpFastOne(a.f);if(!fp)continue;
+      for(const L of lost)for(const [i,g] of L.fps.entries()){if(!g)continue;const sc=simFast(fp,g);
+        if(sc>=RS_MIN){const k=L.p.id+':'+i,cur=slots.get(k);if(!cur||sc>cur.score)slots.set(k,{score:sc,url:a.u});}}}}
+  const done=[],partial=[];
+  for(const L of lost){const of=L.fps.length,got=L.fps.map((_,i)=>slots.get(L.p.id+':'+i)).filter(Boolean);if(!got.length)continue;
+    (got.length===of?done:partial).push({p:L.p,n:got.length,of,prev:got[0].url});}
+  RS.slots=slots;RS.found={done,partial};return {n,chats:chats.length};
+}
+async function* rsImages(files){
+  for(const f of files){
+    if(/\.zip$/i.test(f.name)||/zip/.test(f.type)){await loadLib('zip');let z;try{z=await JSZip.loadAsync(f);}catch{continue;}
+      for(const e of Object.values(z.files)){if(e.dir||!/\.(jpe?g|png|webp)$/i.test(e.name)||/__MACOSX/.test(e.name))continue;
+        const b=await e.async('blob');yield {name:e.name,blob:new Blob([b],{type:/png$/i.test(e.name)?'image/png':/webp$/i.test(e.name)?'image/webp':'image/jpeg'})};}}
+    else if(/^image\//.test(f.type))yield {name:f.name,blob:f};
+  }
+}
+async function rsScan(files){
+  const lost=lostProducts().map(p=>({p,fps:(p.fp||[]).map(fpFastOne)})).filter(x=>x.fps.some(Boolean));
+  const slots=new Map();   // "productId:index" -> {score, blob}
+  let n=0;const say=t=>{const x=$('#rsNote');if(x)x.textContent=t;};
+  for await(const im of rsImages(files)){n++;if(n%5===0)say(`Looking at photo ${n}…`);
+    const u=URL.createObjectURL(im.blob);let fp=null;
+    try{fp=fpFastOne(packFP(fingerprint(await loadImg(u))));}catch{}URL.revokeObjectURL(u);if(!fp)continue;
+    for(const L of lost)for(const [i,g] of L.fps.entries()){if(!g)continue;const sc=simFast(fp,g);
+      if(sc>=RS_MIN){const k=L.p.id+':'+i,cur=slots.get(k);if(!cur||sc>cur.score)slots.set(k,{score:sc,blob:im.blob});}}
+  }
+  const done=[],partial=[];
+  for(const L of lost){const of=L.fps.length,got=L.fps.map((_,i)=>slots.get(L.p.id+':'+i)).filter(Boolean);if(!got.length)continue;
+    const r={p:L.p,n:got.length,of,prev:URL.createObjectURL(got[0].blob)};(got.length===of?done:partial).push(r);}
+  RS.slots=slots;RS.found={done,partial};
+  return n;
+}
+document.addEventListener('change',async e=>{if(e.target.id!=='rsFiles')return;const files=[...e.target.files];e.target.value='';if(!files.length)return;
+  const x=$('#rsNote');if(x)x.textContent='Reading…';
+  try{const n=await rsScan(files);$('#dlg').innerHTML=restoreDlgHTML(n?`Looked at ${n} photo${n===1?'':'s'}.`:'No photos found in what you chose.');}
+  catch(err){if(x)x.textContent='Could not read these files: '+(err.message||err);}});
+queueMicrotask(()=>Object.assign(ACT,{   // ACT is defined further down
+  restorePhotos:()=>openRestore(),
+  rsArchive:async el=>{el.disabled=true;const say=t=>{const x=$('#rsNote');if(x)x.textContent=t;};
+    try{const r=await rsScanArchive(say);const f=RS.found;
+      $('#dlg').innerHTML=restoreDlgHTML(`Searched ${r.n} kept photo${r.n===1?'':'s'} in ${r.chats} chat${r.chats===1?'':'s'}.${f.done.length||f.partial.length?'':' None of them match. Choose the vendor\'s chat export or the photos instead.'}`);}
+    catch(e){say('Could not search the chats: '+(e.message||e));el.disabled=false;}},
+  rsSave:async el=>{if(RS.busy)return;RS.busy=true;el.disabled=true;const say=t=>{const x=$('#rsNote');if(x)x.textContent=t;};let ok=0,fail=0;const part=[];
+    const list=[...RS.found.done,...RS.found.partial];
+    for(const [k,r] of list.entries()){const p=r.p;say(`Putting back photos for ${p.myId||p.code||p.title} (${k+1} of ${list.length})…`);
+      try{const keep=[],full=[];for(const i of (p.fp||[]).keys()){const s=RS.slots.get(p.id+':'+i);if(!s)continue;const u=s.url||URL.createObjectURL(s.blob);
+          try{full.push((await compressImage(u,1100,0.8)).data);keep.push(i);}finally{if(!s.url)URL.revokeObjectURL(u);}}
+        if(!full.length)continue;
+        await Media.putProduct(p,(await compressImage(full[0],360,0.74)).data,full);
+        p.fp=keep.map(i=>p.fp[i]);if(p.colors)p.colors=keep.map(i=>p.colors[i]||{name:'',hex:'#ddd'});p.imageCount=full.length;
+        delete p.photoLost;if(keep.length<r.of)part.push(p.myId||p.code||p.title);ok++;}
+      catch(err){console.error(err);fail++;}}
+    await saveProducts();RS.busy=false;RS.found=null;RS.slots=null;
+    $('#dlg').innerHTML=restoreDlgHTML(`Photos put back for ${ok} product${ok===1?'':'s'}.${part.length?` Some photos were not found for ${part.slice(0,6).join(', ')}${part.length>6?'…':''}; add the rest in Full view.`:''}${fail?` ${fail} could not be saved; try again.`:''}`);toast(`Photos put back for ${ok} product${ok===1?'':'s'}`);route();},
+}));
 let PHOTO_CHECKED=false;
 async function autoRepairPhotos(){if(PHOTO_CHECKED||!HOSTED||S.role!=='admin')return;PHOTO_CHECKED=true;
   try{const r=await repairPhotos();if(r.fixed||r.lost.length)toast(photoRepairText(r));if(r.fixed)route();}catch(e){console.error(e);}}
-function photoRepairText(r){return [r.fixed?`Fixed the photos of ${r.fixed} product${r.fixed===1?'':'s'}.`:'',r.lost.length?`${r.lost.length} product${r.lost.length===1?' has':'s have'} no photos left in storage (${r.lost.slice(0,4).map(p=>p.myId||p.code||p.title).join(', ')}${r.lost.length>4?'…':''}). Open ${r.lost.length===1?'it':'them'} in Full view and add the photos again.`:''].filter(Boolean).join(' ')||`All photos are fine (${r.checked} products checked).`;}
+function photoRepairText(r){return [r.fixed?`Fixed the photos of ${r.fixed} product${r.fixed===1?'':'s'}.`:'',r.lost.length?`${r.lost.length} product${r.lost.length===1?' has':'s have'} no photos left in storage (${r.lost.slice(0,4).map(p=>p.myId||p.code||p.title).join(', ')}${r.lost.length>4?'…':''}). Use Restore lost photos to bring them back from the vendor's WhatsApp chat.`:'',r.unchecked?`Could not look in storage for ${r.unchecked} product${r.unchecked===1?'':'s'}; try again in a minute.`:''].filter(Boolean).join(' ')||`All photos are fine (${r.checked} products checked).`;}
 
 // ---------- photos and videos ----------
 const Media={
@@ -3623,7 +3714,7 @@ function pProducts(m,q){
   const pgd=pageSlice(list,PF.page);PF.page=pgd.pg;PF.all=list.map(p=>p.id);
   const sel=[...PF.sel].filter(id=>S.products.some(p=>p.id===id));PF.sel=new Set(sel);
   m.innerHTML=`<h1>Products</h1><p class="lede">What customers see: titles, categories, selling prices, stock, and whether each product is live.</p>
-    <p class="small" style="margin:-6px 0 12px"><button class="btn sm" data-act="fixPhotos">Check and fix photos</button> <span class="muted">If a photo shows as broken, this finds the newest copy still saved and puts it back.</span></p>
+    <p class="small" style="margin:-6px 0 12px"><button class="btn sm" data-act="fixPhotos">Check and fix photos</button> <button class="btn sm" data-act="restorePhotos">Restore lost photos</button> <span class="muted">If a photo shows as broken, this finds the newest copy still saved and puts it back.</span></p>
   <div class="filters">
     <input type="search" id="pfQ" placeholder="Search title, description, code, or your ID" value="${esc(PF.q)}" aria-label="Search products">
     <select data-pf="cat" aria-label="Category"><option value="">All categories</option>${catsFlat().map(c=>`<option value="${c.id}" ${PF.cat===c.id?'selected':''}>${esc(catLabel(c))}</option>`).join('')}</select>
