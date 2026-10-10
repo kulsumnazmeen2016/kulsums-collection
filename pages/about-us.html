@@ -1719,7 +1719,7 @@ async function loadAll(){
   S.settings=deepMerge(clone(DEFAULT_SETTINGS),st||{});S.videos=vids||[];
   S.categories=cats||clone(DEFAULT_CATS);
   if(!S.categories.some(c=>c.id==='others'))S.categories.push(clone(OTHERS));
-  S.products=prods||[];S.vendors=vens||[];S.cart=cart||[];S.wish=wish||[];S.myOrders=my||[];S.recent=recent||[];markLive();
+  S.products=prods||[];setProdBase();S.vendors=vens||[];S.cart=cart||[];S.wish=wish||[];S.myOrders=my||[];S.recent=recent||[];markLive();
   if(typeof loadPosts==='function')await loadPosts();
 }
 async function persist(key,val,shared=true){
@@ -1735,7 +1735,7 @@ const saveSettings=async()=>{
   if(ok&&S.role==='admin')await persist('kc:catalog',buildCatalog());return ok;
 };
 const saveCats=()=>persist(K.cats,S.categories);
-const saveProducts=async()=>{await dupGate();ensureSlugs();const ok=await persist(K.products,S.products.map(({_fpb,...p})=>p));if(ok)markLive();if(ok&&HOSTED)return persist('kc:catalog',buildCatalog());return ok;};
+const saveProducts=async()=>{await dupGate();ensureSlugs();await mergeRemoteProducts();const ok=await persist(K.products,S.products.map(cleanProd));if(ok){markLive();setProdBase();}if(ok&&HOSTED)return persist('kc:catalog',buildCatalog());return ok;};
 const saveVendors=()=>persist(K.vendors,S.vendors);
 const saveVideos=async()=>{const ok=await persist(K.videos,S.videos);if(ok&&HOSTED)return persist('kc:vcatalog',buildVideoCatalog());return ok;};
 const saveCart=()=>persist(K.cart,S.cart,false);
@@ -2339,8 +2339,9 @@ const PUBLIC_KEYS=['kc:settings','kc:categories','kc:catalog','kc:vcatalog','kc:
 const BUCKET='media';
 
 const Remote={
-  async getMany(keys){const {data,error}=await sb.from('kv').select('key,value').in('key',keys);if(error)throw error;const o={};for(const r of data||[])o[r.key]=r.value;return o;},
-  async set(key,value){const {error}=await sb.from('kv').upsert({key,value,updated_at:new Date().toISOString()});if(error)throw new Error(error.message||'Save refused');},
+  stamps:{},
+  async getMany(keys){const {data,error}=await sb.from('kv').select('key,value,updated_at').in('key',keys);if(error)throw error;const o={};for(const r of data||[]){o[r.key]=r.value;this.stamps[r.key]=r.updated_at;}return o;},
+  async set(key,value){const at=new Date().toISOString();const {error}=await sb.from('kv').upsert({key,value,updated_at:at});if(error)throw new Error(error.message||'Save refused');this.stamps[key]=at;},
   async upload(path,blob,type){
     const {error}=await sb.storage.from(BUCKET).upload(path,blob,{contentType:type,upsert:true,cacheControl:'31536000'});
     if(error)throw new Error(error.message||'Upload failed');
@@ -2404,6 +2405,55 @@ const Auth={
   async updatePassword(pw){const {error}=await sb.auth.updateUser({password:pw});if(error)throw new Error(error.message);},
 };
 
+// ---------- several phones and tabs editing at once ----------
+// Each save first fetches what was saved elsewhere since this page loaded, and keeps those changes.
+// A field this page did not change takes the newer value, so an old open tab can no longer undo new photos or prices.
+const cleanProd=p=>{const o={};for(const k in p)if(k[0]!=='_')o[k]=p[k];return o;};
+function setProdBase(){S._prodBase=HOSTED&&S.role?new Map(S.products.map(p=>[p.id,JSON.stringify(cleanProd(p))])):null;}
+async function mergeRemoteProducts(){
+  if(!HOSTED||!S.role||!S._prodBase)return;
+  let r;try{const {data,error}=await sb.from('kv').select('value,updated_at').eq('key',K.products).maybeSingle();if(error)return;r=data;}catch{return;}
+  const was=Remote.stamps[K.products];if(!r||!Array.isArray(r.value)||(was&&Date.parse(r.updated_at)<=Date.parse(was)))return;
+  const base=S._prodBase,rmap=new Map(r.value.map(p=>[p.id,p])),J=v=>JSON.stringify(v??null),here=new Set();let n=0;
+  const keep=[];
+  for(const p of S.products){here.add(p.id);const bs=base.get(p.id),rp=rmap.get(p.id);
+    if(bs===undefined){keep.push(p);continue;}                 // added on this page
+    const b=JSON.parse(bs);
+    if(!rp){if(J(cleanProd(p))!==bs)keep.push(p);else n++;continue;}   // deleted elsewhere: keep only if changed here
+    for(const k of new Set([...Object.keys(b),...Object.keys(rp)])){if(k[0]==='_')continue;
+      if(J(p[k])===J(b[k])&&J(rp[k])!==J(b[k])){if(rp[k]===undefined)delete p[k];else p[k]=rp[k];n++;if(k==='media')dropImageCache(p.id);}}
+    keep.push(p);}
+  for(const rp of r.value)if(!here.has(rp.id)&&!base.has(rp.id)){keep.push(rp);n++;}   // added elsewhere
+  S.products.splice(0,S.products.length,...keep);Remote.stamps[K.products]=r.updated_at;
+  if(n)console.info('Kept',n,'changes saved on another phone or tab');
+}
+
+// ---------- photo repair ----------
+// Finds products whose photo files are missing and points them at the newest photos still in storage.
+async function photoOk(u){if(!u||!/^https?:/.test(u))return true;try{const r=await fetch(u,{method:'HEAD',cache:'no-store'});return r.ok;}catch{return true;}}
+async function repairPhotos(report){
+  if(!HOSTED||!S.role)return {checked:0,fixed:0,lost:[]};
+  const list=S.products.filter(p=>p.media?.th),out={checked:0,fixed:0,lost:[]};let i=0;
+  const work=async()=>{while(i<list.length){const p=list[i++];out.checked++;report?.(out.checked,list.length);
+    const urls=[p.media.th,...(p.media.imgs||[])];let bad=false;for(const u of urls){if(!(await photoOk(u))){bad=true;break;}}
+    if(!bad)continue;
+    const {data}=await sb.storage.from(BUCKET).list(`p/${p.id}`,{limit:1000});
+    const groups={};for(const f of data||[]){const m=f.name.match(/^([a-z0-9]+)-(th|\d+)\.jpg$/);if(!m)continue;(groups[m[1]]=groups[m[1]]||{imgs:[]});if(m[2]==='th')groups[m[1]].th=f.name;else groups[m[1]].imgs[+m[2]]=f.name;}
+    const best=Object.entries(groups).filter(([,g])=>g.th&&g.imgs[0]).sort((a,b)=>parseInt(b[0],36)-parseInt(a[0],36))[0];
+    if(!best){out.lost.push(p);continue;}
+    const g=best[1],names=g.imgs.filter(Boolean),url=n=>sb.storage.from(BUCKET).getPublicUrl(`p/${p.id}/${n}`).data.publicUrl;
+    p.media={th:url(g.th),imgs:names.map(url),paths:[g.th,...names].map(n=>`p/${p.id}/${n}`)};
+    if(p.imageCount!==names.length){p.imageCount=names.length;if(p.colors&&p.colors.length>names.length)p.colors=p.colors.slice(0,names.length);p.fp=(p.fp||[]).slice(0,names.length);}
+    dropImageCache(p.id);out.fixed++;}};
+  await Promise.all(Array.from({length:6},work));
+  if(out.fixed)await saveProducts();
+  return out;
+}
+let PHOTO_CHECKED=false;
+async function autoRepairPhotos(){if(PHOTO_CHECKED||!HOSTED||S.role!=='admin')return;PHOTO_CHECKED=true;
+  try{const r=await repairPhotos();if(r.fixed||r.lost.length)toast(photoRepairText(r));if(r.fixed)route();}catch(e){console.error(e);}}
+function photoRepairText(r){return [r.fixed?`Fixed the photos of ${r.fixed} product${r.fixed===1?'':'s'}.`:'',r.lost.length?`${r.lost.length} product${r.lost.length===1?' has':'s have'} no photos left in storage (${r.lost.slice(0,4).map(p=>p.myId||p.code||p.title).join(', ')}${r.lost.length>4?'…':''}). Open ${r.lost.length===1?'it':'them'} in Full view and add the photos again.`:''].filter(Boolean).join(' ')||`All photos are fine (${r.checked} products checked).`;}
+
 // ---------- photos and videos ----------
 const Media={
   // thData: small JPEG data URL; full: array of JPEG data URLs
@@ -2414,7 +2464,7 @@ const Media={
     const imgs=[];
     for(const [i,d] of full.entries()){const path=`p/${p.id}/${ts}-${i}.jpg`;imgs.push(await Remote.upload(path,await dataURLtoBlob(d),'image/jpeg'));paths.push(path);}
     p.media={th,imgs,paths};dropImageCache(p.id);
-    Remote.remove(old);
+    // Older photo files are kept: another phone or tab may still show them, and deleting them broke photos.
   },
   async delProduct(p){
     if(!HOSTED){await DB.del(K.th(p.id));await DB.del(K.img(p.id));}else await Remote.remove(p.media?.paths);
@@ -3191,6 +3241,7 @@ const reviewCount=()=>S.products.filter(awaitingReview).length+S.videos.filter(v
 const vendorById=id=>S.vendors.find(v=>v.id===id);
 
 async function renderStaff(parts,q){
+  if(S.role==='admin')setTimeout(autoRepairPhotos,1500);
   document.body.classList.remove('shop-shell','has-buybar');
   document.title='Staff | '+S.settings.brand;
   {let m=document.head.querySelector('meta[name=robots]');if(!m){m=document.createElement('meta');m.name='robots';document.head.appendChild(m);}m.content='noindex,nofollow';}
@@ -3571,6 +3622,7 @@ function pProducts(m,q){
   const pgd=pageSlice(list,PF.page);PF.page=pgd.pg;PF.all=list.map(p=>p.id);
   const sel=[...PF.sel].filter(id=>S.products.some(p=>p.id===id));PF.sel=new Set(sel);
   m.innerHTML=`<h1>Products</h1><p class="lede">What customers see: titles, categories, selling prices, stock, and whether each product is live.</p>
+    <p class="small" style="margin:-6px 0 12px"><button class="btn sm" data-act="fixPhotos">Check and fix photos</button> <span class="muted">If a photo shows as broken, this finds the newest copy still saved and puts it back.</span></p>
   <div class="filters">
     <input type="search" id="pfQ" placeholder="Search title, description, code, or your ID" value="${esc(PF.q)}" aria-label="Search products">
     <select data-pf="cat" aria-label="Category"><option value="">All categories</option>${catsFlat().map(c=>`<option value="${c.id}" ${PF.cat===c.id?'selected':''}>${esc(catLabel(c))}</option>`).join('')}</select>
@@ -8736,6 +8788,11 @@ async function wbSavePhotos(p){if(!WB.photosChanged&&!WB.colsChanged)return;
   if(WB.photosChanged){if(WB.imgs.length){const fps=[];for(const u of WB.imgs){try{fps.push(packFP(fingerprint(await loadImg(u))));}catch{}}p.fp=fps;p.imageCount=WB.imgs.length;
       await Media.putProduct(p,(await compressImage(WB.imgs[0],360,0.74)).data,WB.imgs);}else{await Media.delProduct(p);p.media=null;p.imageCount=0;p.fp=[];}}
   p.colors=WB.imgs.length?WB.cols.slice(0,WB.imgs.length).map(c=>c||{name:'',hex:'#ddd'}):[];WB.photosChanged=false;WB.colsChanged=false;}
+Object.assign(ACT,{
+  fixPhotos:async el=>{el.disabled=true;const t=el.textContent;
+    try{const r=await repairPhotos((n,all)=>{el.textContent=`Checking ${n} of ${all}…`;});PHOTO_CHECKED=true;toast(photoRepairText(r));route();}
+    catch(e){toast('Could not check the photos: '+(e.message||e));}el.disabled=false;el.textContent=t;},
+});
 Object.assign(ACT,{
   wbPhDel:el=>{const i=+el.dataset.i;if(!confirm(`Remove photo ${i+1}?`))return;WB.imgs.splice(i,1);WB.cols.splice(i,1);wbRedrawPhotos();},
   wbPhMain:el=>{const i=+el.dataset.i;WB.imgs.unshift(WB.imgs.splice(i,1)[0]);WB.cols.unshift(WB.cols.splice(i,1)[0]);WB.cur=0;wbRedrawPhotos();},
