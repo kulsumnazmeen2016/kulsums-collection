@@ -2735,6 +2735,73 @@ function howToOrderHTML(){const sw=waOrderOn(),po=photoOrderOn();
     ${sw?`<a class="how-card" href="#/whatsapp"><span class="how-ico" aria-hidden="true">💬</span><b>Order on WhatsApp</b><span>Send us a product and we confirm your order in the chat.</span><i>Order on WhatsApp →</i></a>`:''}
   </div></section>`;}
 
+let VWA_ID=null;
+// ---------- videos: post to Instagram as a Reel, and send to a customer on WhatsApp ----------
+const VID_CAPTION="✨ {title} ✨\n\n{desc}\n\n🛍️ Shop now: {link}\n📸 Follow us: {handle}\n💬 Order on WhatsApp: {whatsapp}\n\n{hashtags}";
+function igHandle(){const u=IGS.conn?.username;if(u)return '@'+u;const v=String(S.settings.social?.instagram||'').trim();if(!v)return '';
+  const m=v.match(/instagram\.com\/([A-Za-z0-9._]+)/i);return '@'+(m?m[1]:v.replace(/^@/,''));}
+const videoLink=v=>{const p=v.productId&&prodById(v.productId);return p&&p.published?productURL(p):siteBase()+'videos?v='+encodeURIComponent(v.id);};
+function videoCaption(v,tpl){const sw=supportWA(),p=v.productId&&prodById(v.productId);
+  const tags=[...new Set([...(IG().hashtags||`#${S.settings.brand.replace(/[^A-Za-z0-9]+/g,'')} #NewArrival #IndianFashion #Reels`).split(/\s+/).filter(Boolean)])].join(' ');
+  const price=p&&sellPrice(p)!=null?`Price: ${moneyINR(sellPrice(p))}`:'';
+  return (tpl||IG().videoCaption||VID_CAPTION).replace(/\{title\}/g,v.title||S.settings.brand).replace(/\{desc\}/g,[String(v.desc||'').trim(),price].filter(Boolean).join('\n'))
+    .replace(/\{link\}/g,videoLink(v)).replace(/\{website\}/g,siteBase()).replace(/\{handle\}/g,igHandle()).replace(/\{whatsapp\}/g,sw?'https://wa.me/'+waNum(sw):'')
+    .replace(/\{hashtags\}/g,tags).replace(/\{brand\}/g,S.settings.brand).split('\n').filter((l,i,a)=>!(/:\s*$/.test(l.trim())&&/^(📸|💬|🛍️)/u.test(l.trim()))).join('\n').replace(/\n{3,}/g,'\n\n').trim();}
+function vidIgStatus(v){const r=IGS.posts?.['video:'+v.id];if(!r)return '';
+  return r.status==='published'?`<p class="small" style="color:var(--ok)">On Instagram${r.permalink?`: <a href="${esc(r.permalink)}" target="_blank" rel="noopener">see the Reel</a>`:''}</p>`
+    :r.status==='failed'?`<p class="small" style="color:var(--rose)">Last try failed: ${esc(r.error_message||'')}</p>`:'';}
+async function openVideoIG(id){const v=S.videos.find(x=>x.id===id);if(!v)return;if(HOSTED&&S.role)await Promise.all([igLoadStatus(),IGS.boot?null:igLoadPosts()]);
+  const d=$('#dlg');d.classList.remove('video-dlg');const conn=IGS.conn||{};
+  d.innerHTML=`<div class="dlg ig-dlg" data-vid="${v.id}" style="max-width:620px"><h2 style="margin-top:0">Post this video to Instagram as a Reel</h2>
+    ${!HOSTED||!v.url?'<p style="color:var(--rose)">This video is not saved online, so Instagram cannot fetch it.</p>':''}
+    ${conn.connected?`<p class="small muted">Posting as <b>@${esc(conn.username||'')}</b>.</p>`:`<p class="small" style="color:var(--rose)">Instagram is not connected. ${isAdmin()?'<a href="#/staff/settings?s=insta" data-act="dlgClose">Connect Instagram</a>':''}</p>`}
+    <label class="field">Caption <span class="hint">Your website link, Instagram handle and WhatsApp are filled in. Edit freely (up to 2,200 characters).</span><textarea id="vigCap" rows="11">${esc(videoCaption(v))}</textarea></label>
+    <p class="small muted">Instagram accepts MP4 or MOV videos from 3 seconds to 15 minutes. Processing usually takes under a minute.</p>
+    ${vidIgStatus(v)}<p class="small" id="vigNote" role="status"></p>
+    <div class="dlg-actions"><button class="btn" data-act="dlgClose">Close</button><button class="btn" data-act="vigCopy">Copy caption</button>
+      <button class="btn primary" data-act="vigPost" ${!HOSTED||!v.url||!conn.connected||!isAdmin()?'disabled':''}>${IGS.posts?.['video:'+v.id]?.status==='published'?'Post again':'Publish Reel'}</button></div></div>`;
+  d.showModal();}
+function openVideoWA(id){const v=S.videos.find(x=>x.id===id);if(!v)return;VWA_ID=id;const d=$('#dlg');d.classList.remove('video-dlg');
+  const people=[...(S.contacts||[]).map(c=>({n:c.name||'',p:c.phone||c.number||c.whatsapp||''})),...[...(typeof OCACHE!=='undefined'?OCACHE.values():[])].map(o=>({n:o.customer?.name||'',p:o.customer?.phone||''}))]
+    .filter(x=>String(x.p).replace(/\D/g,'').length>=10).filter((x,i,a)=>a.findIndex(y=>y.p===x.p)===i).slice(0,300);
+  const msg=`${v.title||'New video'} from ${S.settings.brand}\n${v.desc?String(v.desc).trim()+'\n':''}\nWatch it here: ${videoLink(v)}${igHandle()?`\nFollow us on Instagram: ${igHandle()}`:''}\nVisit our store: ${siteBase()}`;
+  d.innerHTML=`<div class="dlg" style="max-width:560px"><h2 style="margin-top:0">Send this video on WhatsApp</h2>
+    <label class="field">Customer's WhatsApp number <span class="hint">With country code for numbers outside India. Pick a customer or type any number.</span><input type="tel" id="vwaTo" list="vwaList" placeholder="98765 43210" autocomplete="off"></label>
+    <datalist id="vwaList">${people.map(x=>`<option value="${esc(x.p)}">${esc(x.n)}</option>`).join('')}</datalist>
+    <label class="field">Message<textarea id="vwaMsg" rows="7">${esc(msg)}</textarea></label>
+    <div class="dlg-actions" style="flex-wrap:wrap"><button class="btn" data-act="dlgClose">Close</button>
+      ${navigator.canShare&&v.url?'<button class="btn" data-act="vwaFile">Share the video file</button>':''}
+      <button class="btn primary" data-act="vwaSend">${ICON.wa} Open WhatsApp</button></div>
+    <p class="small muted">Open WhatsApp sends the message with the video link (WhatsApp shows a preview). On a phone, Share the video file sends the video itself: choose the customer's chat.</p></div>`;
+  d.showModal();setTimeout(()=>$('#vwaTo')?.focus(),50);}
+queueMicrotask(()=>Object.assign(ACT,{
+  rvvInsta:el=>openVideoIG(el.closest('[data-vid]').dataset.vid),
+  rvvWA:el=>openVideoWA(el.closest('[data-vid]').dataset.vid),
+  vigCopy:async()=>{try{await navigator.clipboard.writeText($('#vigCap').value);toast('Caption copied');}catch{toast('Select the caption and copy it');}},
+  vigPost:async el=>{const w=el.closest('[data-vid]'),v=S.videos.find(x=>x.id===w.dataset.vid),cap=$('#vigCap').value,say=(t,c='')=>{const n=$('#vigNote');if(n){n.style.color=c;n.innerHTML=t;}};
+    if(cap.length>2200){say('The caption is longer than Instagram allows (2,200 characters).','var(--rose)');return;}
+    const prev=IGS.posts?.['video:'+v.id];let force=false;if(prev?.status==='published'){if(!confirm('This video is already on Instagram. Post it again as a new Reel?'))return;force=true;}
+    el.disabled=true;
+    try{say('Sending the video to Instagram…');const r=await igCall({action:'video_start',video_id:v.id,video_url:v.url,cover_url:v.posterUrl||'',caption:cap,force});
+      let res=null;for(let i=0;i<72&&!res;i++){await new Promise(z=>setTimeout(z,5000));say(`Instagram is processing the video… ${(i+1)*5} seconds`);
+        const c=await igCall({action:'video_check',video_id:v.id,creation_id:r.creation_id});if(c.status==='published')res=c;}
+      if(!res){say('Instagram is still processing. Open this window again in a few minutes and select Publish Reel to check.','var(--rose)');return;}
+      IGS.posts['video:'+v.id]={product_id:'video:'+v.id,status:'published',media_id:res.media_id,permalink:res.permalink,published_at:res.published_at};
+      v.ig={id:res.media_id,link:res.permalink,at:Date.now()};await saveVideos();say(`Published! ${res.permalink?`<a href="${esc(res.permalink)}" target="_blank" rel="noopener">See the Reel</a>`:''}`,'var(--ok)');toast('Reel published on Instagram');el.textContent='Post again';}
+    catch(e){if(e.code==='auth_expired'&&IGS.conn)IGS.conn.expired=true;
+      say(esc(e.code==='bad_request'?'Update the Instagram Edge Function first (README Part 47).':e.message)+(['auth_expired','not_connected','permission_missing'].includes(e.code)?` <a href="#/staff/settings?s=insta" data-act="dlgClose">Reconnect Instagram</a>`:''),'var(--rose)');}
+    finally{el.disabled=false;}},
+  vwaSend:()=>{const to=$('#vwaTo').value.replace(/[^\d+]/g,''),msg=$('#vwaMsg').value;const digits=to.replace(/\D/g,'');
+    if(digits.length<10){toast('Enter the customer’s WhatsApp number (10 digits, or with the country code).');$('#vwaTo').focus();return;}
+    window.open(waLink(digits.length===10?'91'+digits:digits,msg),'_blank','noopener');},
+  vwaFile:async el=>{
+    const v=S.videos.find(x=>x.id===VWA_ID);if(!v?.url)return;el.disabled=true;el.textContent='Getting the video…';
+    try{const b=await (await fetch(v.url)).blob();const f=new File([b],`${(v.title||'video').replace(/[^\w-]+/g,'-')}.${/quicktime/.test(b.type)?'mov':'mp4'}`,{type:b.type||'video/mp4'});
+      if(!navigator.canShare?.({files:[f]})){toast('This phone cannot share video files. Use Open WhatsApp instead.');return;}
+      await navigator.share({files:[f],text:$('#vwaMsg').value});}catch(e){if(e?.name!=='AbortError')toast('Could not share the video: '+(e.message||e));}
+    finally{el.disabled=false;el.textContent='Share the video file';}},
+}));
+
 // ---------- several phones and tabs editing at once ----------
 // Each save first fetches what was saved elsewhere since this page loaded, and keeps those changes.
 // A field this page did not change takes the newer value, so an old open tab can no longer undo new photos or prices.
@@ -2926,6 +2993,7 @@ document.addEventListener('change',async e=>{if(e.target.id!=='rsFiles')return;c
   catch(err){if(x)x.textContent='Could not read these files: '+(err.message||err);}});
 queueMicrotask(()=>Object.assign(ACT,{   // ACT is defined further down
   restorePhotos:()=>openRestore(),
+  pfNoPhoto:()=>{PF.status=PF.status==='nophoto'?'':'nophoto';PF.sort=PF.status?'new':PF.sort;PF.page=1;route();},
   maintOn:async()=>{if(!isAdmin())return;if(!confirm('Turn on maintenance mode? Customers will see only the maintenance page until you turn it off.'))return;S.settings.maintenance={...(S.settings.maintenance||{}),on:true};await saveSettings();toast('Maintenance mode is on. Customers see the maintenance page.');route();},
   maintOff:async()=>{if(!isAdmin())return;S.settings.maintenance={...(S.settings.maintenance||{}),on:false};MAINT_PREVIEW=false;await saveSettings();toast('The store is open again');route();},
   maintPreview:()=>{MAINT_PREVIEW=true;go('#/');},
@@ -3267,7 +3335,8 @@ function vHome(main){
     ${newsHomeHTML()}
     ${homeCommunityHTML()}`;
 }
-function vVideos(main){
+function vVideos(main,_,q){
+  const one=q?.get?.('v');if(one&&S.videos.some(v=>v.id===one&&v.published))setTimeout(()=>openVideo(one),50);
   const vids=visibleVideos();
   main.innerHTML=`<div class="crumbs"><a href="#/">Home</a> / Videos</div><div class="page-title"><h1>Videos</h1><span class="muted">${vids.length} video${vids.length===1?'':'s'}</span></div>
     ${vids.length?`<div class="vgrid">${vids.map(videoCard).join('')}</div>`:emptyShop('No videos yet','New videos of our collection will appear here.','<a class="btn primary" href="#/">Continue shopping</a>')}`;
@@ -4168,25 +4237,31 @@ async function saveImport(){
 }
 
 // ---------- products ----------
-const PF={q:'',cat:'',vendor:'',status:'',page:1,sel:new Set(),all:[]};
+// Products with no photo, or whose photos are missing from storage.
+const noPhoto=p=>!!p.photoLost||!(Number(p.imageCount)>0||p.media?.imgs?.length||p.media?.th);
+const PF_SORT={new:(a,b)=>(b.createdAt||0)-(a.createdAt||0),old:(a,b)=>(a.createdAt||0)-(b.createdAt||0),nophoto:(a,b)=>(noPhoto(b)-noPhoto(a))||((b.createdAt||0)-(a.createdAt||0)),
+  photos:(a,b)=>(Number(a.imageCount)||0)-(Number(b.imageCount)||0)||((b.createdAt||0)-(a.createdAt||0)),title:(a,b)=>String(a.title||'').localeCompare(String(b.title||'')),
+  price:(a,b)=>(Number(sellPrice(a))||0)-(Number(sellPrice(b))||0),priceDesc:(a,b)=>(Number(sellPrice(b))||0)-(Number(sellPrice(a))||0)};
+const PF={q:'',cat:'',vendor:'',status:'',sort:'new',page:1,sel:new Set(),all:[]};
 function pProducts(m,q){
   if(q?.get('f')==='noprice')PF.status='noprice';
   const list=S.products.filter(p=>{
     if(PF.cat&&!catGroupIds(catById(PF.cat)).includes(p.category))return false;if(PF.vendor&&p.vendorId!==PF.vendor)return false;
     if(PF.status==='live'&&!isVisible(p))return false;if(PF.status==='hidden'&&isVisible(p))return false;
     if(PF.status==='out'&&p.stock!=='out')return false;if(PF.status==='review'&&!awaitingReview(p))return false;
-    if(PF.status==='removed'&&!(!p.published&&p.reviewed))return false;if(PF.status==='nodesc'&&!missDesc(p))return false;if(PF.status==='manual'&&!isManual(p))return false;if(PF.status==='chat'&&isManual(p))return false;if(PF.status==='novendor'&&!missVendor(p))return false;if(PF.status==='check'&&!needsCatCheck(p))return false;if(PF.status==='noprice'&&sellPrice(p)!=null)return false;
+    if(PF.status==='removed'&&!(!p.published&&p.reviewed))return false;if(PF.status==='nodesc'&&!missDesc(p))return false;if(PF.status==='manual'&&!isManual(p))return false;if(PF.status==='chat'&&isManual(p))return false;if(PF.status==='novendor'&&!missVendor(p))return false;if(PF.status==='check'&&!needsCatCheck(p))return false;if(PF.status==='noprice'&&sellPrice(p)!=null)return false;if(PF.status==='nophoto'&&!noPhoto(p))return false;
     if(PF.q){const h=(p.title+' '+p.description+' '+p.code+' '+(p.myId||'')+' '+(p.colors||[]).map(c=>c?.detected||'').join(' ')).toLowerCase();if(!PF.q.toLowerCase().split(/\s+/).every(t=>h.includes(t)))return false;}
-    return true;}).sort((a,b)=>b.createdAt-a.createdAt);
+    return true;}).sort(PF_SORT[PF.sort]||PF_SORT.new);
   const pgd=pageSlice(list,PF.page);PF.page=pgd.pg;PF.all=list.map(p=>p.id);
   const sel=[...PF.sel].filter(id=>S.products.some(p=>p.id===id));PF.sel=new Set(sel);
   m.innerHTML=`<h1>Products</h1><p class="lede">What customers see: titles, categories, selling prices, stock, and whether each product is live.</p>
-    <p class="small" style="margin:-6px 0 12px"><button class="btn sm" data-act="fixPhotos">Check and fix photos</button> <button class="btn sm" data-act="restorePhotos">Restore lost photos</button> <span class="muted">If a photo shows as broken, this finds the newest copy still saved and puts it back.</span></p>
+    <p class="small" style="margin:-6px 0 12px">${(()=>{const n=S.products.filter(noPhoto).length;return n?`<button class="btn sm ${PF.status==='nophoto'?'primary':'accent'}" data-act="pfNoPhoto">${PF.status==='nophoto'?'Show all products':`Show ${n} without photos`}</button> `:'';})()}<button class="btn sm" data-act="fixPhotos">Check and fix photos</button> <button class="btn sm" data-act="restorePhotos">Restore lost photos</button> <span class="muted">If a photo shows as broken, this finds the newest copy still saved and puts it back.</span></p>
   <div class="filters">
     <input type="search" id="pfQ" placeholder="Search title, description, code, or your ID" value="${esc(PF.q)}" aria-label="Search products">
     <select data-pf="cat" aria-label="Category"><option value="">All categories</option>${catsFlat().map(c=>`<option value="${c.id}" ${PF.cat===c.id?'selected':''}>${esc(catLabel(c))}</option>`).join('')}</select>
     <select data-pf="vendor" aria-label="Vendor"><option value="">All vendors</option>${S.vendors.map(v=>`<option value="${v.id}" ${PF.vendor===v.id?'selected':''}>${esc(v.name)}</option>`).join('')}</select>
-    <select data-pf="status" aria-label="Status"><option value="">Any status</option>${[['manual','Added by hand'],['chat','From WhatsApp chats'],['review','Waiting for review'],['noprice','No price'],['nodesc','No description'],['novendor','No vendor'],['live','Live in store'],['removed','Removed from store'],['check','Check category'],['hidden','Not live'],['out','Sold out']].map(([k,l])=>`<option value="${k}" ${PF.status===k?'selected':''}>${l}</option>`).join('')}</select>
+    <select data-pf="sort" aria-label="Sort"><option value="new" ${PF.sort==='new'?'selected':''}>Newest first</option><option value="old" ${PF.sort==='old'?'selected':''}>Oldest first</option><option value="nophoto" ${PF.sort==='nophoto'?'selected':''}>No photos first</option><option value="photos" ${PF.sort==='photos'?'selected':''}>Fewest photos first</option><option value="title" ${PF.sort==='title'?'selected':''}>Title A to Z</option><option value="price" ${PF.sort==='price'?'selected':''}>Price, low to high</option><option value="priceDesc" ${PF.sort==='priceDesc'?'selected':''}>Price, high to low</option></select>
+    <select data-pf="status" aria-label="Status"><option value="">Any status</option>${[['manual','Added by hand'],['chat','From WhatsApp chats'],['review','Waiting for review'],['nophoto','No photos (or photos missing)'],['noprice','No price'],['nodesc','No description'],['novendor','No vendor'],['live','Live in store'],['removed','Removed from store'],['check','Check category'],['hidden','Not live'],['out','Sold out']].map(([k,l])=>`<option value="${k}" ${PF.status===k?'selected':''}>${l}</option>`).join('')}</select>
   </div>
   ${sel.length?`<div class="filters panel" style="padding:10px 14px;position:sticky;top:0;z-index:6"><b>${sel.length} selected</b>
     <button class="btn sm primary" data-act="bulk" data-op="publish">Add to store</button><button class="btn sm" data-act="bulk" data-op="hide">Remove from store</button>
@@ -4400,7 +4475,9 @@ function rvVideoCard(v,managing,isDup){
       <label class="field">Description customers see<textarea rows="2" data-rvv="desc">${esc(v.desc)}</textarea></label>
       <label class="field">Link to a product<span class="hint">Adds a “Shop this product” button under the video and a “Watch video” button on the product page.</span><select data-rvv="productId">${productOptions(v.productId)}</select></label>
     </div>
+    ${managing&&typeof vidIgStatus==='function'?vidIgStatus(v):''}
     <div class="acts">${v.published?'<button class="btn sm" data-act="rvvHide">Hide from store</button>':'<button class="btn sm primary" data-act="rvvPublish">Publish</button>'}
+      ${isAdmin()?'<button class="btn sm" data-act="rvvInsta">📸 Instagram Reel</button>':''}<button class="btn sm" data-act="rvvWA">${ICON.wa} Send on WhatsApp</button>
       <button class="btn sm ghost danger" data-act="rvvDelete" style="margin-left:auto">Delete</button></div></article>`;
 }
 const RV={vendor:'',stage:'edit'};
