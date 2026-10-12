@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <url><loc>https://kulsumscollection.com/</loc><lastmod>2026-10-11</lastmod><priority>1.0</priority></url>
-  <url><loc>https://kulsumscollection.com/collections/new-arrivals</loc><lastmod>2026-10-11</lastmod><priority>0.9</priority></url>
-  <url><loc>https://kulsumscollection.com/collections/kids</loc><lastmod>2026-10-11</lastmod><priority>0.8</priority></url>
-  <url><loc>https://kulsumscollection.com/collections/men</loc><lastmod>2026-10-11</lastmod><priority>0.8</priority></url>
-  <url><loc>https://kulsumscollection.com/collections/home</loc><lastmod>2026-10-11</lastmod><priority>0.8</priority></url>
-  <url><loc>https://kulsumscollection.com/collections/abayas</loc><lastmod>2026-10-11</lastmod><priority>0.8</priority></url>
-  <url><loc>https://kulsumscollection.com/collections/accessories</loc><lastmod>2026-10-11</lastmod><priority>0.8</priority></url>
-  <url><loc>https://kulsumscollection.com/collections/jwellery</loc><lastmod>2026-10-11</lastmod><priority>0.8</priority></url>
-  <url><loc>https://kulsumscollection.com/collections/clothing</loc><lastmod>2026-10-11</lastmod><priority>0.8</priority></url>
+  <url><loc>https://kulsumscollection.com/</loc><lastmod>2026-10-12</lastmod><priority>1.0</priority></url>
+  <url><loc>https://kulsumscollection.com/collections/new-arrivals</loc><lastmod>2026-10-12</lastmod><priority>0.9</priority></url>
+  <url><loc>https://kulsumscollection.com/collections/kids</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://kulsumscollection.com/collections/men</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://kulsumscollection.com/collections/home</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://kulsumscollection.com/collections/abayas</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://kulsumscollection.com/collections/accessories</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://kulsumscollection.com/collections/jwellery</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://kulsumscollection.com/collections/clothing</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
   <url><loc>https://kulsumscollection.com/products/shimmer-silk</loc><lastmod>2026-10-10</lastmod><priority>0.7</priority><image:image><image:loc>https://omnlnjzoeylhgjowkfsb.supabase.co/storage/v1/object/public/media/p/pmv2nssv833is5/mv2nst73-0.jpg</image:loc><image:title>Shimmer Silk</image:title></image:image></url>
   <url><loc>https://kulsumscollection.com/products/moonlight-silk-kurta</loc><lastmod>2026-10-10</lastmod><priority>0.7</priority><image:image><image:loc>https://omnlnjzoeylhgjowkfsb.supabase.co/storage/v1/object/public/media/p/pmv2nsng2m2lp0/mv2nsnwd-0.jpg</image:loc><image:title>Moonlight silk kurta</image:title></image:image></url>
   <url><loc>https://kulsumscollection.com/products/rajwada-silk-suit</loc><lastmod>2026-10-10</lastmod><priority>0.7</priority><image:image><image:loc>https://omnlnjzoeylhgjowkfsb.supabase.co/storage/v1/object/public/media/p/pmv2nskp948jtq/mv2nskwb-0.jpg</image:loc><image:title>RAJWADA SILK SUIT</image:title></image:image></url>
@@ -388,9 +388,9 @@
   <url><loc>https://kulsumscollection.com/products/floral-rayon-top-with-embroidery-2</loc><lastmod>2026-09-30</lastmod><priority>0.7</priority><image:image><image:loc>https://omnlnjzoeylhgjowkfsb.supabase.co/storage/v1/object/public/media/p/pmuo4jnveti42y/mv2gqjvr-0.jpg</image:loc><image:title>Floral Rayon Top with Embroidery</image:title></image:image></url>
   <url><loc>https://kulsumscollection.com/products/pure-cotton-top-with-digital-print</loc><lastmod>2026-09-30</lastmod><priority>0.7</priority><image:image><image:loc>https://omnlnjzoeylhgjowkfsb.supabase.co/storage/v1/object/public/media/p/pmuo4jj5kd3cif/mv2gal57-0.jpg</image:loc><image:title>Pure Cotton Top with Digital Print</image:title></image:image></url>
   <url><loc>https://kulsumscollection.com/products/floral-rayon-top-with-embroidery</loc><lastmod>2026-09-30</lastmod><priority>0.7</priority><image:image><image:loc>https://omnlnjzoeylhgjowkfsb.supabase.co/storage/v1/object/public/media/p/pmuo4jcdg5ypia/mv2gadvc-0.jpg</image:loc><image:title>Floral Rayon Top with Embroidery</image:title></image:image></url>
-  <url><loc>https://kulsumscollection.com/pages/about-us</loc><lastmod>2026-10-11</lastmod><priority>0.4</priority></url>
-  <url><loc>https://kulsumscollection.com/pages/shipping</loc><lastmod>2026-10-11</lastmod><priority>0.4</priority></url>
-  <url><loc>https://kulsumscollection.com/pages/returns</loc><lastmod>2026-10-11</lastmod><priority>0.4</priority></url>
-  <url><loc>https://kulsumscollection.com/pages/contact</loc><lastmod>2026-10-11</lastmod><priority>0.4</priority></url>
-  <url><loc>https://kulsumscollection.com/offers</loc><lastmod>2026-10-11</lastmod><priority>0.5</priority></url>
+  <url><loc>https://kulsumscollection.com/pages/about-us</loc><lastmod>2026-10-12</lastmod><priority>0.4</priority></url>
+  <url><loc>https://kulsumscollection.com/pages/shipping</loc><lastmod>2026-10-12</lastmod><priority>0.4</priority></url>
+  <url><loc>https://kulsumscollection.com/pages/returns</loc><lastmod>2026-10-12</lastmod><priority>0.4</priority></url>
+  <url><loc>https://kulsumscollection.com/pages/contact</loc><lastmod>2026-10-12</lastmod><priority>0.4</priority></url>
+  <url><loc>https://kulsumscollection.com/offers</loc><lastmod>2026-10-12</lastmod><priority>0.5</priority></url>
 </urlset>
