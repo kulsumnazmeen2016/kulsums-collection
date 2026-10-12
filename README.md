@@ -1073,6 +1073,27 @@ Runs once a day when an admin opens the staff area, or select **Clean now** (use
 
 The GitHub Action (every 3 hours) also leaves out of Google anything without a title, a switched-on category, a price or a working photo, and removes its old page, so Search Console and Merchant Center stop seeing those products. The run's log lists them. **Upload the new `scripts/build-seo.mjs`.**
 
+## Part 46: Order with a photo, country button, and the dua on every staff page
+
+### Order with a photo
+Customers who saw something on Instagram, WhatsApp or anywhere else can order it here. It is highlighted in gold in the menu, at the top of the Shop menu on phones, as the first card under the banner on the home page ("How to order"), on an empty cart, and when a search finds nothing.
+1. They add up to 3 photos of the piece (choose from the phone or laptop, take a photo, paste with Ctrl+V or drop it in).
+2. They paste the description, price or product code, or add a screenshot of the description, plus quantity and size or colour.
+3. **Add this and add another item** lets them send several items (up to 6) in one order. Each item comes to you exactly as they sent it.
+4. If the photo or a code matches something in your store, they are offered that product with its price. Otherwise they go to checkout, enter their address and place the order. Payment shows as "Confirm the price first".
+
+**In Orders** you see their photos (tap to enlarge or download), their description and screenshot as sent. Type the **price for each item**, and optionally the **shipping**. The total updates. Then select **Send the price to the customer**: WhatsApp opens with the prices, the total and a link where they can pay by UPI and send the payment reference. Their order page also shows the confirmed price with UPI or bank details.
+
+Photos travel inside the order (customers cannot upload to your storage). When staff open Orders, they are moved into storage automatically, so the database stays small.
+
+Turn the feature on or off in Menus and categories (Order with a photo).
+
+### Country button
+When Customers abroad is on, the header shows **Deliver to 🇮🇳 India INR ▾** (flag and currency on phones), and the home page shows a "Delivering to … Prices in …" strip with **Change country**.
+
+### Dua on every staff page
+Today's dua (or the message you pin) now shows at the top of every staff page, smaller than on the Dashboard and Tasks.
+
 ## Updating the website later
 
 Your data lives in Supabase, so replacing the website files never touches products or orders.
