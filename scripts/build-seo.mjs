@@ -90,7 +90,17 @@ const imgOf = (p) => { const u = p.media?.imgs?.[0] || p.media?.th || ""; return
 
 const catById = Object.fromEntries(cats.map((c) => [c.id, c]));
 const catOn = (c) => { for (let x = c, i = 0; x && i < 5; x = catById[x.parent], i++) if (x.enabled === false) return false; return !!c; };
-const products = catalog.filter((p) => p.published !== false && catOn(catById[p.category] || { enabled: true })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+// Only products a shopper can really buy get a page, the sitemap and the Merchant feed: a title, a category that is
+// switched on, a selling price and at least one working photo. Anything else is left out (and its old page removed),
+// so Google never finds a page without a price or a photo.
+const leftOut = [];
+const products = catalog.filter((p) => {
+  const why = p.published === false ? "" : !String(p.title || "").trim() ? "no title" : !catById[p.category] ? "no category" : !catOn(catById[p.category]) ? "category switched off"
+    : !(Number(p.sellOverride) > 0) ? "no price" : !imgOf(p) ? "no working photo" : "";
+  if (why) leftOut.push(`${p.code || p.id} (${why})`);
+  return p.published !== false && !why;
+}).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+if (leftOut.length) console.log(`Left out of Google (fix these in the staff area): ${leftOut.join(", ")}`);
 const used = new Set();
 for (const p of products) { let s = prodSlug(p), b = s, i = 2; while (used.has(s)) s = `${b}-${i++}`; used.add(s); p._slug = s; }
 const groupIds = (c) => [c.id, ...cats.filter((x) => x.parent === c.id).map((x) => x.id)];
@@ -234,7 +244,3 @@ writeFileSync(join(root, "merchant-feed.xml"), `<?xml version="1.0" encoding="UT
   `<item>${COLS.map((k) => k === "additional_image_link" ? r[k].split(",").filter(Boolean).map((u) => `<g:additional_image_link>${x(u)}</g:additional_image_link>`).join("") : r[k] ? `<g:${k}>${x(r[k])}</g:${k}>` : "").join("")}</item>`).join("\n")}\n</channel></rss>\n`);
 console.log(`Merchant feed: ${rows.length} products${skipped ? `, ${skipped} left out because they have no selling price or no online photo` : ""}`);
 console.log(`Built ${products.length} product pages, ${mainCats.length + 1} collections, sitemap with ${urls.length} addresses, for ${SITE}`);
-
-
-
-
