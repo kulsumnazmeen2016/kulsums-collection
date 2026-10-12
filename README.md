@@ -1042,6 +1042,37 @@ Turn it on while you work on the website. Customers then see only a "We will be 
 - **See what customers see:** "See what customers see" in Settings or on the yellow strip.
 - Search engines are told not to list the maintenance page, so your products keep their places on Google.
 
+## Part 45: Customers abroad, Order on WhatsApp, and automatic clean-up
+
+### Customers abroad (Settings, Customers abroad)
+Turn on **Sell to customers outside India**. Then:
+- Visitors abroad see prices in their own currency. The country is picked from their time zone, and they can change it with the flag button in the header or in the Shop menu. Indian visitors and the staff area always see rupees.
+- **Markup:** set a percentage for each region (Gulf 10%, Europe and USA 15% to start), and override it for any single country. The country table shows what ₹1,000 becomes in each country.
+- **Exchange rates** update every 12 hours from a free public rates service. You can type your own rate for any currency, or choose "Only the rates I type".
+- **Shipping** is added at checkout: a rate for the first 500 g and for each extra 500 g, by region, based on standard international courier rates. **Check these against your courier** and change them. Parcel weight is worked out from the number of pieces (0.5 kg each by default, with your own weight for each category) plus packing.
+- Switch off any country you do not ship to.
+- Cash on delivery and UPI are only offered in India. Customers abroad choose **Pay from abroad**: they see your payment note (and a PayPal button if you add your link), and a button to get the payment details from you on WhatsApp.
+- The order shows the country, what the customer pays in their currency, and the amounts in rupees (markup and shipping included), so your reports stay correct.
+- India-only messages in the scrolling strip (free shipping, cash on delivery) are not shown abroad.
+
+### Order on WhatsApp
+A **Order on WhatsApp** menu item, a button on the home page, and a page where customers find a product and send it to you: code, price, description and the product link, which shows its photo in WhatsApp. On phones, **Send photo** shares the photo itself. Turn it off in Menus and categories.
+
+### Products without a price
+- **Import:** products without any price in the chat are left out, and their photos are not saved, to save space. The message after importing tells you how many.
+- **Clean-up:** products without any price that are not live are deleted with their photos after 2 days (change the days in Settings, Automatic store clean-up).
+
+### Automatic store clean-up (Dashboard, and Settings, Automatic store clean-up)
+Runs once a day when an admin opens the staff area, or select **Clean now** (use **See what it would do** first). It:
+1. Checks every photo, repairs broken ones and marks the rest for Restore lost photos.
+2. Takes off the store any live product with no title, no category (or a switched-off one), no price, or no photo. They stay saved and go back to Review with the reason, so you can fix them and publish again.
+3. Deletes products without any price that are not live.
+4. Hides videos whose product is gone or off the store.
+5. Gives every live product a lasting web address and fixes repeated ones.
+6. Rebuilds the catalogue that Google and Merchant Center read.
+
+The GitHub Action (every 3 hours) also leaves out of Google anything without a title, a switched-on category, a price or a working photo, and removes its old page, so Search Console and Merchant Center stop seeing those products. The run's log lists them. **Upload the new `scripts/build-seo.mjs`.**
+
 ## Updating the website later
 
 Your data lives in Supabase, so replacing the website files never touches products or orders.
