@@ -1094,6 +1094,28 @@ When Customers abroad is on, the header shows **Deliver to 🇮🇳 India INR �
 ### Dua on every staff page
 Today's dua (or the message you pin) now shows at the top of every staff page, smaller than on the Dashboard and Tasks.
 
+## Part 47: Videos to Instagram and WhatsApp, and finding products without photos
+
+### Post a video to Instagram as a Reel
+Staff, Videos: select **📸 Instagram Reel** on a video (admins).
+- The caption is filled in with the title, description and price, **your website link** (the linked product's page, or the video's own page), **your Instagram handle**, your **WhatsApp** link and your hashtags. Edit it as you like.
+- Select **Publish Reel**. Instagram processes the video (usually under a minute) and the window shows the link to the Reel. The video card then shows "On Instagram".
+- Instagram accepts MP4 or MOV, 3 seconds to 15 minutes.
+- Your handle comes from the connected Instagram account, or from Settings, Social media (Instagram).
+
+**One-time step:** update the Instagram Edge Function. In Supabase, open Edge Functions, then **instagram**, replace its code with `supabase/functions/instagram/index.ts`, and Deploy. Or run `supabase functions deploy instagram`. It adds the Reel steps. The access token still never leaves Supabase.
+
+### Send a video to any customer on WhatsApp
+Select **Send on WhatsApp** on a video. Pick a customer from your contacts and orders, or type any number (10 digits for India, or with the country code). The message has the video's title and description, a link to watch it on your website, your Instagram handle and your store link. **Open WhatsApp** opens the chat with the message ready. On a phone, **Share the video file** sends the video itself: choose the customer's chat.
+
+Every published video now has its own link (`/videos?v=…`) that opens it straight away.
+
+### Products without photos
+On Products:
+- a **Show N without photos** button lists every product with no photo, or with photos missing from storage;
+- the Status list has **No photos (or photos missing)**;
+- the new **Sort** list has Newest, Oldest, **No photos first**, Fewest photos first, Title, and Price (low to high, high to low).
+
 ## Updating the website later
 
 Your data lives in Supabase, so replacing the website files never touches products or orders.

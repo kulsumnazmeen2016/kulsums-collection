@@ -2,7 +2,8 @@
 // Supabase Edge Function. Runs on Supabase's servers, never in the browser.
 //
 // Routes:
-//   POST /functions/v1/instagram        { action: "status" | "connect" | "disconnect" | "publish" | "media_page", ... }
+//   POST /functions/v1/instagram        { action: "status" | "connect" | "disconnect" | "publish" | "video_start" | "video_check" | "media_page", ... }
+//                                       video_start / video_check (admins): post a store video as a Reel
 //                                       media_page (admins): a few of your own posts with their photos, to recover lost product photos
 //                                       needs the staff member's login (Authorization: Bearer <Supabase session token>)
 //   GET  /functions/v1/instagram/callback?code=...&state=...    (Instagram redirects here after login)
@@ -298,6 +299,79 @@ async function publish(req: Request, user: { id: string }, body: any) {
     return saveFail(req, productId, e?.detail ? classify(e.detail) : "unavailable", user, caption, images.length, prev);
   }
 }
+// ---------- videos as Reels ----------
+// Step 1 (video_start) hands Instagram the video's public address and returns at once. Instagram then processes the
+// video (often 30 seconds to a few minutes). Step 2 (video_check) is called every few seconds by the staff page and
+// publishes the Reel as soon as it is ready. Each call is short, so nothing times out.
+const MAX_VIDEO_BYTES = 300 * 1024 * 1024;
+async function checkVideo(url: string) {
+  if (!url.startsWith(PUBLIC_MEDIA)) return "image_inaccessible";
+  try {
+    let r = await fetch(url, { method: "HEAD" });
+    if (r.status === 405) r = await fetch(url, { headers: { Range: "bytes=0-0" } });
+    if (!r.ok && r.status !== 206) return "image_inaccessible";
+    const type = (r.headers.get("content-type") ?? "").toLowerCase();
+    if (!type.includes("video/mp4") && !type.includes("video/quicktime")) return "media_rejected";
+    if (Number(r.headers.get("content-length") ?? 0) > MAX_VIDEO_BYTES) return "media_rejected";
+    return null;
+  } catch { return "image_inaccessible"; }
+}
+async function videoStart(req: Request, user: { id: string }, body: any) {
+  const videoId = String(body?.video_id ?? "").replace(/[^A-Za-z0-9_-]/g, "").slice(0, 60);
+  const key = `video:${videoId}`;
+  const caption = String(body?.caption ?? "").slice(0, 2200);
+  const videoUrl = String(body?.video_url ?? "");
+  const coverUrl = String(body?.cover_url ?? "");
+  if (!videoId || !videoUrl) return fail(req, "bad_request");
+  const c = await getConn();
+  if (!c) return fail(req, "not_connected", 409);
+  const { data: prev } = await db.from("instagram_posts").select("*").eq("product_id", key).maybeSingle();
+  if (prev?.status === "published" && body?.force !== true) return fail(req, "already_published", 409, { media_id: prev.media_id, permalink: prev.permalink, published_at: prev.published_at });
+  const bad = await checkVideo(videoUrl);
+  if (bad) { await log(key, "video_check", null, { result: bad }); return saveFail(req, key, bad, user, caption, 1, prev); }
+  const token = await freshToken(c);
+  if (!token) return saveFail(req, key, "auth_expired", user, caption, 1, prev);
+  try {
+    const params: Record<string, unknown> = { media_type: "REELS", video_url: videoUrl, caption, share_to_feed: true };
+    if (coverUrl.startsWith(PUBLIC_MEDIA)) params.cover_url = coverUrl;
+    const creation = (await graph(`${c.instagram_user_id}/media`, token, "POST", params)).id;
+    await db.from("instagram_posts").upsert({ product_id: key, status: "publishing", caption, image_count: 1, error_code: null, error_message: null,
+      attempts: (prev?.attempts ?? 0) + 1, published_by: user.id, updated_at: new Date().toISOString() });
+    return json(req, { ok: true, creation_id: String(creation) });
+  } catch (e: any) {
+    await log(key, "video_start", e?.status ?? null, e?.detail ?? String(e?.message ?? e));
+    return saveFail(req, key, e?.detail ? classify(e.detail) : "unavailable", user, caption, 1, prev);
+  }
+}
+async function videoCheck(req: Request, user: { id: string }, body: any) {
+  const videoId = String(body?.video_id ?? "").replace(/[^A-Za-z0-9_-]/g, "").slice(0, 60);
+  const key = `video:${videoId}`;
+  const creation = String(body?.creation_id ?? "").replace(/[^0-9]/g, "").slice(0, 40);
+  if (!videoId || !creation) return fail(req, "bad_request");
+  const c = await getConn();
+  if (!c) return fail(req, "not_connected", 409);
+  const token = await freshToken(c);
+  const { data: prev } = await db.from("instagram_posts").select("*").eq("product_id", key).maybeSingle();
+  if (!token) return saveFail(req, key, "auth_expired", user, prev?.caption ?? "", 1, prev);
+  try {
+    const s = await graph(`${creation}?fields=status_code`, token);
+    const status = String(s.status_code ?? "IN_PROGRESS");
+    if (status === "IN_PROGRESS" || status === "PUBLISHED" && prev?.status === "published") return json(req, { ok: true, status: status === "PUBLISHED" ? "published" : "processing", media_id: prev?.media_id, permalink: prev?.permalink });
+    if (status === "ERROR" || status === "EXPIRED") { await log(key, "video_status", null, { status }); return saveFail(req, key, "media_rejected", user, prev?.caption ?? "", 1, prev); }
+    const media = await graph(`${c.instagram_user_id}/media_publish`, token, "POST", { creation_id: creation });
+    let permalink: string | null = null;
+    try { permalink = (await graph(`${media.id}?fields=permalink`, token)).permalink ?? null; } catch { /* optional */ }
+    const published_at = new Date().toISOString();
+    await db.from("instagram_posts").upsert({ product_id: key, status: "published", media_id: media.id, permalink, caption: prev?.caption ?? "", image_count: 1,
+      error_code: null, error_message: null, attempts: prev?.attempts ?? 1, published_at, published_by: user.id, updated_at: published_at });
+    await log(key, "published", 200, { media_id: media.id });
+    return json(req, { ok: true, status: "published", media_id: media.id, permalink, published_at });
+  } catch (e: any) {
+    await log(key, "video_publish", e?.status ?? null, e?.detail ?? String(e?.message ?? e));
+    return saveFail(req, key, e?.detail ? classify(e.detail) : "unavailable", user, prev?.caption ?? "", 1, prev);
+  }
+}
+
 // ---------- photo recovery: read back the photos of your own posts ----------
 // Returns up to 3 posts per call. Photos are fetched here (Instagram's photo links cannot be read by a browser page)
 // and returned as image data. Only links that Instagram itself returned are fetched; the token never leaves the server.
@@ -362,6 +436,8 @@ Deno.serve(async (req) => {
       case "disconnect": if (user.role !== "admin") return json(req, { ok: false, code: "auth", message: "Only admins can disconnect Instagram." }, 403);
         await db.from("instagram_connections").delete().eq("id", 1); await log(null, "disconnected", 200, {}); return json(req, { ok: true });
       case "media_page": if (user.role !== "admin") return json(req, { ok: false, code: "auth", message: "Only admins can do this." }, 403); return mediaPage(req, body);
+      case "video_start": if (user.role !== "admin") return json(req, { ok: false, code: "auth", message: "Only admins can publish to Instagram." }, 403); return videoStart(req, user, body);
+      case "video_check": if (user.role !== "admin") return json(req, { ok: false, code: "auth", message: "Only admins can publish to Instagram." }, 403); return videoCheck(req, user, body);
       case "publish": if (user.role !== "admin") return json(req, { ok: false, code: "auth", message: "Only admins can publish to Instagram." }, 403); return publish(req, user, body);
       default: return fail(req, "bad_request");
     }
