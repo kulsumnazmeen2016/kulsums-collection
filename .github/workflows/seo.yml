@@ -26,10 +26,15 @@ jobs:
         run: |
           git config user.name "kulsums-seo-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A products collections pages sitemap.xml robots.txt merchant-feed.tsv merchant-feed.xml 404.html offers.html stories.html videos.html news.html combos.html cart.html checkout.html wishlist.html track.html search.html emi.html hi.html
+          # Add only the generated files that exist (a missing one used to stop the run).
+          for f in products collections pages sitemap.xml robots.txt merchant-feed.tsv merchant-feed.xml 404.html offers.html stories.html videos.html news.html combos.html cart.html checkout.html wishlist.html track.html search.html emi.html hi.html whatsapp.html photo-order.html; do
+            if [ -e "$f" ] || git ls-files --error-unmatch "$f" >/dev/null 2>&1; then git add -A -- "$f"; fi
+          done
           if git diff --cached --quiet; then echo "Nothing changed"; exit 0; fi
           git commit -m "Update SEO pages"
-          git pull --rebase
-          git push
-
-     
+          # If you uploaded files while this was running, take your changes first, then try again (up to 3 times).
+          for i in 1 2 3; do
+            git pull --rebase -X theirs --autostash && git push && exit 0
+            echo "Push did not go through, trying again ($i)"; git rebase --abort 2>/dev/null; sleep 5
+          done
+          echo "Could not save the pages after 3 tries"; exit 1
