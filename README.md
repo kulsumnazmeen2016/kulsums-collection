@@ -1182,6 +1182,25 @@ Resellers **cannot** see your settings, customers, chats, vendor payments or oth
 
 Orders sent from the desk show "created by <name> (reseller)" and their code on your Orders page.
 
+## Part 51: Team and logins, deleting logins, resellers in one place, and sorting products into categories
+
+### Team and logins (staff menu)
+A new **Team and logins** page (also in Settings, Staff access) lists everyone who can log in: admins, employees and resellers.
+- **Add a person:** email and access **Admin**, **Employee** or **Reseller**. For Reseller, pick an existing reseller or enter a new one's name and WhatsApp number; the reseller record is created for you.
+- **Remove access:** they keep their account but see nothing.
+- **Delete login:** deletes the account completely (you cannot delete yourself or the last admin). Their orders and work stay.
+- **Send password reset** for anyone.
+
+Run the updated `reseller-setup.sql` once more in the Supabase SQL Editor to turn on Delete login (safe to run again).
+
+### Sort products into categories (Products, Sort into categories)
+Reads each product's title and description and suggests a category: men's wear, women's wear, jewellery, kids, home and the rest (your own categories and their keywords). Choose which products to look at (no category yet, maybe in the wrong category, or all), untick or change any suggestion, then **Use the ticked suggestions**. Nothing changes until you do.
+
+**Main menus:** if you do not yet have a Women's wear, Men's wear, Jewellery, Kids or Home menu, the same window offers to add them, and to put Sarees, Suits, Kurtis, Lehengas, Dupattas and Western wear under Women's wear as submenus.
+
+### Home page rows
+Under the banner, the home page now shows a row of the newest products for each main menu (for example Women's wear, Men, Jewellery, Home), each with **See all**. On phones the rows scroll sideways.
+
 ## Updating the website later
 
 Your data lives in Supabase, so replacing the website files never touches products or orders.
