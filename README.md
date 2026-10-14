@@ -1201,6 +1201,26 @@ Reads each product's title and description and suggests a category: men's wear, 
 ### Home page rows
 Under the banner, the home page now shows a row of the newest products for each main menu (for example Women's wear, Men, Jewellery, Home), each with **See all**. On phones the rows scroll sideways.
 
+## Part 52: Faster website, WhatsApp-style shop, and products for 3 days
+
+### Why it was slow, and what changed
+- **Every refresh downloaded all your data again** (the full product list with vendor details, several MB). Now the website first asks only *when* each part last changed, which takes a few bytes, and downloads just the parts that changed. Everything else comes from the copy kept on the phone or computer, so refreshing and opening the staff area are much quicker.
+- **Every save uploaded everything twice** (all products, then the public catalogue), and first downloaded the whole list to check for changes from other phones. Now saves made close together are combined into one; nothing is uploaded if nothing changed; the catalogue is uploaded only when something customers see changed; and the "other phones" check reads a tiny timestamp unless something really changed.
+- **Each time an admin opened the staff area, all 1,616 photos were checked one by one.** Now a quick check of one photo per product runs once a day. Use Products, Check and fix photos for a full check.
+- **The catalogue customers download is smaller**: photo addresses are stored in a short form, and only what the shop needs is included.
+- The product lifetime check no longer loads all orders unless something has expired.
+
+**Upload the new `scripts/build-seo.mjs` too**, so Google reads the shorter catalogue correctly.
+
+### WhatsApp-style shop (Settings, Store details, WhatsApp-style shop; on by default)
+- On the home page, under the banner, your collections are listed like WhatsApp chats: New arrivals (pinned) and each main menu, with the newest product's photo, its name and price, the time it was added, and a green count of new designs since the customer last looked.
+- Opening a collection shows it as a chat. Every design is a message with its photos as an album (tap any photo for full screen and swipe through them), the description, the price and MRP saving, the time it was added and ✓✓. Under each are **Add to bag** (or Choose colour), **Order on WhatsApp** and ❤. Days are separated like WhatsApp (Today, Yesterday…). The newest 20 load first; **Show earlier designs** loads more.
+- Submenus show as chips at the top. A message box at the bottom sends a question about that collection to your WhatsApp.
+- **▦** at the top of a chat switches to the classic grid. Turn the setting off to go back to the classic shop.
+
+### Products stay 3 days
+The product lifetime is now **3 days** (Settings, Automatic store clean-up, Product lifetime). Stores still on the old 6 days move to 3 automatically the first time an admin opens the staff area. Products you added by hand still wait on the Dashboard for you to keep or delete them.
+
 ## Updating the website later
 
 Your data lives in Supabase, so replacing the website files never touches products or orders.
