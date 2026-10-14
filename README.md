@@ -1317,3 +1317,67 @@ Nothing new to run in Supabase. Upload `index.html` to the main folder.
 - On the grid view (▦), Select all now covers the whole collection, not only the page you see.
 
 Upload `index.html` to the main folder and `build-seo.mjs` to the `scripts` folder.
+
+---
+
+## Part 55 – 5 new arrivals, chat pages and a fresh look
+
+- **New arrivals** shows only the 5 newest products, on the home page, in the chat list and on its own page.
+- **Pages in the chat:** each collection shows 12 designs per page, newest first, with **‹ Newer · 1 2 3 4 · Older ›** at the top and bottom, plus "Designs 13–24 of 41". Each page has its own address, so the phone's Back button and shared links work. Fewer photos load at once, so collections open faster.
+- **Behind the photos:** the plain beige is replaced by a soft champagne-to-blush backdrop with a faint gold flower pattern. A gentle shimmer shows while a photo loads. On the product page, the photo sits on the backdrop with a soft shadow.
+- **Chat wallpaper:** a warm cream-and-rose gradient with the same gold pattern, instead of plain beige with dots.
+- **Look:**
+  - gold-ringed collection pictures;
+  - gold count badges;
+  - a dark-and-gold header;
+  - design names in the brand font;
+  - prices in gold;
+  - a dark **Add to bag** button and a green **Order on WhatsApp** button;
+  - softer shadows and rounder bubbles.
+
+Note: the backdrop shows where the photo doesn't fill the frame (while it loads, or around a photo of a different shape). The photos themselves are not changed, so a photo taken against beige still shows that beige.
+
+Upload `index.html` to the main folder.
+
+---
+
+## Part 56 – Faster pages, fewer timeouts, Review page selection and sorting, no-photo products removed
+
+**Speed (measured with 2,000 products on a phone):**
+
+| Page | Before | After |
+|---|---|---|
+| Dashboard | 2.9 s | 0.7 s |
+| Review and publish | 2.8 s | 0.17 s |
+| Products | 0.8 s | 0.26 s |
+| Orders | 0.8 s | 0.19 s |
+
+- Product details read from each description are now worked out once and remembered, instead of on every click.
+- Word patterns, duplicate checks and the next free product ID are reused between clicks.
+- The Review page only checks the duplicates for the 20 products on screen.
+- The scrolling announcement band is measured once, not on every page change.
+
+**Timeouts:**
+- Photo fingerprints were half of every product save. They now sit in their own record (`kc:fp`), load in the background, and are only uploaded when photos change. Every save and refresh moves about half as much data, which was what caused the database timeouts.
+- A save that hits a slow connection or a timeout is retried twice automatically before an error shows.
+- No new SQL is needed: the new record lives in the existing `kv` table.
+
+**Review and publish:**
+- **Select:** every product has a Select box. You can also use Select this page, **Select next 10** (each tap adds the next 10 and shows their page) or Select all.
+- **With what's selected:** Publish (or Approve and publish), Send for approval, Send back, Move to category, or Delete.
+- **Sort:**
+  - newest or oldest first;
+  - title A to Z;
+  - price low to high, high to low, or vendor price;
+  - no price first, no photos first, or fewest photos first;
+  - vendor or category A to Z;
+  - my product ID.
+- **Filter** by category, and show **10, 20 or 50 a page**, with page numbers at the top and bottom.
+
+**Products with no photos:**
+- Customers never see them, and they are left out of the catalogue and Google.
+- When an admin opens the staff area, live products without photos are deleted. New drafts without photos are deleted after 2 days, so staff have time to add photos.
+- Chat archives and orders keep their copy.
+- Turn it off in **Settings → Clean-up → Remove products that have no photos**.
+
+Upload `index.html` to the main folder. Then reload the website once on every staff phone.
