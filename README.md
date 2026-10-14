@@ -1105,8 +1105,11 @@ Staff, Videos: select **📸 Instagram Reel** on a video (admins).
 
 **One-time step:** update the Instagram Edge Function. In Supabase, open Edge Functions, then **instagram**, replace its code with `supabase/functions/instagram/index.ts`, and Deploy. Or run `supabase functions deploy instagram`. It adds the Reel steps. The access token still never leaves Supabase.
 
+### Post it yourself (works without connecting Instagram)
+In the Instagram Reel window: **⬇ Download the video** (and the **Cover picture** if you like), **Copy the caption**, then **Open Instagram**, select Create (＋), Reel, choose the downloaded video and paste the caption. Every video card also has a **⬇ Download** button.
+
 ### Send a video to any customer on WhatsApp
-Select **Send on WhatsApp** on a video. Pick a customer from your contacts and orders, or type any number (10 digits for India, or with the country code). The message has the video's title and description, a link to watch it on your website, your Instagram handle and your store link. **Open WhatsApp** opens the chat with the message ready. On a phone, **Share the video file** sends the video itself: choose the customer's chat.
+Select **Send on WhatsApp** on a video. Pick a customer from your contacts and orders, or type any number (10 digits for India, or with the country code). The message has the video's title and description, a link to watch it on your website, your Instagram handle and your store link. To send the video itself: **⬇ Download the video**, **Copy the message**, **Open the customer's chat**, then attach the downloaded video (📎 on a computer, or drag it in) and paste the message. **Send just the message and link** sends a link that plays the video on your website. On phones you can also try Share the video file.
 
 Every published video now has its own link (`/videos?v=…`) that opens it straight away.
 
@@ -1115,6 +1118,69 @@ On Products:
 - a **Show N without photos** button lists every product with no photo, or with photos missing from storage;
 - the Status list has **No photos (or photos missing)**;
 - the new **Sort** list has Newest, Oldest, **No photos first**, Fewest photos first, Title, and Price (low to high, high to low).
+
+## Part 48: Upload dates, and products leaving the store after 6 days
+
+### Upload date
+Every product shows the date it was added: on the product page ("Added on 13 Oct 2026"), on product cards, and on the staff Products list. The Products list also shows how long each live product has left on the store, for example "Leaves the store in 3 days".
+
+### Product lifetime (Settings, Automatic store clean-up, Product lifetime)
+On by default: **6 days**, counted from the day a product goes live.
+- **When the days are up, customers stop seeing the product immediately.** Within a few hours the clean-up deletes it with its photos and its linked videos, and the GitHub Action removes its page from Google and the Merchant feed. No broken links are left.
+- **Products you added by hand** are not deleted by themselves. When their days are up they are hidden, and the Dashboard shows them under **Products leaving the store** with **Keep 6 more days**, **Keep always** or **Delete**. Turn off "Ask me first about products I added by hand" to have them removed automatically too.
+- **Products leaving within a day** are listed on the Dashboard as well, so you can keep any you still want.
+- **Kept automatically:** featured products (setting), products marked **Keep always** (Products page), and products in an order that is not yet delivered (hidden, then removed after delivery or cancellation).
+- Choose **Only take it off the store** instead of deleting if you would rather keep the products saved.
+- Change the number of days at any time. The check runs every 3 hours while an admin has the staff area open, and products past their days are hidden from customers straight away even when nobody is logged in.
+
+Products that were already live when you uploaded this version start counting from that day, so nothing disappears at once.
+
+**Upload the new `scripts/build-seo.mjs`** as well, so Google drops expired products straight away.
+
+## Part 49: Staff orders with photos, approval, and who created each order
+
+### New order with photos (Orders, 📸 New order with photos)
+For orders taken on WhatsApp, Instagram, the phone or in person. Staff and admins can both use it.
+1. For each item: add photos (choose, take or paste), paste the description as it is, and enter how many and the price. **＋ Add another item** for more.
+2. The customer's name and mobile (address optional for now).
+3. **Payment:** **Paid** (amount filled in), **Partly paid** (enter the amount received; the balance is shown), or **Not paid yet**, plus how they paid (UPI, bank, cash, cash on delivery) and shipping.
+4. **Create order.** A message then asks for the **vendor** and **vendor price** of each item. Fill them in now, or leave them for an admin.
+
+### Approval
+- Orders made this way wait for an admin. The Dashboard shows "N orders made by staff are waiting for your approval", and Orders has a **To approve** filter.
+- The admin adds or checks the vendor and vendor price on the order card (the margin is shown), then selects **Approve order**. The order moves to Confirmed.
+- Until it is approved, it cannot be marked Packed, Shipped or Delivered.
+- **Received (₹)** on the card updates the amount paid. When it reaches the total, the order is marked Paid.
+
+### Completing a staff order (admin)
+Select **Open the order form** on the order (or Edit). For orders made with photos, the form starts with the **items**: each item's photos (tap to enlarge, ＋ Photo to add more), the description and the selling price, already filled in by staff. Add the vendor, vendor price and customer details, then select **Save and approve**.
+- Staff only need the photo, description and selling price. The customer's name and mobile are optional for them; the order card lists what is still missing ("To complete: customer name, mobile number, vendor, vendor price").
+- **iPhone photos (HEIC)** are converted to JPG automatically. If a photo cannot be read, a message says so, instead of the photo silently going missing.
+
+### Date and creator
+Every order card shows the date and time it was created and who created it: the staff member's login, or "placed by the customer online". The date is recorded automatically.
+
+## Part 50: Deleted products stay in chats and orders, and the reseller desk
+
+### Deleting products no longer removes them from chat archives or orders
+When you delete a product (by hand, as a duplicate, with its vendor, by combining products, or by the 6-day lifetime), its photos and details are **kept if a chat archive or any order uses it**. Chat archives and orders keep showing its photos, title, code and prices. Products nothing else uses are still removed completely to save space. New orders also keep their own small photo of each item.
+
+### Reseller desk
+Resellers log in on the **Staff login page** with their own email and get their own desk (not the staff area):
+- **Products:** every live product with the **vendor price**, **your price to them**, and **their price** (your price plus their markup, rounded up). They set their markup once; it is saved for them.
+- **Share:** a message with the product details, **their price, their name, WhatsApp number and business name**, from a template they can change in My details. **Download the photos**, copy the message, open WhatsApp.
+- **Make a bill:** add products, change quantity or their price per item, add shipping, a discount and the customer. It shows what the customer pays, what they pay you and their profit. **Download the bill (PDF)** under their business name and number, **send it on WhatsApp**, **save it**, or **Send this order to Kulsums Collection**: the order comes to you at your prices with their code, ready to deliver to their customer.
+- **My orders:** only orders with their code, with status, payment, tracking, and "Make a bill for this order".
+- **My details:** name, WhatsApp number, business name, address, GSTIN, markup, rounding, bill note and share message.
+
+Resellers **cannot** see your settings, customers, chats, vendor payments or other orders, and cannot change products or photos.
+
+**One-time setup:**
+1. In Supabase, open **SQL Editor**, paste all of `reseller-setup.sql`, and select **Run**.
+2. In the staff area, open the reseller (Resellers), enter their email under **Reseller desk login**, and select **Give login**.
+3. If they have no account yet, they open the Staff login page, select **Create an account** with that email, and are taken to their desk. (If creating accounts is switched off in Supabase, create the user yourself under Authentication > Users with that email.)
+
+Orders sent from the desk show "created by <name> (reseller)" and their code on your Orders page.
 
 ## Updating the website later
 
