@@ -15,6 +15,13 @@ const root = process.cwd();
 const read = (f) => readFileSync(join(root, f), "utf8");
 
 // ---------- settings ----------
+// The website files must be in the main folder of the repository, next to this "scripts" folder.
+for (const f of ["index.html", "config.js"]) {
+  if (!existsSync(join(root, f))) {
+    console.error(`\n${f} is missing from the main folder of your GitHub repository.\nUpload ${f} again (Add file > Upload files) to the main folder, not inside a folder, then run this again.\nWithout index.html your home page shows "page not found" to Google.\n`);
+    process.exit(1);
+  }
+}
 const cfg = read("config.js");
 const SB_URL = (cfg.match(/supabaseUrl\s*:\s*['"]([^'"]+)['"]/) || [])[1];
 const SB_KEY = (cfg.match(/supabaseKey\s*:\s*['"]([^'"]+)['"]/) || [])[1];
@@ -30,6 +37,9 @@ const data = await kv(["kc:settings", "kc:categories", "kc:catalog"]);
 const st = data["kc:settings"] || {};
 const cats = data["kc:categories"] || [];
 const catalog = data["kc:catalog"] || [];
+// The website stores photo addresses in a short form ({b, n}); turn them back into full addresses.
+{ const B = `${SB_URL.replace(/\/$/, "")}/storage/v1/object/public/media/p/`;
+  for (const p of catalog) { const m = p.media; if (m && m.b) p.media = { th: `${B}${m.b}-th.jpg`, imgs: Array.from({ length: m.n || 0 }, (_, i) => `${B}${m.b}-${i}.jpg`) }; } }
 
 // ---------- check every photo before Google sees it ----------
 // A photo whose file is missing (404) is left out of the pages and the Merchant feed, so Google never turns a product
@@ -96,7 +106,7 @@ const catOn = (c) => { for (let x = c, i = 0; x && i < 5; x = catById[x.parent],
 const leftOut = [];
 // Product lifetime (Settings, Automatic store clean-up): products past their days on the store are left out at once.
 const EXP = st.expiry || {};
-const expDays = Number(EXP.days || 6), expOn = EXP.on !== false && expDays > 0;
+const expDays = Number(EXP.days || 3), expOn = EXP.on !== false && expDays > 0;
 const isExpired = (p) => expOn && p.listedAt && !p.keep && !(EXP.keepFeatured !== false && p.featured) && Date.now() >= Number(p.listedAt) + expDays * 864e5;
 const products = catalog.filter((p) => {
   const why = p.published === false ? "" : isExpired(p) ? `older than ${expDays} days` : !String(p.title || "").trim() ? "no title" : !catById[p.category] ? "no category" : !catOn(catById[p.category]) ? "category switched off"
