@@ -41,6 +41,109 @@ const catalog = data["kc:catalog"] || [];
 { const B = `${SB_URL.replace(/\/$/, "")}/storage/v1/object/public/media/p/`;
   for (const p of catalog) { const m = p.media; if (m && m.b) p.media = { th: `${B}${m.b}-th.jpg`, imgs: Array.from({ length: m.n || 0 }, (_, i) => `${B}${m.b}-${i}.jpg`) }; } }
 
+// ---------- same capitals and fancy-letter clean-up as the website (Title Case titles, normal sentences) ----------
+const EMOJI_RE=/[\p{Extended_Pictographic}\u{1F000}-\u{1FAFF}\u{1F1E6}-\u{1F1FF}\u2190-\u21FF\u2300-\u23FF\u2460-\u24FF\u25A0-\u25FF\u2600-\u27BF\u2900-\u297F\u2B00-\u2BFF\u3030\u303D\u3297\u3299\uFE0F\uFE0E\u200D\u20E3\u0950\u5350\u534D•●○◆◇■□▪▫★☆✓✔✗✘➤➜➡→←»«❤♡♥]/gu;
+const S = { settings: st };
+// ---------- tidy text: capitals, fancy fonts and punctuation are fixed automatically ----------
+// Vendors write in CAPITALS, in fancy letters (𝐒𝐢𝐥𝐤, ᴄᴏᴛᴛᴏɴ) or Every Word Capitalised. Customers always see
+// clean titles (Title Case) and calm descriptions (Sentence case), with sizes like XL and place names kept right.
+function plainLetters(s){const A='ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀꜱᴛᴜᴠᴡʏᴢ',B='abcdefghijklmnopqrstuvwyz';
+  return String(s??'').normalize('NFKC').replace(/[ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀꜱᴛᴜᴠᴡʏᴢ]/g,c=>B[A.indexOf(c)]).replace(/[\u200B\u200C\u2060\uFEFF]/g,'');}
+const TT_ACR=new Set(['KC','AD','CZ','USA','UK','UAE','LED','PU','PVC','GST','COD','DIY','HD','UV','NRI','TV','SKU','MRP','EMI','UPI','PDF','QR','OTP','ID','DM','NB']);
+const TT_PROPER=Object.fromEntries(['Indian','India','Pakistani','Banarasi','Benarasi','Chanderi','Lucknowi','Jaipuri','Kashmiri','Kanjivaram','Kanchipuram','Rajasthani','Gujarati','Bengali','Kolhapuri','Mysore','Paithani','Patola','Pochampally','Maheshwari','Bhagalpuri','Sambalpuri','Kota','Hyderabadi','Punjabi','Afghani','Arabic','Turkish','Moroccan','American','Eid','Diwali','Navratri','Holi','Ramadan','Ramzan','Christmas','Karwa','Chauth','Onam','Pongal','Raksha','Bandhan','English','Hindi','Urdu','Dubai','London','Mumbai','Delhi','Surat','Kolkata','Lycra','Modal','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].map(w=>[w.toLowerCase(),w]));
+const TT_SMALL=new Set(['with','and','of','in','for','the','a','an','on','to','or','by','at','from','as','per','into','vs']);
+const TT_UNIT=/^\d+(?:[.,]\d+)?(?:m|mtr|mtrs|meter|meters|metre|metres|cm|mm|in|inch|inches|ft|gm|gms|g|kg|ml|l|pc|pcs|piece|pieces|yard|yards|yds|st|nd|rd|th|x|k|%)$/i;
+const TT_SIZE=/^(?:\d?x{1,4}[sl]|xxl|\d{1,2}xl)$/i;
+const tidyOn=()=>S?.settings?.tidyText!==false;
+// One word: keep sizes, codes, short forms and place names right; mode 'title' capitalises, 'text' lowers.
+function tidyWord(w,mode,first,sizeCtx,prev){
+  const m=w.match(/^([^\p{L}\p{N}]*)([\p{L}\p{N}](?:[\p{L}\p{N}'’.&+]*[\p{L}\p{N}])?)([^\p{L}\p{N}]*)$/u);
+  if(!m)return w;
+  const [,a,core,z]=m;
+  const up=core.toUpperCase(),low=core.toLowerCase();
+  let out;
+  if(core.length>1&&TT_ACR.has(up))out=up;
+  else if(TT_SIZE.test(core))out=up;
+  else if(core.length===1&&/\p{L}/u.test(core)){
+    if(low==='i'&&mode!=='title')out='I';
+    else if(/^[sml]$/.test(low)&&(sizeCtx||(mode==='title'&&!first))&&!/\d\s*$/.test(prev||''))out=up;
+    else out=mode==='keep'?core:mode==='title'&&(first||!TT_SMALL.has(low))?up:low;}
+  else if(/\d/.test(core))out=TT_UNIT.test(core)?low:/\p{L}/u.test(core)&&mode!=='keep'?up:core;
+  else if(TT_PROPER[low])out=TT_PROPER[low];
+  else if(/\p{Ll}.*\p{Lu}/u.test(core)&&core!==up)out=core;        // iPhone, McQueen: typed on purpose
+  else if(mode!=='title'&&core===up&&core.length<=4&&/\d\s*$/.test(prev||'')&&TT_UNIT.test('1'+low))out=low;                           // MTR, PCS, CM after a number
+  else if(mode==='keep')out=core;
+  else if(mode==='title')out=TT_SMALL.has(low)&&!first?low:low.charAt(0).toUpperCase()+low.slice(1);
+  else out=low;
+  return a+out+z;
+}
+function tidyPunct(s){
+  return plainLetters(s).replace(/\.{3,}|…+/g,'…').replace(/(\p{L})\.\.(?=\s*\p{L})/gu,'$1. ').replace(/([!?,;:])\1+/g,'$1').replace(/([!?])[!?]+/g,'$1')
+    .replace(/\s+([,.;:!?…%)\]])/g,'$1').replace(/([(\[])\s+/g,'$1')
+    .replace(/([,;])(?=[\p{L}])/gu,'$1 ').replace(/(\p{Ll}{2}[.!?])(?=\p{L}{2})/gu,'$1 ')
+    .replace(/\s*&\s*/g,' & ').replace(/[ \t]{2,}/g,' ').trim();
+}
+// Words, keeping hyphenated words together but tidying each part (A-line, Co-ord, Off-white).
+function tidyWords(s,mode,sizeCtx){
+  const parts=s.split(/(\s+)/);let first=true,prev='';
+  return parts.map(t=>{if(!t||/^\s+$/.test(t))return t;
+    let r;if(/^[^\s-]+(?:-[^\s-]+)+$/.test(t)&&!/\d/.test(t)){const bits=t.split('-');
+      r=bits.map((b,k)=>{const x=tidyWord(b,mode,first&&!k,sizeCtx,prev);return k&&mode==='title'&&b.replace(/\W/g,'').length<=4?x.toLowerCase():x;}).join('-');}
+    else r=tidyWord(t,mode,first,sizeCtx,prev);
+    if(/[\p{L}\p{N}]/u.test(t))first=/[:(]$/.test(t)&&mode==='title';prev=t;return r;}).join('');
+}
+const capFirst=s=>s.replace(/^([^\p{L}\p{N}]*)(\p{Ll})/u,(x,a,b)=>a+b.toUpperCase());
+function tidyTitleText(s){
+  if(!s)return s;
+  let t=tidyPunct(String(s).replace(EMOJI_RE,' ').replace(/[*_~`|]+/g,' ')).replace(/^[\s,.;:\-–|]+|[\s,;:\-–|.!]+$/g,'');
+  t=tidyWords(t,'title',false);
+  return /^\p{Ll}+\p{Lu}/u.test(t)?t:capFirst(t);
+}
+// How shouty is this line? Counts only letters that have capitals.
+function caseShape(s){const up=(s.match(/\p{Lu}/gu)||[]).length,lo=(s.match(/\p{Ll}/gu)||[]).length;
+  const words=s.split(/\s+/).filter(w=>/^[^\p{L}]*\p{L}{3,}/u.test(w)),caps=words.filter(w=>/^[^\p{L}]*\p{Lu}/u.test(w)).length;
+  return {shout:up+lo>=6&&up/(up+lo)>.6,titley:words.length>=3&&caps/words.length>=.7,lowered:up===0&&lo>0};}
+function tidyProse(s,sizeCtx){
+  const sh=caseShape(s);
+  let t;
+  if(sh.shout||sh.titley||sh.lowered)t=tidyWords(s,'text',sizeCtx);
+  else{let prev='';t=s.split(/(\s+)/).map(w=>{if(!w||/^\s+$/.test(w))return w;const c=w.replace(/[^\p{L}]/gu,'');
+    const r=c.length>=4&&c===c.toUpperCase()&&/\p{Lu}/u.test(c)&&!TT_ACR.has(c)?tidyWord(w,'text',false,sizeCtx,prev):tidyWord(w,'keep',false,sizeCtx,prev);prev=w;return r;}).join('');}
+  // capital at the start of each sentence
+  return capFirst(t).replace(/([.!?…]\s+)(\p{Ll})/gu,(x,a,b)=>a+b.toUpperCase());
+}
+// ('keep' mode leaves ordinary words alone and only fixes sizes, short forms and "i".)
+function tidyLineText(l){
+  let s=tidyPunct(String(l||'').replace(/[*_~`]+/g,' '));if(!s)return '';
+  const kv=s.match(/^([\p{L}][\p{L} ]{0,22}?)\s*[:：]\s*(.+)$/u);
+  if(kv){const key=capFirst(kv[1].trim().toLowerCase().replace(/\b(\p{L}+)\b/gu,w=>TT_PROPER[w]||w));
+    const isSize=/^sizes?\b/i.test(key),isCol=/^colou?rs?\b/i.test(key);
+    let v=kv[2].replace(/[.;,]+$/,'');
+    v=isCol?tidyWords(v,'title',false):tidyProse(v,isSize);
+    if(isSize)v=v.replace(/\s*[,/]\s*/g,', ');
+    return `${key}: ${v}`;}
+  const sizeCtx=(s.match(/(?:^|[\s,/])(?:\d?x{1,4}[sl]|xxl|[sml])(?=$|[\s,/])/gi)||[]).length>=3;
+  let t=tidyProse(s,sizeCtx);
+  if(t.split(/\s+/).length>=4&&/[\p{L}\p{N})]$/u.test(t))t+='.';
+  return t;
+}
+function tidyDescText(text){
+  if(!text)return text||'';
+  const seen=new Set(),key=l=>l.toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
+  let lines=String(text).split('\n').map(l=>l.trim()?tidyLineText(l):'')
+    .map(l=>l.replace(/^Colou?rs?:\s*(\d+)\s+colou?rs?$/i,'Available in $1 colours.'))
+    .filter(l=>{if(!l)return true;const k=key(l);if(seen.has(k))return false;seen.add(k);return true;});
+  // A short sentence already said in full by a longer one is dropped ("Beautiful saree." before "Beautiful saree with zari work.")
+  const prose=lines.filter(l=>l&&!/^[\p{L}][\p{L} ]{0,22}:\s/u.test(l)).map(key);
+  lines=lines.filter(l=>{if(!l||/^[\p{L}][\p{L} ]{0,22}:\s/u.test(l))return true;const k=key(l);return !prose.some(o=>o!==k&&o.length>k.length&&o.startsWith(k));});
+  return lines.join('\n').replace(/\n{3,}/g,'\n\n').trim();
+}
+if (st.tidyText !== false) for (const p of catalog) {
+  if (p.title) p.title = tidyTitleText(p.title);
+  if (p.storeDesc) p.storeDesc = tidyDescText(String(p.storeDesc).replace(EMOJI_RE, ""));
+}
+for (const c of cats) if (c.name && st.tidyText !== false) c.name = tidyTitleText(c.name);
+
 // ---------- check every photo before Google sees it ----------
 // A photo whose file is missing (404) is left out of the pages and the Merchant feed, so Google never turns a product
 // down for a broken photo. A product with no working photo is left out of the feed until its photos are fixed.

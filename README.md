@@ -1298,3 +1298,22 @@ To update: open the repository on GitHub, select **Add file**, then **Upload fil
 **Fixed:** videos weren't loading after the Part 52 update. A note comment had hidden one line of code.
 
 Nothing new to run in Supabase. Upload `index.html` to the main folder.
+
+---
+
+## Part 54 – Titles and descriptions fixed when saved; move products from the store
+
+**Fixed in the saved data, not just on screen**
+- When you save or publish, the title is saved in Title Case. A description you typed is saved in normal sentences, with sizes like XL and names like Eid kept right.
+- Why it didn't work before: another phone or tab still running the old website could put the CAPITALS back. Text is now fixed after other phones' changes are combined, so the fixed version is what gets saved.
+- Leaving the title or description box fixes the text in the box straight away, so you see exactly what customers will see.
+- Products saved before this update are fixed and saved once, the next time any staff member opens the staff area. A message says how many were fixed.
+- The Google pages and Merchant Center feed (`scripts/build-seo.mjs`) use the same clean-up.
+- **Important:** every staff phone should reload the website once after you upload, so they all run the new version.
+
+**Moving products from the store page (admins)**
+- Open a collection on the store while signed in as admin. A bar at the top shows **Select all N** and a **Select** box on every design.
+- Tick some, or Select all, then pick **Move to category…**. All of them move and the store updates.
+- On the grid view (▦), Select all now covers the whole collection, not only the page you see.
+
+Upload `index.html` to the main folder and `build-seo.mjs` to the `scripts` folder.
