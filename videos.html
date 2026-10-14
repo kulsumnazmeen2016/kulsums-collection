@@ -1447,6 +1447,40 @@ body.sheet-open{overflow:hidden}
 .home-row .hr-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.home-row h2{margin:0}
 .hr-track{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(200px,230px);gap:14px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}.hr-track>*{scroll-snap-align:start}
 @media (max-width:760px){.cs-row{grid-template-columns:auto 44px 1fr}.cs-row select{grid-column:2/-1}.hr-track{grid-auto-columns:46%;gap:10px}}
+/* ---------- WhatsApp-style shop ---------- */
+.wc-list{background:#fff;border:1px solid var(--rule,#e8e0d2);border-radius:18px;overflow:hidden;margin:16px 0}
+.wc-list-head{display:flex;flex-direction:column;padding:12px 16px;background:#15110c;color:#f5ead6}.wc-list-head .small{color:#cdbf9f}
+.wc-row{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;padding:10px 14px;color:inherit;text-decoration:none;border-top:1px solid #f0ebe3}
+.wc-row:hover{background:#faf6ef}.wc-av{width:52px;height:52px;border-radius:50%;overflow:hidden;background:#e9e1d3;display:block;flex:none}.wc-av img,.wc-av .ph{width:100%;height:100%;object-fit:cover;display:block}
+.wc-av.sm{width:40px;height:40px}.wc-mid{display:flex;flex-direction:column;min-width:0}.wc-mid b{font-size:1.02rem}.wc-prev{color:#6f655a;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wc-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px}.wc-time{font-size:.75rem;color:#8a7f70}.wc-time.on{color:#1f9d55;font-weight:700}
+.wc-un{background:#25d366;color:#fff;border-radius:999px;font-size:.72rem;font-weight:700;padding:2px 7px;min-width:20px;text-align:center}
+.wc-thread{margin:0 -16px;background:#efeae2;background-image:radial-gradient(rgba(0,0,0,.035) 1px,transparent 1px);background-size:18px 18px;min-height:70vh;display:flex;flex-direction:column}
+.wc-th-head{position:relative;z-index:2;display:flex;align-items:center;gap:10px;padding:8px 12px;background:#15110c;color:#f5ead6}
+.wc-back,.wc-grid{color:#f5ead6;text-decoration:none;font-size:1.4rem;padding:2px 6px}.wc-th-t{display:flex;flex-direction:column;flex:1;min-width:0}.wc-th-t span{font-size:.75rem;color:#cdbf9f}
+.wc-subs{display:flex;gap:6px;overflow-x:auto;padding:8px 12px;background:#f7f3ec;border-bottom:1px solid #e6dfd3}
+.wc-body{padding:10px 12px 90px;display:flex;flex-direction:column;gap:6px;max-width:640px;width:100%;margin:0 auto}
+.wc-day{text-align:center;margin:8px 0}.wc-day span{background:#e1f3fb;color:#4a5a63;font-size:.75rem;padding:4px 10px;border-radius:8px;box-shadow:0 1px 1px rgba(0,0,0,.06)}
+.wc-earlier{text-align:center;margin:6px 0}
+.wc-msg{align-self:flex-start;max-width:min(88%,420px)}
+.wc-bub{position:relative;background:#fff;border-radius:0 12px 12px 12px;padding:4px;box-shadow:0 1px 1px rgba(0,0,0,.1)}
+.wc-bub:before{content:"";position:absolute;left:-8px;top:0;border-top:10px solid #fff;border-left:8px solid transparent}
+.wc-album{display:grid;gap:3px;border-radius:9px;overflow:hidden}.wc-album.n1{grid-template-columns:1fr}.wc-album.n2{grid-template-columns:1fr 1fr}
+.wc-album.n3{grid-template-columns:1fr 1fr}.wc-album.n3 .wc-ph:first-child{grid-row:span 2}.wc-album.n4{grid-template-columns:1fr 1fr}
+.wc-ph{position:relative;border:0;padding:0;background:#e9e1d3;cursor:zoom-in;display:block;aspect-ratio:4/5}.wc-album.n3 .wc-ph:first-child{aspect-ratio:auto}
+.wc-ph img{width:100%;height:100%;object-fit:cover;display:block}.wc-more{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.45);color:#fff;font-size:1.6rem;font-weight:700}
+.wc-cap{padding:6px 8px 18px;position:relative}.wc-t{font-weight:700;color:#111;text-decoration:none;display:block;margin-bottom:3px}.wc-d{font-size:.9rem;line-height:1.45;color:#303030}
+.wc-pr{margin-top:6px;font-size:1rem}.wc-pr b{color:#111}.wc-ts{position:absolute;right:8px;bottom:3px;font-size:.68rem;color:#8a8a8a}.wc-tick{color:#53bdeb;letter-spacing:-3px}
+.wc-acts{display:flex;gap:6px;flex-wrap:wrap;margin:5px 0 4px}
+.wc-chip{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid #d9d2c6;border-radius:999px;padding:6px 12px;font:inherit;font-size:.85rem;color:#1f3b2b;text-decoration:none;cursor:pointer;white-space:nowrap}
+.wc-chip.on{background:#d9fdd3;border-color:#25d366}
+.wc-compose{position:sticky;bottom:0;display:flex;gap:8px;padding:8px 10px;background:#f0f2f5;border-top:1px solid #ddd}.wc-compose input{flex:1;border-radius:999px;border:0;padding:10px 14px;font:inherit}
+.wc-compose button{width:44px;height:44px;border-radius:50%;border:0;background:#25d366;color:#fff;display:grid;place-items:center;cursor:pointer}.wc-compose svg{width:22px;height:22px}
+.cv{display:none}.cv.on{display:flex;position:fixed;inset:0;z-index:200;background:#000;flex-direction:column}
+.cv-top,.cv-bot{display:flex;align-items:center;gap:12px;padding:10px 14px;color:#fff}.cv-top b{flex:1;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv-x{background:none;border:0;color:#fff;font-size:1.4rem;cursor:pointer}.cv-bot{justify-content:space-between}
+.cv-track{flex:1;display:flex;overflow-x:auto;scroll-snap-type:x mandatory}.cv-track figure{flex:0 0 100%;margin:0;display:grid;place-items:center;scroll-snap-align:center}.cv-track img{max-width:100%;max-height:100%;object-fit:contain}
+@media (max-width:760px){.has-buybar .wc-compose{bottom:64px}.shop-shell .wc-compose{bottom:64px}.wc-body{padding-bottom:110px}}
 </style>
 <!-- generated by scripts/build-seo.mjs -->
 <link rel="canonical" href="https://kulsumscollection.com/videos">
@@ -1723,8 +1757,9 @@ const DEFAULT_SETTINGS={
   heroText:'Sarees, suits, and everyday favourites, picked by hand and delivered to your door.',
   currency:'₹',
   logo:'',
+  chatShop:true,
   intl:{enabled:false,switcher:true,autoDetect:true,rateMode:'auto',manual:{},markup:{},countryMarkup:{},off:[],zones:{},itemKg:0.5,catKg:{},packKg:0.2,freeAbove:0,payNote:'We will message you on WhatsApp with the payment details (bank transfer, Wise or PayPal) and the courier tracking.',paypal:''},
-  expiry:{on:true,days:6,action:'delete',keepFeatured:true,askManual:true,deleteVideos:true},
+  expiry:{on:true,days:3,action:'delete',keepFeatured:true,askManual:true,deleteVideos:true},
   clean:{auto:true,photos:true,unpublish:true,noPrice:true,noPriceDays:2,videos:true},
   maintenance:{on:false,title:'We will be back soon',message:'We are updating our store with new arrivals. Please check back in a little while. You can still message us on WhatsApp.'},
   announcement:{enabled:true,scroll:true,speed:'normal',messages:['Free shipping on orders above ₹1,499','New arrivals every week','Cash on delivery available','Message us on WhatsApp for help choosing']},
@@ -1806,13 +1841,13 @@ async function loadAll(){
   const [cart,wish,my,recent]=await Promise.all([DB.get(K.cart,false),DB.get(K.wish,false),DB.get(K.my,false),DB.get(K.recent,false)]);
   if(HOSTED){
     try{
-      const pub=await (PRE&&!S.role?Promise.race([Remote.getMany(PUBLIC_KEYS),new Promise((_,no)=>setTimeout(()=>no(new Error('slow')),6000))]):Remote.getMany(PUBLIC_KEYS));   // a built page does not wait long: it has its own data
+      const pub=await (PRE&&!S.role?Promise.race([Remote.getManyCached(PUBLIC_KEYS),new Promise((_,no)=>setTimeout(()=>no(new Error('slow')),6000))]):Remote.getManyCached(PUBLIC_KEYS));   // a built page does not wait long: it has its own data
       st=pub['kc:settings'];cats=pub['kc:categories'];
       S.publicHadPricing=!!(st&&(st.pricing||st.market||st.catMarkup));
       S.campaigns=pub['kc:campaigns']||[];
-      if(S.role){const pr=await Remote.getMany(['kc:products','kc:vendors','kc:videos','kc:private','kc:resellers','kc:vpay','kc:contacts','kc:chat:pgone']);S.pgone=pr['kc:chat:pgone']||{};S.contacts=pr['kc:contacts']||[];S.resellers=pr['kc:resellers']||[];S.vpay=pr['kc:vpay']||[];prods=pr['kc:products'];vens=pr['kc:vendors'];vids=pr['kc:videos'];if(pr['kc:private'])st={...(st||{}),...pr['kc:private']};}
-      else if(S.reseller){const pr=await Remote.getMany(['kc:products','kc:vendors','kc:videos','kc:resellers','kc:rp:'+S.reseller]);if(pr['kc:products']){prods=pr['kc:products'];vens=pr['kc:vendors']||[];vids=pr['kc:videos']||pub['kc:vcatalog'];}else{prods=pub['kc:catalog'];vens=[];vids=pub['kc:vcatalog'];}S.resellers=pr['kc:resellers']||[];S.rprof=pr['kc:rp:'+S.reseller]||{};}
-      else{prods=pub['kc:catalog'];vens=[];vids=pub['kc:vcatalog'];}
+      if(S.role){const pr=await Remote.getManyCached(['kc:products','kc:vendors','kc:videos','kc:private','kc:resellers','kc:vpay','kc:contacts','kc:chat:pgone']);S.pgone=pr['kc:chat:pgone']||{};S.contacts=pr['kc:contacts']||[];S.resellers=pr['kc:resellers']||[];S.vpay=pr['kc:vpay']||[];prods=pr['kc:products'];vens=pr['kc:vendors'];vids=pr['kc:videos'];if(pr['kc:private'])st={...(st||{}),...pr['kc:private']};}
+      else if(S.reseller){const pr=await Remote.getManyCached(['kc:products','kc:vendors','kc:videos','kc:resellers','kc:rp:'+S.reseller]);if(pr['kc:products']){prods=pr['kc:products'];vens=pr['kc:vendors']||[];vids=pr['kc:videos']||pub['kc:vcatalog'];}else{prods=(pub['kc:catalog']||[]).map(expandMedia);vens=[];vids=pub['kc:vcatalog'];}S.resellers=pr['kc:resellers']||[];S.rprof=pr['kc:rp:'+S.reseller]||{};}
+      else{prods=(pub['kc:catalog']||[]).map(expandMedia);vens=[];vids=pub['kc:vcatalog'];}
       S.offline=false;
     }catch(e){S.offline=true;console.error(e);}
   }else{
@@ -1820,7 +1855,8 @@ async function loadAll(){
   }
   if(PRE&&!S.role){st=st||PRE.settings;cats=cats||PRE.categories;const have=new Set((prods||[]).map(p=>p.id));prods=[...(prods||[]),...(PRE.products||[]).filter(p=>!have.has(p.id))];}
   if(st?.announcement&&typeof st.announcement.text==='string'&&!st.announcement.messages){st.announcement.messages=[st.announcement.text];delete st.announcement.text;}
-  S.settings=deepMerge(clone(DEFAULT_SETTINGS),st||{});S.videos=vids||[];
+  S.settings=deepMerge(clone(DEFAULT_SETTINGS),st||{});
+  if(S.settings.expiry&&!S.settings.expiry.v3){if(Number(S.settings.expiry.days)===6)S.settings.expiry.days=3;S.settings.expiry.v3=true;S._saveExpiry=true;}   // products now stay 3 daysS._catSig=JSON.stringify([S.settings.pricing,S.settings.market,S.settings.catMarkup]);S.videos=vids||[];
   S.categories=cats||clone(DEFAULT_CATS);
   if(!S.categories.some(c=>c.id==='others'))S.categories.push(clone(OTHERS));
   S.products=prods||[];setProdBase();S.vendors=vens||[];S.cart=cart||[];S.wish=wish||[];S.myOrders=my||[];S.recent=recent||[];markLive();
@@ -1836,10 +1872,20 @@ const saveSettings=async()=>{
   if(!HOSTED)return persist(K.settings,S.settings);
   const pub={...S.settings};PRIVATE_SETTINGS.forEach(k=>delete pub[k]);
   const ok=await persist(K.settings,pub)&&(S.role!=='admin'||await persist('kc:private',Object.fromEntries(PRIVATE_SETTINGS.map(k=>[k,S.settings[k]]))));
-  if(ok&&S.role==='admin')await persist('kc:catalog',buildCatalog());return ok;
+  // The catalogue only depends on pricing; upload it again only when pricing changed.
+  if(ok&&S.role==='admin'){const sig=JSON.stringify([S.settings.pricing,S.settings.market,S.settings.catMarkup]);if(sig!==S._catSig){S._catSig=sig;await persist('kc:catalog',buildCatalog());}}return ok;
 };
 const saveCats=()=>persist(K.cats,S.categories);
-const saveProducts=async()=>{await dupGate();ensureSlugs();if(typeof stampListing==='function')stampListing();await mergeRemoteProducts();const ok=await persist(K.products,S.products.map(cleanProd));if(ok){markLive();setProdBase();}if(ok&&HOSTED)return persist('kc:catalog',buildCatalog());return ok;};
+// Saves made close together are combined into one, and nothing is uploaded when nothing changed.
+let SP_WAIT=null;
+const saveProducts=()=>SP_WAIT||(SP_WAIT=new Promise(res=>setTimeout(async()=>{SP_WAIT=null;try{res(await saveProductsNow());}catch(e){console.error(e);res(false);}},200)));
+const SAVED={p:'',c:''};
+async function saveProductsNow(){await dupGate();ensureSlugs();if(typeof stampListing==='function')stampListing();await mergeRemoteProducts();
+  const list=S.products.map(cleanProd),pj=JSON.stringify(list);let ok=true;
+  if(pj!==SAVED.p){ok=await persist(K.products,list);if(ok)SAVED.p=pj;}
+  if(ok){markLive();setProdBase();}
+  if(ok&&HOSTED){const cat=buildCatalog(),cj=JSON.stringify(cat);if(cj!==SAVED.c){ok=await persist('kc:catalog',cat);if(ok)SAVED.c=cj;}}
+  return ok;}
 const saveVendors=()=>persist(K.vendors,S.vendors);
 const saveVideos=async()=>{const ok=await persist(K.videos,S.videos);if(ok&&HOSTED)return persist('kc:vcatalog',buildVideoCatalog());return ok;};
 const saveCart=()=>persist(K.cart,S.cart,false);
@@ -2448,8 +2494,18 @@ const BUCKET='media';
 
 const Remote={
   stamps:{},
+  // Asks only "when did these last change?" (a few bytes), then downloads just the ones that changed since this
+  // phone or computer last loaded them. Everything else comes from the copy kept on the device.
+  async getManyCached(keys){
+    let st;try{const r=await sb.from('kv').select('key,updated_at').in('key',keys);if(r.error)throw r.error;st=r.data||[];}catch{return this.getMany(keys);}
+    const out={},need=[];
+    for(const r of st){let c=null;try{c=await DB.get('cache:'+r.key,false);}catch{}
+      if(c&&c.at&&Date.parse(c.at)===Date.parse(r.updated_at)){out[r.key]=c.v;this.stamps[r.key]=r.updated_at;}else need.push(r.key);}
+    if(need.length){const fresh=await this.getMany(need);for(const k of need){if(!(k in fresh))continue;out[k]=fresh[k];DB.set('cache:'+k,{at:this.stamps[k],v:fresh[k]},false).catch(()=>{});}}
+    return out;},
+  cacheKeep(key,value){if(this.stamps[key])DB.set('cache:'+key,{at:this.stamps[key],v:value},false).catch(()=>{});},
   async getMany(keys){const {data,error}=await sb.from('kv').select('key,value,updated_at').in('key',keys);if(error)throw error;const o={};for(const r of data||[]){o[r.key]=r.value;this.stamps[r.key]=r.updated_at;}return o;},
-  async set(key,value){const at=new Date().toISOString();const {error}=await sb.from('kv').upsert({key,value,updated_at:at});if(error)throw new Error(error.message||'Save refused');this.stamps[key]=at;},
+  async set(key,value){const at=new Date().toISOString();const {error}=await sb.from('kv').upsert({key,value,updated_at:at});if(error)throw new Error(error.message||'Save refused');this.stamps[key]=at;this.cacheKeep(key,value);},
   async upload(path,blob,type){
     const {error}=await sb.storage.from(BUCKET).upload(path,blob,{contentType:type,upsert:true,cacheControl:'31536000'});
     if(error)throw new Error(error.message||'Upload failed');
@@ -2656,7 +2712,7 @@ async function cleanStore({auto=false,dry=false}={}){
   if(!S.role||!isAdmin())return null;
   const rep={at:Date.now(),auto,unpublished:[],deleted:[],videos:[],slugs:0,checkedPhotos:0};
   // 1. photos: repair what can be repaired, mark the rest
-  if(HOSTED&&clOn('photos')&&!dry){try{const r=await repairPhotos();PHOTO_CHECKED=true;rep.checkedPhotos=r.checked;rep.photosFixed=r.fixed;}catch(e){console.error(e);}}
+  if(HOSTED&&clOn('photos')&&!dry){LIGHT_PHOTO_CHECK.on=!!auto;try{const r=await repairPhotos();PHOTO_CHECKED=true;rep.checkedPhotos=r.checked;rep.photosFixed=r.fixed;}catch(e){console.error(e);}finally{LIGHT_PHOTO_CHECK.on=false;}}
   // 2. live products that cannot be bought properly come off the store
   if(clOn('unpublish'))for(const p of S.products.filter(x=>x.published)){const why=cleanReasons(p);if(!why.length)continue;
     rep.unpublished.push({id:p.id,code:p.myId||p.code||'',title:p.title||'',why:why.join(', ')});
@@ -2689,8 +2745,8 @@ function cleanPanelHTML(){const r=CL().last;
     <span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" data-act="cleanPreview">See what it would do</button><button class="btn sm primary" data-act="cleanNow">Clean now</button></span></div>
     ${r&&(r.unpublished.length||r.deleted.length)?`<details class="small" style="margin-top:8px"><summary>What was changed last time</summary>${r.unpublished.length?`<p><b>Taken off the store</b> (fix them, then publish again from Review): ${r.unpublished.slice(0,40).map(x=>`${esc(x.code)} ${esc(x.title)} (${esc(x.why)})`).join('; ')}${r.unpublished.length>40?'…':''}</p>`:''}
       ${r.deleted.length?`<p><b>Removed (no price):</b> ${r.deleted.slice(0,40).map(x=>esc(x.code)).join(', ')}${r.deleted.length>40?'…':''}</p>`:''}</details>`:''}</div>`;}
-async function autoExpire(){if(!isAdmin()||!expOn()||S._cleaning)return;if(Date.now()-(EXP().lastRun||0)<3*3600e3)return;S._cleaning=true;
-  try{const rep={};await expireProducts(rep,false);S.settings.expiry={...EXP(),lastRun:Date.now()};await saveProducts();await saveSettings();
+async function autoExpire(){if(isAdmin()&&S._saveExpiry){S._saveExpiry=false;saveSettings();}if(!isAdmin()||!expOn()||S._cleaning)return;let last=0;try{last=+localStorage.getItem('kc:expiryRun')||0;}catch{}if(Date.now()-last<3*3600e3)return;S._cleaning=true;
+  try{try{localStorage.setItem('kc:expiryRun',String(Date.now()));}catch{}const rep={};await expireProducts(rep,false);if(rep.expiredAuto?.length)await saveProducts();   // saves only when something was removed
     const n=rep.expiredAuto?.length||0,m=rep.expiredManual?.length||0;if(n||m){toast([n?`${n} product${n===1?'':'s'} older than ${expDays()} days ${EXP().action==='hide'?'taken off the store':'deleted with their photos'}`:'',m?`${m} added by hand waiting for you on the Dashboard`:''].filter(Boolean).join('. '));if(inStaffView())route();}}
   catch(e){console.error(e);}S._cleaning=false;}
 async function autoClean(){if(CL().auto===false){await autoExpire();return;}if(!isAdmin()||S._cleaning)return;if(Date.now()-(CL().lastRun||0)<20*3600e3){await autoExpire();return;}S._cleaning=true;
@@ -2885,8 +2941,8 @@ queueMicrotask(()=>Object.assign(ACT,{
 // see it, and the daily clean-up deletes it with its photos and videos, so no broken links are left behind.
 // Products you added by hand are never deleted by themselves: they wait for you to refresh or delete them.
 const EXP=()=>S.settings.expiry||{};
-const expOn=()=>EXP().on!==false&&Number(EXP().days||6)>0;
-const expDays=()=>Number(EXP().days||6);
+const expOn=()=>EXP().on!==false&&Number(EXP().days||3)>0;
+const expDays=()=>Number(EXP().days||3);
 const listedAt=p=>p.listedAt||p.publishedAt||0;
 const addedAt=p=>p.createdAt||listedAt(p)||0;
 function expiresAt(p){const t=listedAt(p);return t?t+expDays()*864e5:0;}
@@ -2901,8 +2957,9 @@ function leavesIn(p){if(!expOn()||!p.published)return '';if(exempt(p))return p.k
 function stampListing(){const now=Date.now();for(const p of S.products){if(p.published&&!p.listedAt)p.listedAt=p.publishedAt||now;if(!p.publishedAt&&p.published)p.publishedAt=p.listedAt;if(!p.published&&p.listedAt&&!p.keepListed)delete p.listedAt;}}
 async function openOrderIds(){try{const os=await allOrders();return new Set(os.filter(o=>!['delivered','cancelled'].includes(o.status)).flatMap(o=>(o.items||[]).map(i=>i.id)));}catch{return new Set();}}
 // Called by the daily clean-up.
-async function expireProducts(rep,dry){if(!expOn())return;const now=Date.now(),open=await openOrderIds();
-  const gone=S.products.filter(p=>expired(p,now));
+async function expireProducts(rep,dry){if(!expOn())return;const now=Date.now();
+  const gone=S.products.filter(p=>expired(p,now));rep.expiredAuto=[];rep.expiredManual=[];rep.expiredHeld=[];if(!gone.length)return;   // nothing to do: no need to load orders
+  const open=await openOrderIds();
   rep.expiredAuto=[];rep.expiredManual=[];rep.expiredHeld=[];
   for(const p of gone){const row={id:p.id,code:p.myId||p.code||'',title:p.title||'',listed:listedAt(p)};
     if(isManual(p)&&EXP().askManual!==false)rep.expiredManual.push(row);
@@ -3256,6 +3313,81 @@ function homeRowsHTML(){const vis=visibleProducts();const rows=mainMenus().map(c
   return rows.map(({c,ps})=>`<section class="sec home-row" aria-labelledby="hr-${c.id}"><div class="hr-head"><h2 id="hr-${c.id}">${esc(c.name)}</h2><a class="btn sm" href="#/c/${c.id}">See all ${ps.length}</a></div>
     <div class="hr-track">${ps.slice(0,10).map(cardHTML).join('')}</div></section>`).join('');}
 
+// ================= WhatsApp-style shop =================
+// Categories are listed like WhatsApp chats. Opening one shows its products as messages: photos as an album,
+// the description, the price and the time it was added, with Add to bag and Order on WhatsApp under each.
+// Only the newest 20 load at first, so it stays quick; "Show earlier" loads more.
+const chatShop=()=>S.settings.chatShop!==false;
+const CV={limit:20,cat:'',sub:''};
+const seenAll=()=>lsGet('kc:seen')||{};
+function markSeen(id){const s=seenAll();s[id]=Date.now();lsSet('kc:seen',s);}
+const tOf=p=>listedAt(p)||p.createdAt||0;
+function chatTime(t){if(!t)return '';const d=new Date(t),now=new Date(),y=new Date(now);y.setDate(now.getDate()-1);
+  if(d.toDateString()===now.toDateString())return d.toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit'}).toLowerCase();
+  if(d.toDateString()===y.toDateString())return 'Yesterday';return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});}
+function dayLabel(t){const d=new Date(t),now=new Date(),y=new Date(now);y.setDate(now.getDate()-1);
+  if(d.toDateString()===now.toDateString())return 'Today';if(d.toDateString()===y.toDateString())return 'Yesterday';return d.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});}
+function chatGroups(){const vis=visibleProducts(),out=[];
+  if(S.settings.menus.newArrivals&&vis.length)out.push({id:'new',name:'New arrivals',pin:true,ps:newArrivalsList()});
+  mainMenus().forEach(c=>{const ids=catGroupIds(c);const ps=vis.filter(p=>ids.includes(p.category));if(ps.length)out.push({id:c.id,name:c.name,ps});});
+  return out.map(g=>({...g,last:[...g.ps].sort((a,b)=>tOf(b)-tOf(a))[0]}));}
+function chatListHTML(){const gs=chatGroups(),seen=seenAll();if(!gs.length)return '';
+  return `<section class="wc-list" aria-label="Our collections"><div class="wc-list-head"><b>Our collections</b><span class="small">Tap one to see every design, like a WhatsApp chat</span></div>
+    ${gs.map(g=>{const p=g.last,un=g.ps.filter(x=>tOf(x)>(seen[g.id]||0)).length;return `<a class="wc-row" href="#/c/${g.id}">
+      <span class="wc-av">${p?thumbTag(p):''}</span>
+      <span class="wc-mid"><b>${esc(g.name)}${g.pin?' <span aria-hidden="true">📌</span>':''}</b><span class="wc-prev">📷 ${esc(p?.title||'')}${p&&sellPrice(p)!=null?' · '+esc(money(sellPrice(p))):''}</span></span>
+      <span class="wc-meta"><span class="wc-time ${un?'on':''}">${chatTime(tOf(p))}</span>${un?`<span class="wc-un">${un>99?'99+':un}</span>`:''}</span></a>`;}).join('')}</section>`;}
+function albumHTML(p){const n=Math.max(1,Number(p.imageCount)||(p.media?.imgs?.length)||1),show=Math.min(n,4);
+  return `<div class="wc-album n${show}">${Array.from({length:show},(_,i)=>`<button type="button" class="wc-ph" data-act="cvOpen" data-id="${p.id}" data-i="${i}" aria-label="See photo ${i+1} of ${n} full size">
+      <img data-full="${p.id}" data-i="${i}" alt="${esc(p.title)}${n>1?' photo '+(i+1):''}" loading="lazy">${i===3&&n>4?`<span class="wc-more">+${n-4}</span>`:''}</button>`).join('')}</div>`;}
+function waBubbleHTML(p){const price=sellPrice(p),cols=productColours(p),f=F(),canBuy=f.cart&&price!=null&&p.stock!=='out',on=S.wish.includes(p.id);
+  const desc=storeDesc(p).split('\n').map(x=>x.trim()).filter(Boolean).slice(0,7);
+  return `<div class="wc-msg" id="m-${p.id}"><div class="wc-bub">${albumHTML(p)}
+    <div class="wc-cap"><a class="wc-t" href="#/p/${p.id}">${esc(p.title)}</a>${desc.length?`<div class="wc-d">${desc.map(esc).join('<br>')}</div>`:''}
+      <div class="wc-pr">${price!=null?`<b>${esc(priceLabel(p))}</b>${mrpHTML(p,minPrice(p))}`:'<b>Price on request</b>'}${cols.length>1?` <span class="small">· ${cols.length} colours</span>`:''}${p.stock==='out'?' <span class="pill bad">Sold out</span>':''}</div>
+      <span class="wc-ts">${chatTime(tOf(p))} <span class="wc-tick" aria-hidden="true">✓✓</span></span></div></div>
+    <div class="wc-acts">${canBuy&&cols.length<2?`<button class="wc-chip" data-act="add" data-id="${p.id}">🛍️ Add to bag</button>`:canBuy?`<a class="wc-chip" href="#/p/${p.id}">🎨 Choose colour</a>`:''}
+      ${supportWA()?`<a class="wc-chip" href="${waLink(supportWA(),typeof waOrderText==='function'?waOrderText(p):p.title)}" target="_blank" rel="noopener">💬 Order on WhatsApp</a>`:''}
+      ${f.wishlist?`<button class="wc-chip ${on?'on':''}" data-act="wish" data-id="${p.id}" aria-pressed="${on}">${on?'❤️':'🤍'}</button>`:''}</div></div>`;}
+function vChatThread(main,id,q){const isNew=id==='new',c=isNew?null:catById(id);
+  if(!isNew&&(!c||c.id!==id))return vCategory(main,id,q);
+  if(CV.cat!==id){CV.cat=id;CV.limit=20;CV.sub='';}
+  const subs=c?subMenus(c):[],sub=CV.sub&&subs.some(s=>s.id===CV.sub)?CV.sub:'';
+  const vis=visibleProducts();let ps=isNew?newArrivalsList():vis.filter(p=>(sub?[sub]:catGroupIds(c)).includes(p.category));
+  ps=[...ps].sort((a,b)=>tOf(a)-tOf(b));const total=ps.length,shown=ps.slice(-CV.limit);
+  let lastDay='';const body=shown.map(p=>{const d=new Date(tOf(p)).toDateString();const sep=d!==lastDay?`<div class="wc-day"><span>${dayLabel(tOf(p))}</span></div>`:'';lastDay=d;return sep+waBubbleHTML(p);}).join('');
+  const name=isNew?'New arrivals':c.name,av=ps[ps.length-1];
+  main.innerHTML=`<div class="wc-thread"><header class="wc-th-head"><a href="#/" class="wc-back" aria-label="Back to all collections">←</a><span class="wc-av sm">${av?thumbTag(av):''}</span>
+      <span class="wc-th-t"><b>${esc(name)}</b><span>${total} design${total===1?'':'s'} · tap a photo to see it full size</span></span>
+      <a class="wc-grid" href="#/c/${id}?grid=1" title="Show as a grid" aria-label="Show as a grid">▦</a></header>
+    ${subs.length?`<div class="wc-subs" role="group" aria-label="Filter">${[['','All'],...subs.map(s=>[s.id,s.name])].map(([k,l])=>`<button class="wc-chip ${sub===k?'on':''}" data-act="cvSub" data-s="${k}">${esc(l)}</button>`).join('')}</div>`:''}
+    <div class="wc-body" id="wcBody">${total>shown.length?`<div class="wc-earlier"><button class="wc-chip" data-act="cvMore">Show ${Math.min(20,total-shown.length)} earlier designs</button></div>`:''}
+      ${body||'<div class="wc-day"><span>No designs here yet</span></div>'}</div>
+    ${supportWA()?`<form class="wc-compose" data-wacompose data-name="${esc(name)}"><input type="text" name="m" placeholder="Ask us about ${esc(name)}…" aria-label="Message us on WhatsApp" autocomplete="off"><button aria-label="Send on WhatsApp">${ICON.wa}</button></form>`:''}</div>`;
+  markSeen(id);
+  requestAnimationFrame(()=>{if(!CV.keepScroll){const last=main.querySelector('.wc-msg:last-of-type');(last||main).scrollIntoView({block:'end'});}CV.keepScroll=false;});
+}
+document.addEventListener('submit',e=>{const f=e.target.closest('[data-wacompose]');if(!f)return;e.preventDefault();const t=f.m.value.trim();
+  window.open(waLink(supportWA(),`Hi ${S.settings.brand}, about ${f.dataset.name}: ${t||'I would like to know more.'}`),'_blank','noopener');f.m.value='';});
+// Full-size photo viewer, swipe between photos
+async function chatViewer(pid,start=0){const p=prodById(pid);if(!p)return;let imgs=((await getImages(pid))||[]).filter(Boolean);
+  if(!imgs.length)imgs=[...document.querySelectorAll(`#m-${pid} .wc-ph img`)].map(i=>i.src).filter(Boolean);if(!imgs.length){const t=await getThumb(pid);if(t)imgs=[t];}if(!imgs.length){toast('No photo for this design yet');return;}start=Math.min(start,Math.max(0,imgs.length-1));
+  let v=$('#cvView');if(!v){v=document.createElement('div');v.id='cvView';document.body.appendChild(v);}
+  v.className='cv on';v.innerHTML=`<div class="cv-top"><button class="cv-x" data-act="cvClose" aria-label="Close">✕</button><b>${esc(p.title)}</b><span id="cvN">${start+1} / ${imgs.length}</span></div>
+    <div class="cv-track" id="cvTrack">${imgs.map((u,i)=>`<figure><img src="${u}" alt="${esc(p.title)} photo ${i+1}"></figure>`).join('')}</div>
+    <div class="cv-bot"><span>${sellPrice(p)!=null?esc(priceLabel(p)):''}</span><a class="btn sm primary" href="#/p/${p.id}" data-act="cvClose">See details</a></div>`;
+  const tr=$('#cvTrack');requestAnimationFrame(()=>{tr.scrollLeft=start*tr.clientWidth;});
+  tr.onscroll=()=>{const n=$('#cvN');if(n)n.textContent=`${Math.round(tr.scrollLeft/tr.clientWidth)+1} / ${imgs.length}`;};
+  document.body.style.overflow='hidden';}
+function chatViewerClose(){const v=$('#cvView');if(v){v.className='cv';v.innerHTML='';}document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#cvView.on'))chatViewerClose();});
+queueMicrotask(()=>Object.assign(ACT,{
+  cvOpen:el=>chatViewer(el.dataset.id,+el.dataset.i||0),
+  cvClose:()=>chatViewerClose(),
+  cvMore:async()=>{const b=$('#wcBody'),h=b?b.scrollHeight:0,y=window.scrollY;CV.limit+=20;CV.keepScroll=true;await route();const b2=$('#wcBody');if(b2)window.scrollTo(0,y+(b2.scrollHeight-h));},
+  cvSub:el=>{CV.sub=el.dataset.s;CV.limit=20;route();},
+}));
+
 // ---------- several phones and tabs editing at once ----------
 // Each save first fetches what was saved elsewhere since this page loaded, and keeps those changes.
 // A field this page did not change takes the newer value, so an old open tab can no longer undo new photos or prices.
@@ -3263,7 +3395,9 @@ const cleanProd=p=>{const o={};for(const k in p)if(k[0]!=='_')o[k]=p[k];return o
 function setProdBase(){S._prodBase=HOSTED&&S.role?new Map(S.products.map(p=>[p.id,JSON.stringify(cleanProd(p))])):null;}
 async function mergeRemoteProducts(){
   if(!HOSTED||!S.role||!S._prodBase)return;
-  let r;try{const {data,error}=await sb.from('kv').select('value,updated_at').eq('key',K.products).maybeSingle();if(error)return;r=data;}catch{return;}
+  let r;try{const s0=await sb.from('kv').select('updated_at').eq('key',K.products).maybeSingle();const at=s0.data?.updated_at,was0=Remote.stamps[K.products];
+    if(!at||(was0&&Date.parse(at)<=Date.parse(was0)))return;   // nothing new elsewhere: no download
+    const {data,error}=await sb.from('kv').select('value,updated_at').eq('key',K.products).maybeSingle();if(error)return;r=data;}catch{return;}
   const was=Remote.stamps[K.products];if(!r||!Array.isArray(r.value)||(was&&Date.parse(r.updated_at)<=Date.parse(was)))return;
   const base=S._prodBase,rmap=new Map(r.value.map(p=>[p.id,p])),J=v=>JSON.stringify(v??null),here=new Set();let n=0;
   const keep=[];
@@ -3281,12 +3415,13 @@ async function mergeRemoteProducts(){
 
 // ---------- photo repair ----------
 // Finds products whose photo files are missing and points them at the newest photos still in storage.
+const LIGHT_PHOTO_CHECK={on:false};
 async function photoOk(u){if(!u||!/^https?:/.test(u))return true;try{const r=await fetch(u,{method:'HEAD',cache:'no-store'});return r.ok;}catch{return true;}}
 async function repairPhotos(report){
   if(!HOSTED||!S.role)return {checked:0,fixed:0,lost:[]};
   const list=S.products.filter(p=>p.media?.th),out={checked:0,fixed:0,lost:[]};let i=0;
   const work=async()=>{while(i<list.length){const p=list[i++];out.checked++;report?.(out.checked,list.length);
-    const urls=[p.media.th,...(p.media.imgs||[])];let bad=false;for(const u of urls){if(!(await photoOk(u))){bad=true;break;}}
+    const urls=LIGHT_PHOTO_CHECK.on?[p.media.th]:[p.media.th,...(p.media.imgs||[])];let bad=false;for(const u of urls){if(!(await photoOk(u))){bad=true;break;}}
     if(!bad)continue;
     const {data,error}=await sb.storage.from(BUCKET).list(`p/${p.id}`,{limit:1000});
     if(error){out.unchecked=(out.unchecked||0)+1;continue;}   // could not look: never report it as lost
@@ -3297,7 +3432,7 @@ async function repairPhotos(report){
     p.media={th:url(g.th),imgs:names.map(url),paths:[g.th,...names].map(n=>`p/${p.id}/${n}`)};
     if(p.imageCount!==names.length){p.imageCount=names.length;if(p.colors&&p.colors.length>names.length)p.colors=p.colors.slice(0,names.length);p.fp=(p.fp||[]).slice(0,names.length);}
     delete p.photoLost;dropImageCache(p.id);out.fixed++;}};
-  await Promise.all(Array.from({length:6},work));
+  await Promise.all(Array.from({length:LIGHT_PHOTO_CHECK.on?3:6},work));
   if(out.fixed||out.flagged)await saveProducts();
   return out;
 }
@@ -3477,7 +3612,8 @@ queueMicrotask(()=>Object.assign(ACT,{   // ACT is defined further down
 }));
 let PHOTO_CHECKED=false;
 async function autoRepairPhotos(){if(PHOTO_CHECKED||!HOSTED||S.role!=='admin')return;PHOTO_CHECKED=true;
-  try{const r=await repairPhotos();if(r.fixed||r.lost.length)toast(photoRepairText(r));if(r.fixed)route();}catch(e){console.error(e);}}
+  {let last=0;try{last=+localStorage.getItem('kc:photoCheck')||0;}catch{}if(Date.now()-last<20*3600e3)return;try{localStorage.setItem('kc:photoCheck',String(Date.now()));}catch{}}   // once a day on this device
+  LIGHT_PHOTO_CHECK.on=true;try{const r=await repairPhotos();if(r.fixed||r.lost.length)toast(photoRepairText(r));if(r.fixed)route();}catch(e){console.error(e);}finally{LIGHT_PHOTO_CHECK.on=false;}}
 function photoRepairText(r){return [r.fixed?`Fixed the photos of ${r.fixed} product${r.fixed===1?'':'s'}.`:'',r.lost.length?`${r.lost.length} product${r.lost.length===1?' has':'s have'} no photos left in storage (${r.lost.slice(0,4).map(p=>p.myId||p.code||p.title).join(', ')}${r.lost.length>4?'…':''}). Use Restore lost photos to bring them back from the vendor's WhatsApp chat.`:'',r.unchecked?`Could not look in storage for ${r.unchecked} product${r.unchecked===1?'':'s'}; try again in a minute.`:''].filter(Boolean).join(' ')||`All photos are fine (${r.checked} products checked).`;}
 
 // ---------- photos and videos ----------
@@ -3507,10 +3643,14 @@ const Media={
 
 // ---------- customer-safe copies ----------
 // Customers' browsers only ever download these. They contain no vendor prices, vendor text, or unpublished items.
-function buildCatalog(){
-  return S.products.filter(p=>p.published).map(p=>({id:p.id,slug:prodSlug(p),code:p.code,title:p.title,storeDesc:storeDesc(p),description:'',category:p.category,stock:p.stock,
-    published:true,reviewed:true,featured:!!p.featured,createdAt:p.createdAt,listedAt:p.listedAt||null,keep:!!p.keep,imageCount:p.imageCount,fp:(p.fp||[]).slice(0,2),sellOverride:sellPrice(p),vendorPrice:null,media:p.media,mrp:p.mrp||null,colors:p.colors?p.colors.map((c,i)=>c?{name:c.name,hex:c.hex,price:colourSell(p,i)}:null):null}));
-}
+// Photo addresses all look alike (…/media/p/<product>/<time>-0.jpg), so the catalogue stores just the varying part.
+const MEDIA_BASE=()=>SB_URL?SB_URL+'/storage/v1/object/public/media/p/':'';
+function compactMedia(m){const B=MEDIA_BASE();if(!m||!B||!m.th||!m.th.startsWith(B)||!/-th\.jpg$/.test(m.th))return m?{th:m.th,imgs:m.imgs}:m;
+  const b=m.th.slice(B.length,-7),imgs=m.imgs||[];return imgs.every((u,i)=>u===B+b+'-'+i+'.jpg')?{b,n:imgs.length}:{th:m.th,imgs};}
+function expandMedia(p){const m=p&&p.media;if(!m||!m.b)return p;const B=MEDIA_BASE();p.media={th:B+m.b+'-th.jpg',imgs:Array.from({length:m.n||0},(_,i)=>B+m.b+'-'+i+'.jpg')};return p;}
+function catalogItem(p){return {id:p.id,slug:prodSlug(p),code:p.code,title:p.title,storeDesc:storeDesc(p),category:p.category,stock:p.stock,
+    published:true,featured:!!p.featured,createdAt:p.createdAt,listedAt:p.listedAt||null,keep:!!p.keep,imageCount:p.imageCount,fp:(p.fp||[]).slice(0,1),sellOverride:sellPrice(p),media:compactMedia(p.media),mrp:p.mrp||null,colors:p.colors?p.colors.map((c,i)=>c?{name:c.name,hex:c.hex,price:colourSell(p,i)}:null):null};}
+function buildCatalog(){return S.products.filter(p=>p.published).map(catalogItem);}
 function buildVideoCatalog(){
   return S.videos.filter(v=>v.published).map(v=>({id:v.id,title:v.title,desc:v.desc,productId:v.productId,duration:v.duration,createdAt:v.createdAt,published:true,reviewed:true,
     url:v.url,posterUrl:v.posterUrl,mime:v.mime,size:v.size,chunks:v.chunks}));
@@ -3715,7 +3855,7 @@ async function renderShop(parts,q){
   $('#app').innerHTML=shopHeader()+'<main class="shop-main" id="main"></main>'+shopFooter()+fabs();
   const main=$('#main');
   stopMotion();
-  const V={'photo-order':vPhotoOrder,whatsapp:vWhatsApp,hi:(m,a,q)=>vHi(m,q),emi:(m,a,q)=>vEmi(m,q),notfound:vNotFound,'':vHome,combos:vCombos,news:vNews,stories:vStories,offers:vOffers,videos:vVideos,c:vCategory,p:vProduct,search:vSearch,cart:vCart,checkout:vCheckout,order:vOrder,track:vTrack,wishlist:vWish,info:vInfo};
+  const V={'photo-order':vPhotoOrder,whatsapp:vWhatsApp,hi:(m,a,q)=>vHi(m,q),emi:(m,a,q)=>vEmi(m,q),notfound:vNotFound,'':vHome,combos:vCombos,news:vNews,stories:vStories,offers:vOffers,videos:vVideos,c:(m,a,q)=>chatShop()&&q?.get?.('grid')!=='1'?vChatThread(m,a,q):vCategory(m,a,q),p:vProduct,search:vSearch,cart:vCart,checkout:vCheckout,order:vOrder,track:vTrack,wishlist:vWish,info:vInfo};
   document.body.dataset.view=view||'home';
   if(intlOn())loadRates();
   await (V[view||'']||vHome)(main,arg,q);
@@ -3782,12 +3922,12 @@ function vHome(main){
   if(st.menus.offers&&F().ads&&activeAds().length)tiles.push({h:'#/offers',t:'Offers',d:'Special prices and coupon codes'});
   if(st.menus.combos&&typeof liveRules==='function'&&liveRules().length)tiles.push({h:'#/combos',t:'Combo deals',d:'Save more when you buy together'});
   if(st.menus.about)tiles.push({h:'#/info/about',t:'About us',d:`Meet ${guideCfg().name} and ${zayanName()}`});
-  main.innerHTML=`${heroHTML()}${countryStripHTML()}${howToOrderHTML()}${zayanHTML('home')}
-    <section class="sec explore" aria-labelledby="exploreH"><div class="explore-head"><h2 id="exploreH">Explore our collections</h2>
+  main.innerHTML=`${heroHTML()}${countryStripHTML()}${chatShop()?chatListHTML():''}${howToOrderHTML()}${zayanHTML('home')}
+    ${chatShop()?'':`<section class="sec explore" aria-labelledby="exploreH"><div class="explore-head"><h2 id="exploreH">Explore our collections</h2>
       <p>${vis.length?'Use the menu above to explore sarees, suits, kurtis and more, or start with one of these:':'Our new collection is on its way. Use the menu above to look around, or message us to ask about something specific.'}</p></div>
       ${tiles.length?`<div class="explore-grid">${tiles.map(x=>`<a class="ex-tile ${x.star?'star':''}" href="${x.h}"><b>${esc(x.t)}</b><span>${esc(x.d)}</span><i aria-hidden="true">→</i></a>`).join('')}</div>`:''}
-      ${!vis.length&&supportWA()?`<p style="text-align:center;margin-top:16px"><a class="btn primary" href="${waLink(supportWA(),'Hi, I would like to know about your collection')}" target="_blank" rel="noopener">Message us on WhatsApp</a></p>`:''}</section>
-    ${homeRowsHTML()}
+      ${!vis.length&&supportWA()?`<p style="text-align:center;margin-top:16px"><a class="btn primary" href="${waLink(supportWA(),'Hi, I would like to know about your collection')}" target="_blank" rel="noopener">Message us on WhatsApp</a></p>`:''}</section>`}
+    ${chatShop()?'':homeRowsHTML()}
     ${newsHomeHTML()}
     ${homeCommunityHTML()}`;
 }
@@ -5214,6 +5354,7 @@ function pSettings(m){
     ${cleanPanelHTML()}
   </div></section>
   <section class="panel" id="store"><h2>Store details</h2><div class="stack">
+    ${sw('chatShop','WhatsApp-style shop','Collections are listed like WhatsApp chats, and each opens as a chat with every design shown as a message: photos, description, price and the time it was added. Turn off for the classic grid of products.')}
     ${fld('brand','Brand name')}${fld('tagline','Tagline')}${fld('heroText','Home page message','text','Shown under the tagline on the home page.')}
     ${fld('currency','Currency symbol','text','','maxlength="4" style="width:90px"')}
     <div><b>Logo</b><div style="display:flex;align-items:center;gap:14px;margin-top:8px"><img src="${logoSrc()}" alt="Current logo" style="width:84px;height:84px;border-radius:50%;object-fit:cover;background:#000">
