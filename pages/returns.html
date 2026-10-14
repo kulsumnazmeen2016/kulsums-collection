@@ -1499,6 +1499,75 @@ p,.pdp-desc,.wc-d,.small{text-wrap:pretty}
 .wc-stbar{position:static;margin:0;border-radius:0;background:#fffdf7;border-bottom:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 12px}
 .wc-stbar select{max-width:100%}.st-all{font-weight:600;display:inline-flex;gap:6px;align-items:center}
 .wc-sel{display:inline-flex;gap:6px;align-items:center;font-size:.85rem;font-weight:600;background:#fff;border:1px solid var(--rule);border-radius:99px;padding:3px 10px;margin:0 0 4px}
+
+/* ================= refreshed look: rich photo backdrops, chat wallpaper, gold accents ================= */
+:root{
+  --photo-bg:radial-gradient(120% 80% at 50% 0%,#fffaf2 0%,rgba(255,250,242,0) 60%),radial-gradient(90% 70% at 100% 100%,#f1d3dc 0%,rgba(241,211,220,0) 65%),radial-gradient(80% 60% at 0% 100%,#e9d5b0 0%,rgba(233,213,176,0) 70%),linear-gradient(165deg,#fbf1e3 0%,#f3e0c8 55%,#ecd2d6 100%);
+  --motif:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%23b08a3e' stroke-opacity='.22' stroke-width='1.1'%3E%3Cg transform='translate(24 24)'%3E%3Cellipse ry='9' rx='3.6' cy='-8'/%3E%3Cellipse ry='9' rx='3.6' cy='8'/%3E%3Cellipse rx='9' ry='3.6' cx='-8'/%3E%3Cellipse rx='9' ry='3.6' cx='8'/%3E%3Ccircle r='2.2'/%3E%3C/g%3E%3Cpath d='M72 64l6 8-6 8-6-8z'/%3E%3C/g%3E%3Cg fill='%23b08a3e' fill-opacity='.2'%3E%3Ccircle cx='72' cy='24' r='1.6'/%3E%3Ccircle cx='24' cy='72' r='1.6'/%3E%3C/g%3E%3C/svg%3E");
+}
+@keyframes kcShimmer{0%{background-position:-160% 0,0 0}100%{background-position:260% 0,0 0}}
+/* every photo frame gets a soft champagne-and-blush studio backdrop instead of flat beige */
+.card .ph,.wc-ph,.gallery .main,.gallery .main img,.gallery .thumbs button,.wc-av{background:var(--photo-bg)}
+.card .ph,.wc-ph,.gallery .main{position:relative}
+.card .ph:has(img:not([src])),.wc-ph:has(img:not([src])){background:linear-gradient(100deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.55) 50%,rgba(255,255,255,0) 70%),var(--photo-bg);background-size:60% 100%,100% 100%;background-repeat:no-repeat;animation:kcShimmer 1.6s linear infinite}
+.gallery .main{box-shadow:inset 0 0 0 1px rgba(176,138,62,.18),0 18px 40px -24px rgba(90,60,20,.45)}
+.gallery .main:before{content:"";position:absolute;inset:0;background:var(--motif);opacity:.6;pointer-events:none}
+.gallery .main img{position:relative;background:transparent;filter:drop-shadow(0 14px 18px rgba(70,45,10,.18))}
+.card{transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 1px 2px rgba(40,25,5,.05)}
+.card:hover{transform:translateY(-3px);box-shadow:0 16px 30px -18px rgba(90,60,20,.45)}
+.card .price{color:var(--gold-dark)}
+
+/* chat list on the home page */
+.wc-list{border:0;border-radius:22px;box-shadow:0 22px 50px -30px rgba(60,35,5,.55),0 0 0 1px rgba(176,138,62,.18);background:#fffdf9}
+.wc-list-head{padding:16px 18px;background:radial-gradient(120% 140% at 0% 0%,#3b2d1c 0%,#15110c 60%);position:relative;overflow:hidden}
+.wc-list-head:after{content:"";position:absolute;inset:0;background:var(--motif);opacity:.35;pointer-events:none}
+.wc-list-head b{font-family:var(--display);font-weight:400;font-size:1.45rem;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent;position:relative;z-index:1}
+.wc-list-head .small{position:relative;z-index:1}
+.wc-row{padding:12px 16px;transition:background .2s}.wc-row:hover{background:linear-gradient(90deg,#fff6e6,#fffdf9)}
+.wc-row .wc-av{width:56px;height:56px;padding:2.5px;background:conic-gradient(from 210deg,#f3de9c,#c9a14a,#8a6a1f,#e9cf8b,#f3de9c)}
+.wc-row .wc-av img,.wc-row .wc-av .ph{border-radius:50%;border:2px solid #fffdf9}
+.wc-row{grid-template-columns:56px 1fr auto}
+.wc-time.on{color:var(--gold-dark)}
+.wc-un{background:var(--gold-grad);color:#2a1d07;box-shadow:0 2px 6px -2px rgba(138,106,31,.7)}
+
+/* chat thread */
+.wc-thread{background:var(--motif),radial-gradient(120% 60% at 50% 0%,#fff8ee 0%,rgba(255,248,238,0) 70%),linear-gradient(170deg,#f7ead8 0%,#f2e1cf 45%,#eedadf 100%);background-size:96px 96px,100% 100%,100% 100%;background-attachment:local}
+.wc-th-head{background:radial-gradient(140% 160% at 0% 0%,#3b2d1c 0%,#15110c 65%);box-shadow:0 6px 18px -10px rgba(0,0,0,.6)}
+.wc-th-head b{font-family:var(--display);font-weight:400;font-size:1.25rem;color:var(--gold-light);letter-spacing:.01em}
+.wc-th-head .wc-av{box-shadow:0 0 0 2px var(--marigold)}
+.wc-subs{background:rgba(255,251,244,.85);backdrop-filter:blur(6px)}
+.wc-day span{background:rgba(255,252,246,.92);color:var(--gold-dark);border:1px solid rgba(176,138,62,.35);font-weight:600;letter-spacing:.03em;box-shadow:0 2px 6px -3px rgba(90,60,20,.3)}
+.wc-msg{max-width:min(90%,440px)}
+.wc-bub{border-radius:4px 18px 18px 18px;padding:5px;box-shadow:0 10px 24px -16px rgba(80,50,10,.55),0 0 0 1px rgba(176,138,62,.14)}
+.wc-album{border-radius:14px}
+.wc-cap{padding:10px 10px 20px}
+.wc-t{font-family:var(--display);font-weight:400;font-size:1.18rem;color:var(--aubergine);letter-spacing:.005em}
+.wc-pr{margin-top:8px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px}
+.wc-pr b{font-size:1.2rem;color:var(--gold-dark)}
+.wc-acts{gap:8px;margin:7px 0 6px;align-items:center}.wc-thread{scroll-margin-top:140px}.wc-acts .wc-chip{margin:0}
+.wc-chip{border-color:rgba(176,138,62,.35);box-shadow:0 2px 6px -4px rgba(80,50,10,.4);transition:transform .15s,box-shadow .15s;font-weight:600}
+.wc-chip:hover{transform:translateY(-1px);box-shadow:0 6px 12px -8px rgba(80,50,10,.6)}
+.wc-chip.wc-buy{background:#15110c;color:var(--gold-light);border-color:#15110c}
+.wc-chip.wc-wa{background:#e7fbe9;color:#11673a;border-color:#9fdcae}
+.wc-chip.wc-heart.on{background:#fff0f2;border-color:#f2b8c2}
+.wc-chip.on:not(.wc-heart){background:var(--gold-grad);border-color:#b38b35;color:#2a1d07}
+.wc-compose{background:rgba(255,251,244,.92);backdrop-filter:blur(8px);border-top:1px solid rgba(176,138,62,.25)}
+.wc-compose input{box-shadow:inset 0 0 0 1px rgba(176,138,62,.3)}
+
+/* chat pages */
+.wc-pager{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;margin:6px auto 10px;padding:8px 10px;background:rgba(255,252,246,.88);border:1px solid rgba(176,138,62,.3);border-radius:16px;box-shadow:0 8px 20px -16px rgba(80,50,10,.6);max-width:100%}
+.wc-pg{min-width:36px;height:36px;padding:0 10px;display:inline-grid;place-items:center;border-radius:999px;text-decoration:none;color:var(--aubergine);font-weight:600;font-size:.9rem;border:1px solid transparent}
+a.wc-pg:hover{border-color:rgba(176,138,62,.5);background:#fff}
+.wc-pg.on{background:var(--gold-grad);color:#2a1d07;box-shadow:0 3px 8px -4px rgba(138,106,31,.8)}
+.wc-pg.nav{border-color:rgba(176,138,62,.35);background:#fff}.wc-pg.off{opacity:.4}
+.wc-dots{color:var(--muted)}.wc-pg-note{flex-basis:100%;text-align:center;font-size:.75rem;color:var(--muted)}
+@media (max-width:420px){.wc-pg{min-width:32px;height:32px;padding:0 8px}}
+
+.rv{position:relative}.rv.sel{outline:3px solid var(--marigold);outline-offset:-1px}
+.rv-tick{display:inline-flex;gap:6px;align-items:center;font-weight:600;font-size:.85rem;margin:10px 14px 0;padding:4px 10px;border:1px solid var(--rule);border-radius:99px;background:#fff;cursor:pointer}
+.rv-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fffdf7;border:1px solid var(--rule);border-radius:12px;padding:8px 12px;margin:8px 0}
+.rv-bar select{max-width:100%}.rv-n{color:var(--gold-dark)}.rv-sortbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.rv-sortbar label{display:inline-flex;gap:6px;align-items:center}
+.rv-pager{margin:12px auto}
 </style>
 <!-- generated by scripts/build-seo.mjs -->
 <link rel="canonical" href="https://kulsumscollection.com/pages/returns">
@@ -1781,7 +1850,7 @@ const DEFAULT_SETTINGS={
   tidyText:true,
   intl:{enabled:false,switcher:true,autoDetect:true,rateMode:'auto',manual:{},markup:{},countryMarkup:{},off:[],zones:{},itemKg:0.5,catKg:{},packKg:0.2,freeAbove:0,payNote:'We will message you on WhatsApp with the payment details (bank transfer, Wise or PayPal) and the courier tracking.',paypal:''},
   expiry:{on:true,days:3,action:'delete',keepFeatured:true,askManual:true,deleteVideos:true},
-  clean:{auto:true,photos:true,unpublish:true,noPrice:true,noPriceDays:2,videos:true},
+  clean:{auto:true,photos:true,unpublish:true,noPhoto:true,noPrice:true,noPriceDays:2,videos:true},
   maintenance:{on:false,title:'We will be back soon',message:'We are updating our store with new arrivals. Please check back in a little while. You can still message us on WhatsApp.'},
   announcement:{enabled:true,scroll:true,speed:'normal',messages:['Free shipping on orders above ₹1,499','New arrivals every week','Cash on delivery available','Message us on WhatsApp for help choosing']},
   banner:{enabled:true,autoplay:true,seconds:5,source:'featured',ribbon:true},
@@ -1881,7 +1950,7 @@ async function loadAll(){
   S._catSig=JSON.stringify([S.settings.pricing,S.settings.market,S.settings.catMarkup]);S.videos=vids||[];
   S.categories=cats||clone(DEFAULT_CATS);
   if(!S.categories.some(c=>c.id==='others'))S.categories.push(clone(OTHERS));
-  S.products=prods||[];try{S._tidyN=tidyCatalogueText();}catch(e){console.error(e);}setProdBase();S.vendors=vens||[];S.cart=cart||[];S.wish=wish||[];S.myOrders=my||[];S.recent=recent||[];markLive();
+  S.products=prods||[];try{S._tidyN=tidyCatalogueText();}catch(e){console.error(e);}setProdBase();FPS.loaded=false;FPS.saved=null;if(S.role)setTimeout(()=>fpReady(),1500);S.vendors=vens||[];S.cart=cart||[];S.wish=wish||[];S.myOrders=my||[];S.recent=recent||[];markLive();
   if(typeof loadPosts==='function')await loadPosts();
 }
 async function persist(key,val,shared=true){
@@ -1902,9 +1971,10 @@ const saveCats=()=>persist(K.cats,S.categories);
 let SP_WAIT=null;
 const saveProducts=()=>SP_WAIT||(SP_WAIT=new Promise(res=>setTimeout(async()=>{SP_WAIT=null;try{res(await saveProductsNow());}catch(e){console.error(e);res(false);}},200)));
 const SAVED={p:'',c:''};
-async function saveProductsNow(){await dupGate();ensureSlugs();if(typeof stampListing==='function')stampListing();await mergeRemoteProducts();try{tidyCatalogueText();}catch(e){console.error(e);}
-  const list=S.products.map(cleanProd),pj=JSON.stringify(list);let ok=true;
-  if(pj!==SAVED.p){ok=await persist(K.products,list);if(ok)SAVED.p=pj;}
+async function saveProductsNow(){await fpReady();await dupGate();ensureSlugs();if(typeof stampListing==='function')stampListing();await mergeRemoteProducts();try{tidyCatalogueText();}catch(e){console.error(e);}
+  let ok=await saveFingerprints();
+  const list=S.products.map(p=>{const o=cleanProd(p);delete o.fp;return o;}),pj=JSON.stringify(list);   // half the size: fingerprints are saved separately
+  if(ok&&pj!==SAVED.p){ok=await persist(K.products,list);if(ok)SAVED.p=pj;}
   if(ok){markLive();setProdBase();}
   if(ok&&HOSTED){const cat=buildCatalog(),cj=JSON.stringify(cat);if(cj!==SAVED.c){ok=await persist('kc:catalog',cat);if(ok)SAVED.c=cj;}}
   return ok;}
@@ -2171,8 +2241,10 @@ async function hydrate(root=document){
 const thumbTag=(p,cls='',alt='')=>`<img data-th="${p.id}" class="${cls}" alt="${esc(alt||p.title)}" loading="lazy" decoding="async">`;
 
 // ================= visibility rules =================
+// A product with no photo is never shown to customers.
+function hasNoPhoto(p){return !!p.photoLost||(!(Number(p.imageCount)>0)&&!p.media?.imgs?.length&&!p.media?.th&&!p.media?.b&&!p.image&&!p.images?.length);}
 function isVisible(p){
-  const c=S.categories.find(x=>x.id===p.category);
+  const c=S.categories.find(x=>x.id===p.category);if(hasNoPhoto(p))return false;
   if(!p.published||!catOn(c)||!String(p.title||'').trim())return false;
   if(p.stock==='out'&&S.settings.catalog.hideOutOfStock)return false;
   if(typeof expired==='function'&&expired(p))return false;   // past its days on the store
@@ -2316,7 +2388,9 @@ const LETTER_SIZES=['XS','S','M','L','XL','XXL','3XL','4XL','5XL','6XL','7XL'];
 const SIZE_ALIAS={'2XL':'XXL','XXXL':'3XL','XXXXL':'4XL'};
 const SET_PARTS=[['kurti','Kurti'],['kurta','Kurta'],['top','Top'],['pant','Pant'],['pants','Pant'],['palazzo','Palazzo'],['sharara','Sharara'],['salwar','Salwar'],['bottom','Bottom'],['skirt','Skirt'],['dupatta','Dupatta'],['stole','Stole'],['jacket','Jacket'],['shrug','Shrug']];
 
-const wre=w=>new RegExp('(?:^|[^\\p{L}])('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')(?=$|[^\\p{L}])','iu');
+const WRE=new Map();   // word patterns are built once and reused (building them for every product was the slowest part of every page)
+const wre=w=>{let r=WRE.get(w);if(!r){r=new RegExp('(?:^|[^\\p{L}])('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')(?=$|[^\\p{L}])','iu');WRE.set(w,r);}return r;};
+const WREG=new Map();const wreg=w=>{let r=WREG.get(w);if(!r){r=new RegExp(wre(w).source,'giu');WREG.set(w,r);}r.lastIndex=0;return r;};
 const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
 const SMALL=new Set(['with','and','of','in','for','the','a','an','on','to']);
 const titleCase=s=>s.toLowerCase().split(/(\s+|-)/).map((w,i)=>SMALL.has(w)&&i?w:w.charAt(0).toUpperCase()+w.slice(1)).join('').replace(/\bKc\b/g,'KC');
@@ -2434,7 +2508,7 @@ function cleanVendorText(text){
 }
 function findAll(list,text){
   const t=' '+text.toLowerCase()+' ',out=[],taken=[];
-  for(const item of list){const k=Array.isArray(item)?item[0]:item;const re=new RegExp(wre(k).source,'giu');let m;
+  for(const item of list){const k=Array.isArray(item)?item[0]:item;const re=wreg(k);let m;
     while((m=re.exec(t))){const s=m.index+m[0].indexOf(m[1]),e=s+m[1].length;
       if(!taken.some(([a,b])=>s<b&&e>a)){taken.push([s,e]);out.push({item,pos:s});}}}
   return out.sort((a,b)=>a.pos-b.pos).map(x=>x.item);
@@ -2455,7 +2529,11 @@ function extractSizes(text){
   const age=t.match(/\b(\d{1,2})\s*(?:-|to)\s*(\d{1,2})\s*(?:yrs?|years?)\b/i);if(age)return `Age ${age[1]} to ${age[2]} years`;
   return '';
 }
-function productDetails(p){
+const PD_MEMO=new Map();
+function productDetails(p){const key=String(p.description||'');let d=PD_MEMO.get(key);
+  if(!d){d=productDetailsRaw(p);if(PD_MEMO.size>6000)PD_MEMO.clear();PD_MEMO.set(key,d);}
+  return {...d};}
+function productDetailsRaw(p){
   const raw=String(p.description||''),clean=cleanVendorText(raw).join('\n'),low=clean.toLowerCase();
   const d={};
   const fab=[...new Set(findAll(FABRICS,clean))];if(fab.length)d.fabric=fab.slice(0,2).map(cap).join(' and ');
@@ -2562,7 +2640,10 @@ function detailLines(p){
 }
 const freeShipFor=price=>{const s=S.settings.shipping;return Number(s.fee)===0||(Number(s.freeAbove)>0&&price!=null&&price>=Number(s.freeAbove));};
 // The text customers see. Admin-written text always wins; otherwise build it from the details.
-function storeDesc(p){const d=storeDescRaw(p);return tidyOn()?tidyDescText(d):d;}
+const SD_MEMO=new Map();
+function storeDesc(p){const k=JSON.stringify([p.storeDesc||'',p.description||'',p.title||'',p.category||'',sellPrice(p),tidyOn()]);
+  const id=p.id||k,c=SD_MEMO.get(id);if(c&&c.k===k)return c.v;
+  const d=storeDescRaw(p),v=tidyOn()?tidyDescText(d):d;if(SD_MEMO.size>8000)SD_MEMO.clear();SD_MEMO.set(id,{k,v});return v;}
 function storeDescRaw(p){
   if(p.storeDesc)return p.storeDesc.replace(EMOJI_RE,'').replace(/[ \t]{2,}/g,' ').trim();
   const {rows,lines}=detailLines(p),vs=vendorSpecs(lines,p);
@@ -2631,7 +2712,11 @@ const Remote={
     return out;},
   cacheKeep(key,value){if(this.stamps[key])DB.set('cache:'+key,{at:this.stamps[key],v:value},false).catch(()=>{});},
   async getMany(keys){const {data,error}=await sb.from('kv').select('key,value,updated_at').in('key',keys);if(error)throw error;const o={};for(const r of data||[]){o[r.key]=r.value;this.stamps[r.key]=r.updated_at;}return o;},
-  async set(key,value){const at=new Date().toISOString();const {error}=await sb.from('kv').upsert({key,value,updated_at:at});if(error)throw new Error(error.message||'Save refused');this.stamps[key]=at;this.cacheKeep(key,value);},
+  async set(key,value){let at,error;
+    for(let i=0;i<3;i++){at=new Date().toISOString();try{({error}=await sb.from('kv').upsert({key,value,updated_at:at}));}catch(e){error={message:e.message||String(e)};}
+      if(!error)break;if(!/timeout|time out|fetch|network|load failed|502|503|504|gateway|temporar/i.test(error.message||''))break;
+      await new Promise(r=>setTimeout(r,1500*(i+1)));}   // a slow connection or a busy database: wait a moment and try again
+    if(error)throw new Error(/timeout|fetch|network|load failed/i.test(error.message||'')?'the connection is slow, please try again in a minute':(error.message||'Save refused'));this.stamps[key]=at;this.cacheKeep(key,value);},
   async upload(path,blob,type){
     const {error}=await sb.storage.from(BUCKET).upload(path,blob,{contentType:type,upsert:true,cacheControl:'31536000'});
     if(error)throw new Error(error.message||'Upload failed');
@@ -2849,6 +2934,12 @@ async function cleanStore({auto=false,dry=false}={}){
       if(days&&Date.now()-(p.createdAt||0)<days*864e5)continue;
       rep.deleted.push({id:p.id,code:p.myId||p.code||'',title:p.title||'',why:'no price'});}
     if(!dry&&rep.deleted.length)await deleteProducts(rep.deleted.map(x=>x.id));}
+  // 3c. products with no photos are deleted (live ones straight away, new drafts after 2 days so staff can add photos)
+  if(clOn('noPhoto')){const gone=[];for(const p of S.products.filter(hasNoPhoto)){
+      const wasLive=p.published||p.listedAt||p.publishedAt||/no photo|photos missing/.test(p.cleanNote||'');
+      if(!wasLive&&Date.now()-(p.createdAt||0)<2*864e5)continue;
+      gone.push({id:p.id,code:p.myId||p.code||'',title:p.title||'',why:p.photoLost?'photos missing':'no photo'});}
+    rep.deleted.push(...gone);if(!dry&&gone.length)await deleteProducts(gone.map(x=>x.id));}
   // 3b. products past their days on the store
   await expireProducts(rep,dry);
   // 4. videos: hide videos whose product is gone or off the store
@@ -2871,7 +2962,10 @@ function cleanPanelHTML(){const r=CL().last;
     <span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" data-act="cleanPreview">See what it would do</button><button class="btn sm primary" data-act="cleanNow">Clean now</button></span></div>
     ${r&&(r.unpublished.length||r.deleted.length)?`<details class="small" style="margin-top:8px"><summary>What was changed last time</summary>${r.unpublished.length?`<p><b>Taken off the store</b> (fix them, then publish again from Review): ${r.unpublished.slice(0,40).map(x=>`${esc(x.code)} ${esc(x.title)} (${esc(x.why)})`).join('; ')}${r.unpublished.length>40?'…':''}</p>`:''}
       ${r.deleted.length?`<p><b>Removed (no price):</b> ${r.deleted.slice(0,40).map(x=>esc(x.code)).join(', ')}${r.deleted.length>40?'…':''}</p>`:''}</details>`:''}</div>`;}
-async function autoExpire(){if(S.role&&S._tidyN){const n=S._tidyN;S._tidyN=0;if(await saveProducts())toast(`Fixed capitals in ${n} title${n===1?'':'s'} and description${n===1?'':'s'}`);}if(isAdmin()&&S._saveExpiry){S._saveExpiry=false;saveSettings();}if(!isAdmin()||!expOn()||S._cleaning)return;let last=0;try{last=+localStorage.getItem('kc:expiryRun')||0;}catch{}if(Date.now()-last<3*3600e3)return;S._cleaning=true;
+async function removeNoPhotoNow(){if(!isAdmin()||!clOn('noPhoto')||S._npDone)return;S._npDone=true;
+  const ids=S.products.filter(p=>hasNoPhoto(p)&&(p.published||p.listedAt||p.publishedAt)).map(p=>p.id);
+  if(ids.length){await deleteProducts(ids);toast(`Removed ${ids.length} product${ids.length===1?'':'s'} with no photos from the store`);}}
+async function autoExpire(){try{await removeNoPhotoNow();}catch(e){console.error(e);}if(S.role&&S._tidyN){const n=S._tidyN;S._tidyN=0;if(await saveProducts())toast(`Fixed capitals in ${n} title${n===1?'':'s'} and description${n===1?'':'s'}`);}if(isAdmin()&&S._saveExpiry){S._saveExpiry=false;saveSettings();}if(!isAdmin()||!expOn()||S._cleaning)return;let last=0;try{last=+localStorage.getItem('kc:expiryRun')||0;}catch{}if(Date.now()-last<3*3600e3)return;S._cleaning=true;
   try{try{localStorage.setItem('kc:expiryRun',String(Date.now()));}catch{}const rep={};await expireProducts(rep,false);if(rep.expiredAuto?.length)await saveProducts();   // saves only when something was removed
     const n=rep.expiredAuto?.length||0,m=rep.expiredManual?.length||0;if(n||m){toast([n?`${n} product${n===1?'':'s'} older than ${expDays()} days ${EXP().action==='hide'?'taken off the store':'deleted with their photos'}`:'',m?`${m} added by hand waiting for you on the Dashboard`:''].filter(Boolean).join('. '));if(inStaffView())route();}}
   catch(e){console.error(e);}S._cleaning=false;}
@@ -3473,27 +3567,38 @@ function waBubbleHTML(p){const price=sellPrice(p),cols=productColours(p),f=F(),c
     <div class="wc-cap"><a class="wc-t" href="#/p/${p.id}">${esc(p.title)}</a>${desc.length?`<div class="wc-d">${desc.map(descLineHTML).join('<br>')}</div>`:''}
       <div class="wc-pr">${price!=null?`<b>${esc(priceLabel(p))}</b>${mrpHTML(p,minPrice(p))}`:'<b>Price on request</b>'}${p.stock==='out'?' <span class="pill bad">Sold out</span>':''}</div>
       <span class="wc-ts">${chatTime(tOf(p))} <span class="wc-tick" aria-hidden="true">✓✓</span></span></div></div>
-    <div class="wc-acts">${canBuy&&cols.length<2?`<button class="wc-chip" data-act="add" data-id="${p.id}">🛍️ Add to bag</button>`:canBuy?`<a class="wc-chip" href="#/p/${p.id}">🎨 Choose colour</a>`:''}
-      ${supportWA()?`<a class="wc-chip" href="${waLink(supportWA(),typeof waOrderText==='function'?waOrderText(p):p.title)}" target="_blank" rel="noopener">💬 Order on WhatsApp</a>`:''}
-      ${f.wishlist?`<button class="wc-chip ${on?'on':''}" data-act="wish" data-id="${p.id}" aria-pressed="${on}">${on?'❤️':'🤍'}</button>`:''}</div></div>`;}
+    <div class="wc-acts">${canBuy&&cols.length<2?`<button class="wc-chip wc-buy" data-act="add" data-id="${p.id}">🛍️ Add to bag</button>`:canBuy?`<a class="wc-chip wc-buy" href="#/p/${p.id}">🎨 Choose colour</a>`:''}
+      ${supportWA()?`<a class="wc-chip wc-wa" href="${waLink(supportWA(),typeof waOrderText==='function'?waOrderText(p):p.title)}" target="_blank" rel="noopener">💬 Order on WhatsApp</a>`:''}
+      ${f.wishlist?`<button class="wc-chip wc-heart ${on?'on':''}" data-act="wish" data-id="${p.id}" aria-pressed="${on}" aria-label="${on?'Remove from':'Save to'} wishlist">${on?'❤️':'🤍'}</button>`:''}</div></div>`;}
+const CV_PER=12;   // designs per chat page: page 1 is the newest
+function chatPagerHTML(id,pg,pages,total,start,end){if(pages<2)return '';
+  const href=k=>`#/c/${id}${k>1?'?pg='+k:''}`,lo=Math.max(1,Math.min(pg-2,pages-4)),hi=Math.min(pages,lo+4),nums=[];
+  for(let k=lo;k<=hi;k++)nums.push(k===pg?`<span class="wc-pg on" aria-current="page">${k}</span>`:`<a class="wc-pg" href="${href(k)}" aria-label="Page ${k}">${k}</a>`);
+  return `<nav class="wc-pager" aria-label="Pages of designs">
+    ${pg>1?`<a class="wc-pg nav" href="${href(pg-1)}">‹ Newer</a>`:'<span class="wc-pg nav off">‹ Newer</span>'}
+    ${lo>1?`<a class="wc-pg" href="${href(1)}" aria-label="Page 1">1</a>${lo>2?'<span class="wc-dots">…</span>':''}`:''}${nums.join('')}${hi<pages?`${hi<pages-1?'<span class="wc-dots">…</span>':''}<a class="wc-pg" href="${href(pages)}" aria-label="Page ${pages}">${pages}</a>`:''}
+    ${pg<pages?`<a class="wc-pg nav" href="${href(pg+1)}">Older ›</a>`:'<span class="wc-pg nav off">Older ›</span>'}
+    <span class="wc-pg-note">Designs ${total-end+1}–${total-start} of ${total}, newest first</span></nav>`;}
 function vChatThread(main,id,q){const isNew=id==='new',c=isNew?null:catById(id);
   if(!isNew&&(!c||c.id!==id))return vCategory(main,id,q);
-  if(CV.cat!==id){CV.cat=id;CV.limit=20;CV.sub='';}
+  if(CV.cat!==id){CV.cat=id;CV.sub='';}
   const subs=c?subMenus(c):[],sub=CV.sub&&subs.some(s=>s.id===CV.sub)?CV.sub:'';
   const vis=visibleProducts();let ps=isNew?newArrivalsList():vis.filter(p=>(sub?[sub]:catGroupIds(c)).includes(p.category));
-  ps=[...ps].sort((a,b)=>tOf(a)-tOf(b));const total=ps.length,shown=ps.slice(-CV.limit);
+  ps=[...ps].sort((a,b)=>tOf(a)-tOf(b));const total=ps.length,pages=Math.max(1,Math.ceil(total/CV_PER)),pg=Math.min(pages,Math.max(1,+(q?.get?.('pg'))||1));
+  const end=total-(pg-1)*CV_PER,start=Math.max(0,end-CV_PER),shown=ps.slice(start,end),pager=chatPagerHTML(id,pg,pages,total,start,end);
   let lastDay='';const body=shown.map(p=>{const d=new Date(tOf(p)).toDateString();const sep=d!==lastDay?`<div class="wc-day"><span>${dayLabel(tOf(p))}</span></div>`:'';lastDay=d;return sep+waBubbleHTML(p);}).join('');
   const name=isNew?'New arrivals':c.name,av=ps[ps.length-1];
   main.innerHTML=`<div class="wc-thread"><header class="wc-th-head"><a href="#/" class="wc-back" aria-label="Back to all collections">←</a><span class="wc-av sm">${av?thumbTag(av):''}</span>
-      <span class="wc-th-t"><b>${esc(name)}</b><span>${total} design${total===1?'':'s'} · tap a photo to see it full size</span></span>
+      <span class="wc-th-t"><b>${esc(name)}</b><span>${total} design${total===1?'':'s'}${pages>1?` · page ${pg} of ${pages}`:''} · tap a photo to see it full size</span></span>
       <a class="wc-grid" href="#/c/${id}?grid=1" title="Show as a grid" aria-label="Show as a grid">▦</a></header>
     ${subs.length?`<div class="wc-subs" role="group" aria-label="Filter">${[['','All'],...subs.map(s=>[s.id,s.name])].map(([k,l])=>`<button class="wc-chip ${sub===k?'on':''}" data-act="cvSub" data-s="${k}">${esc(l)}</button>`).join('')}</div>`:''}
     ${S.role==='admin'&&total?`<div class="plbar wc-stbar" id="stBar">${(SS_PAGE=shown.map(p=>p.id),SS_ALL=ps.map(p=>p.id),stBarHTML())}</div>`:''}
-    <div class="wc-body" id="wcBody">${total>shown.length?`<div class="wc-earlier"><button class="wc-chip" data-act="cvMore">Show ${Math.min(20,total-shown.length)} earlier designs</button></div>`:''}
-      ${body||'<div class="wc-day"><span>No designs here yet</span></div>'}</div>
+    <div class="wc-body" id="wcBody">${pager}
+      ${body||'<div class="wc-day"><span>No designs here yet</span></div>'}
+      ${pager}</div>
     ${supportWA()?`<form class="wc-compose" data-wacompose data-name="${esc(name)}"><input type="text" name="m" placeholder="Ask us about ${esc(name)}…" aria-label="Message us on WhatsApp" autocomplete="off"><button aria-label="Send on WhatsApp">${ICON.wa}</button></form>`:''}</div>`;
   markSeen(id);
-  requestAnimationFrame(()=>{if(!CV.keepScroll){const last=main.querySelector('.wc-msg:last-of-type');(last||main).scrollIntoView({block:'end'});}CV.keepScroll=false;});
+  requestAnimationFrame(()=>{const last=[...main.querySelectorAll('.wc-msg')].pop();if(pg===1&&last)last.scrollIntoView({block:'end'});else main.querySelector('.wc-thread')?.scrollIntoView({block:'start'});});
 }
 document.addEventListener('submit',e=>{const f=e.target.closest('[data-wacompose]');if(!f)return;e.preventDefault();const t=f.m.value.trim();
   window.open(waLink(supportWA(),`Hi ${S.settings.brand}, about ${f.dataset.name}: ${t||'I would like to know more.'}`),'_blank','noopener');f.m.value='';});
@@ -3513,7 +3618,7 @@ queueMicrotask(()=>Object.assign(ACT,{
   cvOpen:el=>chatViewer(el.dataset.id,+el.dataset.i||0),
   cvClose:()=>chatViewerClose(),
   cvMore:async()=>{const b=$('#wcBody'),h=b?b.scrollHeight:0,y=window.scrollY;CV.limit+=20;CV.keepScroll=true;await route();const b2=$('#wcBody');if(b2)window.scrollTo(0,y+(b2.scrollHeight-h));},
-  cvSub:el=>{CV.sub=el.dataset.s;CV.limit=20;route();},
+  cvSub:el=>{CV.sub=el.dataset.s;go('#/c/'+CV.cat);},
 }));
 
 
@@ -3527,6 +3632,62 @@ document.addEventListener('input',e=>{const i=e.target;if(!i.hasAttribute?.('dat
   const lab=i.closest('label');let h=lab.querySelector('.tt-prev');const t=tidyTitleText(i.value);
   if(!h){h=document.createElement('span');h.className='tt-prev';h.setAttribute('aria-live','polite');lab.appendChild(h);}
   h.innerHTML=t&&t!==i.value.trim()?`Customers will see: <b>${esc(t)}</b>`:'';});
+
+// ---------- photo fingerprints live in their own record (kc:fp) ----------
+// They were half of every product save. Now they load in the background and are uploaded only when photos change.
+const FPS={loaded:false,p:null,saved:null,failed:false};
+const fpRemote=async()=>HOSTED?(await Remote.getManyCached(['kc:fp']))['kc:fp']||{}:(await DB.get('kc:fp'))||{};
+function fpReady(){if(FPS.loaded||!S.role)return Promise.resolve();
+  return FPS.p||(FPS.p=(async()=>{try{const m=await fpRemote();for(const p of S.products)if(!p.fp?.length&&m[p.id]){p.fp=m[p.id];delete p._fpb;}FPS.saved=JSON.stringify(m);FPS.failed=false;}
+    catch(e){console.error(e);FPS.failed=true;}finally{FPS.loaded=true;FPS.p=null;}})());}
+async function saveFingerprints(){if(!S.role||!FPS.loaded||FPS.failed)return true;
+  const m={};for(const p of S.products)if(p.fp?.length)m[p.id]=p.fp;let j=JSON.stringify(m);if(j===FPS.saved)return true;
+  // keep fingerprints another phone saved for products this page also has
+  try{const r=await fpRemote();const ids=new Set(S.products.map(p=>p.id));let add=0;for(const id in r)if(!m[id]&&ids.has(id)){m[id]=r[id];const p=prodById(id);if(p&&!p.fp?.length){p.fp=r[id];delete p._fpb;}add++;}if(add)j=JSON.stringify(m);}catch{}
+  if(j===FPS.saved)return true;const ok=await persist('kc:fp',m);if(ok)FPS.saved=j;return ok;}
+
+// ---------- review page: sort, pages, select many ----------
+let RV_SORTS=null;const rvSorts=()=>RV_SORTS||(RV_SORTS={...PF_SORT,vendor:(a,b)=>String(vendorById(a.vendorId)?.name||'~').localeCompare(String(vendorById(b.vendorId)?.name||'~'))||((b.createdAt||0)-(a.createdAt||0)),
+  cat:(a,b)=>String(catById(a.category)?.name||'').localeCompare(String(catById(b.category)?.name||''))||((b.createdAt||0)-(a.createdAt||0)),
+  noprice:(a,b)=>((sellPrice(a)==null)<(sellPrice(b)==null)?1:(sellPrice(a)==null)>(sellPrice(b)==null)?-1:0)||((b.createdAt||0)-(a.createdAt||0)),
+  myid:(a,b)=>String(a.myId||'~').localeCompare(String(b.myId||'~'),undefined,{numeric:true}),
+  vprice:(a,b)=>(Number(a.vendorPrice)||0)-(Number(b.vendorPrice)||0)});
+const RV_SORT_LABEL=[['new','Newest first'],['old','Oldest first'],['title','Title A to Z'],['price','Price, low to high'],['priceDesc','Price, high to low'],['vprice','Vendor price, low to high'],['noprice','No price first'],['nophoto','No photos first'],['photos','Fewest photos first'],['vendor','Vendor A to Z'],['cat','Category A to Z'],['myid','My product ID']];
+function rvBarHTML(){const n=RV.sel.size,all=RV.all?.length||0,page=RV.shown||[],onPage=page.filter(id=>RV.sel.has(id)).length;
+  const ready=RV.stage==='ready';
+  return `<label class="st-all"><input type="checkbox" data-act-change="rvSelPage" ${page.length&&onPage===page.length?'checked':''}> Select this page (${page.length})</label>
+    <button class="btn sm" data-act="rvSelNext">Select next 10</button>${all>page.length?`<button class="btn sm ghost" data-act="rvSelAll">Select all ${all}</button>`:''}
+    ${n?`<b class="rv-n">${n} selected</b>
+      ${isAdmin()?`<button class="btn sm primary" data-act="rvBulk" data-do="publish">${ready?'Approve and publish':'Publish'} ${n}</button>`:''}
+      ${!ready?`<button class="btn sm" data-act="rvBulk" data-do="ready">Send ${n} for approval</button>`:isAdmin()?`<button class="btn sm" data-act="rvBulk" data-do="back">Send ${n} back</button>`:''}
+      <select data-act-change="rvBulkCat" aria-label="Move selected to category"><option value="">Move to category…</option>${catOptions('',false)}</select>
+      <button class="btn sm ghost danger" data-act="rvBulk" data-do="delete">Delete ${n}</button>
+      <button class="btn sm ghost" data-act="rvSelClear">Clear</button>`:'<span class="small muted">Tick products, or select 10 at a time, to publish, move or delete them together.</span>'}`;}
+function rvToolsHTML(total){
+  return `<div class="filters rv-sortbar"><label class="small">Sort <select data-act-change="rvSort" aria-label="Sort">${RV_SORT_LABEL.map(([k,l])=>`<option value="${k}" ${RV.sort===k?'selected':''}>${l}</option>`).join('')}</select></label>
+    <label class="small">Category <select data-act-change="rvCat" aria-label="Category"><option value="">All categories</option>${catOptions(RV.cat,false)}</select></label>
+    <label class="small">Show <select data-act-change="rvPer" aria-label="Products per page">${[10,20,50].map(k=>`<option value="${k}" ${RV.per===k?'selected':''}>${k} a page</option>`).join('')}</select></label></div>
+    <div class="plbar rv-bar" id="rvBar">${rvBarHTML()}</div>${rvPagerHTML(Math.max(1,Math.ceil(total/RV.per)))}`;}
+function rvPagerHTML(pages){if(pages<2)return '';const p=RV.page,lo=Math.max(1,Math.min(p-2,pages-4)),hi=Math.min(pages,lo+4),b=[];
+  for(let k=lo;k<=hi;k++)b.push(`<button class="wc-pg ${k===p?'on':''}" data-act="rvPage" data-p="${k}" ${k===p?'aria-current="page"':''}>${k}</button>`);
+  return `<nav class="wc-pager rv-pager" aria-label="Pages"><button class="wc-pg nav ${p<2?'off':''}" data-act="rvPage" data-p="${p-1}" ${p<2?'disabled':''}>‹ Back</button>${lo>1?'<button class="wc-pg" data-act="rvPage" data-p="1">1</button><span class="wc-dots">…</span>':''}${b.join('')}${hi<pages?`<span class="wc-dots">…</span><button class="wc-pg" data-act="rvPage" data-p="${pages}">${pages}</button>`:''}<button class="wc-pg nav ${p>=pages?'off':''}" data-act="rvPage" data-p="${p+1}" ${p>=pages?'disabled':''}>Next ›</button>
+    <span class="wc-pg-note">Page ${p} of ${pages}, ${RV.per} a page</span></nav>`;}
+function rvSync(){const b=$('#rvBar');if(b)b.innerHTML=rvBarHTML();$$('.rv[data-id]').forEach(a=>{const on=RV.sel.has(a.dataset.id);a.classList.toggle('sel',on);const c=a.querySelector('[data-act-change=rvSel]');if(c)c.checked=on;});}
+queueMicrotask(()=>Object.assign(ACT,{
+  rvSelNext:()=>{const next=(RV.all||[]).filter(id=>!RV.sel.has(id)).slice(0,10);next.forEach(id=>RV.sel.add(id));
+    // show the page where the batch ends, so the ticked products are on screen
+    const last=next[next.length-1];if(last){const i=RV.all.indexOf(last),pg=Math.floor(i/RV.per)+1;if(pg!==RV.page){RV.page=pg;route();return;}}
+    rvSync();toast(next.length?`${next.length} more selected (${RV.sel.size} in all)`:'Everything is already selected');},
+  rvSelAll:()=>{(RV.all||[]).forEach(id=>RV.sel.add(id));rvSync();},
+  rvSelClear:()=>{RV.sel.clear();rvSync();},
+  rvPage:el=>{RV.page=+el.dataset.p||1;route().then(()=>$('.rv-sortbar')?.scrollIntoView({block:'start'}));},
+  rvBulk:async el=>{const ids=[...RV.sel],list=S.products.filter(p=>ids.includes(p.id)),n=list.length,d=el.dataset.do;if(!n)return;
+    if(d==='delete'){if(!confirm(`Delete ${n} product${n===1?'':'s'} and their photos?`))return;await deleteProducts(ids);RV.sel.clear();route();return;}
+    if(d==='publish'){if(!confirm(`Publish ${n} product${n===1?'':'s'}? Customers will see them straight away.`))return;const ok=blockToast(list),who=S.email||'Admin',now=Date.now();
+      ok.forEach(p=>{p.published=true;p.reviewed=true;delete p.stage;p.approvedBy=who;p.approvedAt=now;});await saveProducts();ok.forEach(p=>RV.sel.delete(p.id));toast(`Published ${ok.length}`);route();return;}
+    if(d==='ready'){const who=S.email||(isAdmin()?'Admin':'Employee'),now=Date.now();list.forEach(p=>{p.stage='ready';p.readyBy=who;p.readyAt=now;delete p.backNote;});await saveProducts();RV.sel.clear();toast(`${n} sent for approval`);route();return;}
+    if(d==='back'){const note=prompt('What should be changed?','');if(note===null)return;list.forEach(p=>{p.stage='edit';p.backNote=note.trim()||'Please check this product again.';});await saveProducts();RV.sel.clear();toast(`${n} sent back for editing`);route();}},
+}));
 // ---------- several phones and tabs editing at once ----------
 // Each save first fetches what was saved elsewhere since this page loaded, and keeps those changes.
 // A field this page did not change takes the newer value, so an old open tab can no longer undo new photos or prices.
@@ -3544,7 +3705,7 @@ async function mergeRemoteProducts(){
     if(bs===undefined){keep.push(p);continue;}                 // added on this page
     const b=JSON.parse(bs);
     if(!rp){if(J(cleanProd(p))!==bs)keep.push(p);else n++;continue;}   // deleted elsewhere: keep only if changed here
-    for(const k of new Set([...Object.keys(b),...Object.keys(rp)])){if(k[0]==='_')continue;
+    for(const k of new Set([...Object.keys(b),...Object.keys(rp)])){if(k[0]==='_'||k==='fp')continue;   // fingerprints live in kc:fp
       if(J(p[k])===J(b[k])&&J(rp[k])!==J(b[k])){if(rp[k]===undefined)delete p[k];else p[k]=rp[k];n++;if(k==='media')dropImageCache(p.id);}}
     keep.push(p);}
   for(const rp of r.value)if(!here.has(rp.id)&&!base.has(rp.id)){keep.push(rp);n++;}   // added elsewhere
@@ -3789,7 +3950,7 @@ function compactMedia(m){const B=MEDIA_BASE();if(!m||!B||!m.th||!m.th.startsWith
 function expandMedia(p){const m=p&&p.media;if(!m||!m.b)return p;const B=MEDIA_BASE();p.media={th:B+m.b+'-th.jpg',imgs:Array.from({length:m.n||0},(_,i)=>B+m.b+'-'+i+'.jpg')};return p;}
 function catalogItem(p){return {id:p.id,slug:prodSlug(p),code:p.code,title:p.title,storeDesc:storeDesc(p),category:p.category,stock:p.stock,
     published:true,featured:!!p.featured,createdAt:p.createdAt,listedAt:p.listedAt||null,keep:!!p.keep,imageCount:p.imageCount,fp:(p.fp||[]).slice(0,1),sellOverride:sellPrice(p),media:compactMedia(p.media),mrp:p.mrp||null,colors:p.colors?p.colors.map((c,i)=>c?{name:c.name,hex:c.hex,price:colourSell(p,i)}:null):null};}
-function buildCatalog(){return S.products.filter(p=>p.published).map(catalogItem);}
+function buildCatalog(){return S.products.filter(p=>p.published&&!hasNoPhoto(p)).map(catalogItem);}
 function buildVideoCatalog(){
   return S.videos.filter(v=>v.published).map(v=>({id:v.id,title:v.title,desc:v.desc,productId:v.productId,duration:v.duration,createdAt:v.createdAt,published:true,reviewed:true,
     url:v.url,posterUrl:v.posterUrl,mime:v.mime,size:v.size,chunks:v.chunks}));
@@ -4101,10 +4262,13 @@ function carGo(i){
   $$('.car-dots button').forEach((b,k)=>b.classList.toggle('on',k===CAR.i));
   [...tr.children].forEach((sl,k)=>{sl.setAttribute('aria-hidden',k!==CAR.i);sl.querySelectorAll('a:not([aria-hidden])').forEach(a=>a.tabIndex=k===CAR.i?0:-1);});
 }
+const MOTION_W={};
 function startMotion(){
   const tt=$('.ticker-track[data-speed]');
-  if(tt){const px={slow:25,normal:45,fast:75}[S.settings.announcement.speed]||(Number(S.settings.announcement.speed)||45);tt.style.setProperty('--dur',Math.max(8,tt.scrollWidth/2/px)+'s');}
-  const rb=$('.ribbon-track');if(rb)rb.style.setProperty('--dur',Math.max(20,rb.scrollWidth/2/40)+'s');
+  // the scrolling bands are measured once and remembered: measuring on every page change made every click wait for a full layout
+  if(tt){const px={slow:25,normal:45,fast:75}[S.settings.announcement.speed]||(Number(S.settings.announcement.speed)||45),k='t|'+px+'|'+tt.textContent+'|'+innerWidth;
+    if(!MOTION_W[k])MOTION_W[k]=Math.max(8,tt.scrollWidth/2/px)+'s';tt.style.setProperty('--dur',MOTION_W[k]);}
+  const rb=$('.ribbon-track');if(rb){const k='r|'+rb.textContent+'|'+innerWidth;if(!MOTION_W[k])MOTION_W[k]=Math.max(20,rb.scrollWidth/2/40)+'s';rb.style.setProperty('--dur',MOTION_W[k]);}
   const car=$('.hero-car'),tr=$('#carTrack');
   if(!car||!tr||tr.children.length<2)return;
   carGo(0);
@@ -4148,7 +4312,7 @@ function gridSel(list,whole){
   return `<div class="plbar" id="stBar">${stBarHTML()}</div>${h}`;
 }
 document.addEventListener('click',e=>{if(e.target.closest?.('a.pg'))S.toTop=true;});
-const NEW_COUNT=10;
+const NEW_COUNT=5;
 function newArrivalsList(){const vis=newest(visibleProducts()),fresh=vis.filter(isNew);return [...fresh,...vis.filter(p=>!fresh.includes(p))].slice(0,NEW_COUNT);}
 function vCategory(main,id,q){
   const sort=q.get('sort')||'new';
@@ -5182,7 +5346,7 @@ async function pOrders(m,q){
 const productOptions=sel=>'<option value="">No linked product</option>'+newest(S.products).map(p=>`<option value="${p.id}" ${p.id===sel?'selected':''}>${esc(p.code)} ${esc(p.title.slice(0,50))}</option>`).join('');
 function rvProductCard(p){
   const sp=sellPrice(p),v=vendorById(p.vendorId),dm=RV.dup?.get(p.id);
-  return `<article class="rv" data-id="${p.id}">${dm?`<div class="dup-warn" role="note"><b>Looks like a duplicate</b> of <a href="${productURL(dm.other)}" target="_blank" rel="noopener">${esc(dm.other.title)}</a> (${esc(dm.other.code||'')}), ${Math.round(dm.score*100)}% match. ${isAdmin()?'Publishing it will ask for your approval.':'It needs an admin to approve it.'}</div>`:''}<div class="top">
+  return `<article class="rv ${RV.sel.has(p.id)?'sel':''}" data-id="${p.id}"><label class="rv-tick"><input type="checkbox" data-act-change="rvSel" ${RV.sel.has(p.id)?'checked':''} aria-label="Select ${esc(p.title||p.code||'product')}"> Select</label>${dm?`<div class="dup-warn" role="note"><b>Looks like a duplicate</b> of <a href="${productURL(dm.other)}" target="_blank" rel="noopener">${esc(dm.other.title)}</a> (${esc(dm.other.code||'')}), ${Math.round(dm.score*100)}% match. ${isAdmin()?'Publishing it will ask for your approval.':'It needs an admin to approve it.'}</div>`:''}<div class="top">
       <button class="btn ghost" style="padding:0" data-act="rvEdit" aria-label="Edit photos and details">${thumbTag(p)}</button>
       <div><div class="vendor">${esc(v?.name||'')}, ${esc(p.code)}${p.imageCount>1?`, ${p.imageCount} photos`:''}</div>
         <div class="vp">Vendor price <b>${p.vendorPrice!=null?money(p.vendorPrice):'none'}</b></div>
@@ -5218,20 +5382,26 @@ function rvVideoCard(v,managing,isDup){
       <button class="btn sm" data-act="vDown">⬇ Download</button>${isAdmin()?'<button class="btn sm" data-act="rvvInsta">📸 Instagram Reel</button>':''}<button class="btn sm" data-act="rvvWA">${ICON.wa} Send on WhatsApp</button>
       <button class="btn sm ghost danger" data-act="rvvDelete" style="margin-left:auto">Delete</button></div></article>`;
 }
-const RV={vendor:'',stage:'edit'};
+const RV={vendor:'',stage:'edit',sort:'new',page:1,per:20,sel:new Set(),cat:'',dupCache:new Map()};
 function pReview(m,q){
   if(q?.get('stage'))RV.stage=q.get('stage');
   const inStage=p=>RV.stage==='ready'?p.stage==='ready':p.stage!=='ready';
   const nEdit=S.products.filter(p=>awaitingReview(p)&&p.stage!=='ready').length,nReady=S.products.filter(p=>awaitingReview(p)&&p.stage==='ready').length;
-  const prods=newest(S.products.filter(p=>awaitingReview(p)&&inStage(p)&&(!RV.vendor||p.vendorId===RV.vendor)));
-  {const live=S.products.filter(p=>p.published);RV.dup=new Map();prods.forEach(p=>{const d=p.dupOk?null:dupMatch(p,live);if(d)RV.dup.set(p.id,d);});}
+  const prods=S.products.filter(p=>awaitingReview(p)&&inStage(p)&&(!RV.vendor||p.vendorId===RV.vendor)&&(!RV.cat||catGroupIds(catById(RV.cat)||{id:RV.cat}).includes(p.category))).sort(rvSorts()[RV.sort]||rvSorts().new);
+  RV.all=prods.map(p=>p.id);[...RV.sel].forEach(id=>{if(!RV.all.includes(id))RV.sel.delete(id);});
+  const pages=Math.max(1,Math.ceil(prods.length/RV.per));RV.page=Math.min(Math.max(1,RV.page),pages);
+  const pageItems=prods.slice((RV.page-1)*RV.per,RV.page*RV.per);RV.shown=pageItems.map(p=>p.id);
+  // duplicate check only for the products on this page, remembered between clicks
+  {const live=S.products.filter(p=>p.published);RV.dup=new Map();pageItems.forEach(p=>{if(p.dupOk)return;const k=[p.imageCount,p.fp?.length||0,p.title,live.length].join('|'),c=RV.dupCache.get(p.id);
+    let d;if(c&&c.k===k)d=c.d;else{d=dupMatch(p,live);RV.dupCache.set(p.id,{k,d});}if(d)RV.dup.set(p.id,d);});}
   const vids=S.videos.filter(v=>!v.published&&!v.reviewed&&(!RV.vendor||v.vendorId===RV.vendor)).sort((a,b)=>b.createdAt-a.createdAt);
   m.innerHTML=`<h1>Review and publish</h1><p class="lede">New products stay hidden until they are approved. Edit them, send them for approval, and an admin approves and publishes. Select <b>Full view</b> to see everything about a product while you edit it.</p>
   <div class="seg rv-stages" role="group" aria-label="Queue"><button class="${RV.stage!=='ready'?'on':''}" data-act="rvStage" data-s="edit">To edit <span class="badge">${nEdit}</span></button><button class="${RV.stage==='ready'?'on':''}" data-act="rvStage" data-s="ready">Ready for approval <span class="badge">${nReady}</span></button></div>
   ${S.vendors.length>1?`<div class="filters"><select data-act-change="rvVendor" aria-label="Vendor"><option value="">All vendors</option>${S.vendors.map(v=>`<option value="${v.id}" ${RV.vendor===v.id?'selected':''}>${esc(v.name)}</option>`).join('')}</select></div>`:''}
   ${!prods.length&&!vids.length?`<div class="empty"><h2>Nothing waiting</h2><p>Everything has been reviewed. New items from imported chats will appear here.</p><a class="btn primary" href="#/staff/import">Import WhatsApp chats</a></div>`:''}
   ${prods.length?`<div class="sec-head" style="margin-top:8px"><h2>${prods.length} product${prods.length===1?'':'s'}</h2><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" data-act="rvAiAll">${AIW.running?'Writing… (tap to stop)':'Write all with AI'}</button>${isAdmin()?(RV.stage==='ready'?`<button class="btn sm primary" data-act="rvApproveAll">Approve and publish all ${prods.length}</button>`:`<button class="btn sm primary" data-act="rvPublishAll">Publish all ${prods.length} products</button>`):''}</span></div>
-    <div class="rv-grid">${prods.map(rvProductCard).join('')}</div>`:''}
+    ${rvToolsHTML(prods.length)}
+    <div class="rv-grid">${pageItems.map(rvProductCard).join('')}</div>${rvPagerHTML(pages)}`:''}
   ${vids.length?`<div class="sec-head" style="margin-top:32px"><h2>${vids.length} video${vids.length===1?'':'s'}</h2><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm danger" data-act="rvvDeleteAll">Delete all ${vids.length}</button><button class="btn sm primary" data-act="rvvPublishAll">Publish all ${vids.length} videos</button></span></div>
     <div class="rv-grid">${vids.map(v=>rvVideoCard(v,false)).join('')}</div>`:''}`;
 }
@@ -5479,6 +5649,7 @@ function pSettings(m){
     ${sw('clean.auto','Clean up automatically every day','Runs once a day when an admin opens the staff area.')}
     ${sw('clean.photos','Check photos and repair broken ones','Photos that cannot be repaired are marked so you can restore them.')}
     ${sw('clean.unpublish','Take products off the store when something is wrong','No title, no category (or a switched-off one), no price, or no photo.')}
+    ${sw('clean.noPhoto','Remove products that have no photos','Customers never see a product without a photo. Live products without photos are deleted straight away, and new drafts after 2 days. Chat archives and orders keep their copy.')}
     ${sw('clean.noPrice','Remove products that have no price','Imports leave them out straight away. Products without any price that are not live are deleted with their photos, to save space.')}
     ${fld('clean.noPriceDays','Days to wait before deleting a product without a price','number','0 deletes them at the next clean-up. Gives you time to add a price to something you added by hand.','min="0" style="width:90px"')}
     ${sw('clean.videos','Hide videos whose product is gone or off the store')}
@@ -6026,7 +6197,13 @@ const CHG={
     await saveProducts();toast(`${ids.length} product${ids.length===1?'':'s'} moved to ${catLabel(catById(v))}`);SS.clear();route();},
   plSel:el=>{const id=el.closest('.vrow').dataset.id;el.checked?PL.sel.add(id):PL.sel.delete(id);plSync();},
   plSelAll:el=>{PL.shown.forEach(id=>el.checked?PL.sel.add(id):PL.sel.delete(id));plSync();},
-  rvVendor:el=>{RV.vendor=el.value;route();},
+  rvVendor:el=>{RV.vendor=el.value;RV.page=1;route();},
+  rvSel:el=>{const id=el.closest('.rv').dataset.id;el.checked?RV.sel.add(id):RV.sel.delete(id);rvSync();},
+  rvSelPage:el=>{(RV.shown||[]).forEach(id=>el.checked?RV.sel.add(id):RV.sel.delete(id));rvSync();},
+  rvSort:el=>{RV.sort=el.value;RV.page=1;route();},
+  rvCat:el=>{RV.cat=el.value;RV.page=1;route();},
+  rvPer:el=>{RV.per=+el.value||20;RV.page=1;route();},
+  rvBulkCat:async el=>{const v=el.value,ids=[...RV.sel];if(!v||!ids.length)return;S.products.filter(p=>ids.includes(p.id)).forEach(p=>{p.category=v;p.catManual=true;});await saveProducts();toast(`${ids.length} moved to ${catLabel(catById(v))}`);RV.sel.clear();route();},
   moveCat:async el=>{const p=S.products.find(x=>x.id===el.dataset.id);if(!p)return;const from=catById(p.category).name;p.category=el.value;p.catManual=true;
     await saveProducts();toast(`Moved ${p.title} from ${from} to ${catById(p.category).name}`);route();},
   staffRole:async el=>{const em=el.closest('tr').dataset.email;try{await Staff.add(em,el.value);toast(`${em} is now ${el.value==='admin'?'an admin':'an employee'}`);}catch(e){toast(e.message);}loadStaffMgr();},
@@ -8002,7 +8179,10 @@ const normId=s=>String(s||'').toLowerCase().replace(/[\s\-_.#/]+/g,'');
 function findByAnyId(q){const n=normId(q);if(!n)return null;
   return S.products.find(p=>p.myId&&normId(p.myId)===n)||S.products.find(p=>normId(p.code)===n)||null;}
 const IDS=()=>S.settings.ids||(S.settings.ids={prefix:'K',next:1});
-function nextMyId(){const pre=IDS().prefix??'K';let n=Math.max(1,Number(IDS().next)||1);const used=new Set(S.products.map(p=>normId(p.myId)).filter(Boolean));while(used.has(normId(pre+n)))n++;return {id:pre+n,n};}
+let NMI=null;
+function nextMyId(){const key=S.products.length+'|'+(IDS().next||'')+'|'+(IDS().prefix??'K');if(NMI&&NMI.key===key&&Date.now()-NMI.at<1500)return NMI.v;
+  const v=nextMyIdRaw();NMI={key,at:Date.now(),v};return v;}
+function nextMyIdRaw(){const pre=IDS().prefix??'K';let n=Math.max(1,Number(IDS().next)||1);const used=new Set(S.products.map(p=>normId(p.myId)).filter(Boolean));while(used.has(normId(pre+n)))n++;return {id:pre+n,n};}
 function idTaken(id,exceptId){const n=normId(id);return !!n&&S.products.some(p=>p.id!==exceptId&&(normId(p.myId)===n||normId(p.code)===n));}
 async function assignMissingIds(){const todo=[...S.products].filter(p=>!p.myId).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
   for(const p of todo){const {id,n}=nextMyId();p.myId=id;IDS().next=n+1;}
