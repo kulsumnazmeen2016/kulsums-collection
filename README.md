@@ -1276,3 +1276,25 @@ To update: open the repository on GitHub, select **Add file**, then **Upload fil
 | "Could not reach the online database" | The Supabase project may be paused. Open supabase.com and select **Restore project**. |
 | Photos do not upload, or "row-level security" error | Run `setup.sql` again. It is safe to repeat. |
 | Site shows the old version after updating | Wait 2 minutes, then refresh with Ctrl+Shift+R (Cmd+Shift+R on a Mac). |
+
+---
+
+## Part 53 – Tidy capitals, fonts and descriptions automatically
+
+**What customers see now**
+- **Titles** are always in Title Case: `PURE GEORGETTE SAREE WITH BLOUSE PIECE` becomes **Pure Georgette Saree with Blouse Piece**. Small words (with, and, for) stay small.
+- **Descriptions** are in normal sentences: shouting lines and Every Word Capitalised lines are calmed down, and each sentence starts with a capital.
+- **Fancy letters** that vendors paste from WhatsApp (𝐒𝐢𝐥𝐤, ᴄᴏᴛᴛᴏɴ, Ｓｉｌｋ) become plain letters, so they show in the store's own font and are found by search and Google.
+- **Kept right:** sizes (XL, 3XL, "Size: m,l,xl" → "Size: M, L, XL"), short forms (KC, USA, LED), units after numbers (5.5 mtr), place and festival names (Banarasi, Chanderi, Lucknowi, Eid, Diwali), and words typed on purpose with mixed capitals (iPhone).
+- **Punctuation:** "!!!!" becomes "!", "..." becomes "…", spaces before commas are removed, and a space is added after a comma.
+- **Better descriptions:** a short sentence repeated by a longer one is dropped, repeated lines are removed, details show as **Fabric:** Pure georgette, and "Colour: 2 colours" reads "Available in 2 colours."
+- **Fonts and reading:** headings wrap evenly, prices line up, long words don't spill out of cards, descriptions have more line spacing, and form boxes on phones no longer zoom in when tapped.
+
+**For staff**
+- While you type a title, a line under the box shows **Customers will see: …** with the tidied version.
+- Titles and category names are tidied when the store opens and before every save. Descriptions are tidied as they're shown, so what you saved is never changed.
+- Turn it off in **Settings → Store details → Tidy capitals and fonts automatically**.
+
+**Fixed:** videos weren't loading after the Part 52 update. A note comment had hidden one line of code.
+
+Nothing new to run in Supabase. Upload `index.html` to the main folder.
