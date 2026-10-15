@@ -1381,3 +1381,62 @@ Upload `index.html` to the main folder.
 - Turn it off in **Settings → Clean-up → Remove products that have no photos**.
 
 Upload `index.html` to the main folder. Then reload the website once on every staff phone.
+
+---
+
+## Part 57 – Customer accounts, cumulative bills, profit insights
+
+### One-time setup in Supabase (5 minutes)
+1. **Run the SQL:** Supabase → **SQL Editor** → New query → paste all of `customer-accounts.sql` → **Run**. This adds:
+   - a `customers` table;
+   - a link from each order to its customer;
+   - rules so each customer can read only their own orders;
+   - `claim_order`, for adding an earlier order to an account;
+   - `set_customer_password`, so admins can set a new password for a customer.
+2. **Turn off email confirmation:** Supabase → **Authentication → Sign In / Providers → Email** → switch off **Confirm email** → Save.
+   - Customers sign in with their mobile number, so there is no email to confirm.
+   - Staff and reseller logins stay safe: only people you invite get staff or reseller access.
+3. Check that **Allow new users to sign up** is on (same page).
+
+### For customers
+- **Sign in:** the person icon (top right on a computer, **Sign in / Account** in the bottom bar on a phone) opens the sign-in page.
+- **Create an account:** name, mobile number, optional email and a password.
+- **Sign in afterwards:** mobile number and password.
+- **My account page:**
+  - totals: orders, total shopping, pieces bought and savings;
+  - every order with photos, colours, quantities, prices, status, payment, tracking, **Order again** and **Ask about it** on WhatsApp;
+  - edit name, email and delivery address, and change password.
+- **Earlier orders join the account:**
+  - Orders placed on the same phone before signing up are added automatically.
+  - Others can be added with **Add an order I placed before** (order number plus the phone used for it).
+- **Checkout:** a signed-in customer's details are filled in, and the order is saved to their account. Guests see a **Create my account** button after ordering.
+- **Forgot password:** customers message you on WhatsApp. You open their bill (Reports → Customers) and use **Set a new password**.
+- **Turn off:** Settings → Store details → Customer accounts.
+
+### For you: Reports → Customers
+- **One row per customer** (matched by mobile number, so guest orders and account orders add up):
+  - orders and pieces;
+  - **total shopping**;
+  - vendor cost, **gross profit** and **margin %** (admin only);
+  - paid, due and last order.
+- **Search, sort and range:** search by name or phone; sort by most shopping, profit, margin, orders, most recent, most due or name; view all time or one period.
+- **Totals:** customers, how many came back, shopping and profit per customer, and how many have accounts.
+- **Bill** opens the **cumulative bill** with every order, item and payment, total shopping, paid and balance due:
+  - **Print my copy** includes cost and profit.
+  - **Print customer copy** leaves them out.
+  - **Send to customer** sends the statement on WhatsApp.
+
+### For you: Reports → Sales (admin)
+- **"How the month went":**
+  - **gross profit** and **gross margin**, with the change from the previous period;
+  - profit per order and average order;
+  - best and lowest margin category;
+  - repeat customers' share of sales and the most profitable customer;
+  - orders sold under 15% margin and money still to collect.
+- **Charts and tables:**
+  - **Gross profit by day, month or year** chart;
+  - **Profit by category** table (sales, vendor cost, profit, margin).
+- **Costs survive expiry:** each order now keeps its items' vendor prices, even after the product leaves the store. Products last only 3 days, so this keeps profit correct. Pieces with no vendor price are pointed out.
+- **Order loading:** reports now load all your orders (no 1,000 limit) and keep them for 20 seconds, so sorting and searching are instant.
+
+Upload `index.html` to the main folder.
