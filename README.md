@@ -1440,3 +1440,42 @@ Upload `index.html` to the main folder. Then reload the website once on every st
 - **Order loading:** reports now load all your orders (no 1,000 limit) and keep them for 20 seconds, so sorting and searching are instant.
 
 Upload `index.html` to the main folder.
+
+---
+
+## Part 58 – Sign-in everywhere, sign in before ordering, sign in with a code (OTP)
+
+**Easy to find**
+- **Sign in** shows in three places for everyone, including when you are signed in as staff:
+  - a gold **Sign in** button in the header (it shows the customer's first name once signed in);
+  - **Sign in** in the phone's bottom bar;
+  - a **Sign in or create your account** row in the Shop menu.
+- Guests also see a **sign-in bar** at the top of the home page.
+- The footer link **All products (quick list)** is removed. The page still exists for Google; it just isn't in the footer.
+
+**Sign in before ordering** (Settings → Store details → *Ask customers to sign in before placing an order*, on by default)
+- Pressing Checkout asks the customer to sign in or create an account first. The bag is kept, and afterwards they come straight back to checkout with their name, phone and address filled in.
+- If accounts are not set up yet (`customer-accounts.sql` not run, or "Confirm email" still on), customers see **Continue without an account**, so no order is lost.
+- Staff and resellers are not asked.
+
+**Sign in with a one-time code (OTP)**
+- The customer types their mobile number, gets a 6-digit code by SMS or WhatsApp, and types it in.
+- New numbers are asked for their name, and the account is created in the same step. It is the same account as the password sign-in, with the same shopping history.
+- **Security:**
+  - Codes are sent and checked by the new Supabase Edge Function **customer-otp**, so SMS and WhatsApp keys never reach the website.
+  - At most 1 code every 45 seconds per number, 5 an hour per number and 25 an hour per connection; 8 tries in 15 minutes.
+  - Codes expire after 10 minutes, and are never stored in plain text or logged.
+
+**Setup for codes:**
+1. Run `customer-accounts.sql` again. It is safe to repeat and now also adds two private tables for codes.
+2. Supabase → **Edge Functions** → **Deploy a new function** → name it `customer-otp` → paste `supabase/functions/customer-otp/index.ts` → Deploy.
+3. On the function's **Details**, turn **Verify JWT** OFF. Shoppers are not signed in yet, and the function does its own checks.
+4. **Edge Functions → Secrets**: add `SITE_URL` = `https://kulsumscollection.com`, then ONE provider:
+   - **Twilio Verify** (SMS, or WhatsApp): `OTP_PROVIDER=twilio`, `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_VERIFY_SID` (create a Verify Service in Twilio), and optionally `OTP_CHANNEL=whatsapp`.
+   - **MSG91** (SMS, India): `OTP_PROVIDER=msg91`, `MSG91_AUTHKEY`, `MSG91_TEMPLATE_ID` (an approved OTP template; Indian SMS rules need DLT registration, which MSG91 guides you through).
+   - **WhatsApp Cloud API** (Meta): `OTP_PROVIDER=whatsapp`, `WA_TOKEN` (permanent system-user token), `WA_PHONE_ID`, `WA_TEMPLATE` (an approved *Authentication* template with a copy-code button), optionally `WA_LANG` (default `en`).
+5. Website → Settings → Store details → turn on **Sign in with a one-time code (OTP)**, and choose **SMS** or **WhatsApp** to match your provider.
+
+Each code costs a small amount from your provider; check their current price list. Until step 5, customers sign in with their mobile number and password.
+
+Upload `index.html` to the main folder.
