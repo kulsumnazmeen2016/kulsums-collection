@@ -1530,3 +1530,41 @@ Upload `index.html` to the main folder.
 - The gold **＋** button on every staff page starts a new post.
 
 Upload `index.html` to the main folder. Nothing changes in Supabase.
+
+---
+
+## Part 61 – Buffer: post products to Facebook, Instagram and WhatsApp
+
+Buffer posts to all your social channels at once. Your Buffer key stays on your Supabase server (the `buffer` Edge Function) and is never in the website, a table or the logs. Only admins can post; any staff member can see the channels.
+
+### Setup (once, about 10 minutes)
+1. **Connect your channels in Buffer:** log in at buffer.com and connect **Facebook** (your page), **Instagram** (a business or creator account) and **WhatsApp**, plus any others you like.
+2. **Make an API key:** in Buffer, click your profile picture (bottom left) → **API**, or open publish.buffer.com/settings/api.
+   - Open **Personal Access** → **+ New Key** and name it *Kulsums website*.
+   - Leave all permissions ticked, pick an expiry (**1 year** is easiest), then **Generate API Key**.
+   - Copy the key. It is shown only once, and only the organization owner can make keys.
+3. **Store the key in Supabase:** go to **Edge Functions → Secrets** → **Add new secret**, set **Name** `BUFFER_API_KEY` and **Value** to your key, then **Save**. Keep `SITE_URL` = `https://kulsumscollection.com` if it is already there.
+4. **Deploy the function:**
+   - Go to **Edge Functions → Deploy a new function → Via Editor**, name it `buffer`.
+   - Paste everything from `supabase/functions/buffer/index.ts` (in this repository) and click **Deploy**.
+   - Open the function's **Details** and switch **Verify JWT** **off**. The function checks the staff login itself.
+5. **Choose your defaults:** on the website, open **Settings → Buffer: Facebook, Instagram, WhatsApp**. It should say **Connected** and list your channels.
+   - Tick the channels a product goes to by default.
+   - Choose **Post straight away** or **Add to my Buffer queue**.
+
+When the key expires, Buffer emails you. Make a new key and replace the `BUFFER_API_KEY` secret.
+
+### Posting
+- **New post:** with default channels set, the caption step shows **Also post on Facebook, Instagram, WhatsApp via Buffer** (ticked). After **Share**, the product is posted there too, using your own caption plus the product link and WhatsApp number.
+- **Any product:** the **Buffer** button (next to Instagram and Facebook on the Products, Review and Marketing pages) opens a window:
+  - tick the channels and edit the caption;
+  - choose **Post now**, **Add to Buffer queue** or **At a time**, then **Post**.
+  - It reports each channel separately. If one fails (for example a caption too long for X), the others still go out.
+- **Photos:** each photo is framed to 4:5, which Instagram needs, and uploaded to your public storage folder `bf/`, so Buffer can fetch it.
+
+### Limits (Buffer's plan limits)
+- **Free:** 600 requests a day, 150 per 15 minutes.
+- **Essentials:** 1,800 a day.
+- **Team:** 6,000 a day.
+
+Each post to one channel is one request, plus a couple to read your channels. Exact figures are on developers.buffer.com/guides/api-limits.
