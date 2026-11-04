@@ -1479,3 +1479,54 @@ Upload `index.html` to the main folder.
 Each code costs a small amount from your provider; check their current price list. Until step 5, customers sign in with their mobile number and password.
 
 Upload `index.html` to the main folder.
+
+---
+
+## Part 59 – New post: add products like posting on Instagram
+
+Open **＋ New post** (top of the staff menu, the gold **＋** button in the corner of every staff page, or on the Products and Add a product pages).
+
+1. **Photos:** choose up to 10 from the gallery or take a photo with the camera. You can also drag them in, or paste one.
+   - They show large, like an Instagram carousel; swipe through them.
+   - **◀ ▶** moves a photo, **★ Make main** puts it first, **Remove** takes it out, and **＋** adds more.
+2. **Caption:** tap **Next** and write the caption as you would on Instagram. As you type:
+   - the **first line** becomes the title (with capitals tidied);
+   - a price like **₹1,299** or **Price 1299** becomes the selling price, and an MRP is picked up too;
+   - the **category** is chosen from the words;
+   - colours are read from each photo;
+   - the other lines become the description customers see. Prices, phone numbers, links and hashtags are left out of the store, but kept for Instagram.
+   - **How customers will see it** shows the result. You can change the title, price or category, and **More options** has vendor, vendor price (only you see it), MRP, stock and the home page banner.
+3. **Share:**
+   - **Admins** publish straight away. A price and a category are needed, so nothing shows as "price on request".
+   - **Employees** (with permission to add products) send it to **Review and publish**.
+   - After sharing: **＋ New post** for the next one, **See it in the store**, **Post on Instagram too** (uses your own caption plus the product link), or **Edit details**.
+
+The product gets your next product ID, a code and the 3-day store life like every other product.
+
+Upload `index.html` to the main folder.
+
+---
+
+## Part 60 – A simpler store that looks like Instagram, and a shorter staff menu
+
+**The store (Settings → Store details → How the store looks → Instagram feed, now the default)**
+- **Home is your shop's profile:**
+  - your logo in a gold ring, the number of posts and collections, and your name, tagline and message;
+  - **Message** (WhatsApp), **Instagram** (when your handle is in Settings) and **Order with a photo** buttons;
+  - **round highlights** for All, New and each collection, which work like Instagram story highlights;
+  - **POSTS:** every product as a post in a 3-column grid, newest first, with the price on each tile and a ❐ mark when it has several photos. **Show more posts** loads 24 more at a time.
+- **Tapping a post** opens it over the grid, like Instagram:
+  - swipe the photos;
+  - ♡ save it, 💬 ask on WhatsApp, ➤ share the link, or open **Full details**;
+  - the price (with MRP and % off), the title and the caption (**more** opens the rest);
+  - choose a colour, then **Add to bag** or **Order on WhatsApp**.
+- **Leaving it:** ✕, tapping outside, or Esc closes the post.
+- **Other parts of the home page:** collections open as the same profile with only their posts. Announcements and customer reviews still show under the grid. The long home sections (banner, how to order, explore tiles, product rows) are left out in this style.
+- **Other styles:** **WhatsApp chats** and **Classic shop with categories** are still there in the same setting, with nothing removed.
+
+**Staff menu:**
+- **Always visible:** ＋ New post, Dashboard, Reports, Review and publish, Products, Orders and Settings.
+- **More tools:** every other page (WhatsApp import, chat archive, vendor price list, resellers and vendors, videos, offers, combos, announcements, reviews, menus, team, market prices, quick fix, duplicates, tasks, leads, marketing, vendor payments). It opens by itself when you are on one of them.
+- The gold **＋** button on every staff page starts a new post.
+
+Upload `index.html` to the main folder. Nothing changes in Supabase.
