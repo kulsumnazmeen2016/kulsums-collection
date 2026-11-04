@@ -8442,7 +8442,8 @@ function exportDialogManual(){
 // Columns (any order, extra columns are ignored):
 //   title (required), category, price (final selling price), vendor_price (your cost),
 //   markup_amount (rupees added to the cost) or markup_percent (% added to the cost), mrp, stock (in or out),
-//   store_description (shown to customers), notes (private), colours, images, image_colours, sku.
+//   store_description (shown to customers), notes (private), colours, images, image_colours, sku,
+//   vendor (name of the vendor; it is found in your Vendors list, or added if it is new).
 // If a row has no price, the price is vendor_price + markup_amount (or markup_percent). With no markup at all it sells at vendor_price.
 // images: photo addresses separated by ; (a full web address, or a path on your own site such as import-images/abayas/kca001-1.jpg).
 // image_colours: the colour of each photo, in the same order as images. It gives the product page its colour choices.
@@ -8459,6 +8460,7 @@ const CSV_COLS={
   stock:['stock','availability','instock'],
   store_description:['storedescription','customerdescription','description','desc','body','bodyhtml'],
   notes:['notes','note','internalnotes','privatenotes','vendornotes'],
+  vendor:['vendor','vendorname','supplier','suppliername'],
   colours:['colours','colors','colour','color'],
   images:['images','image','imageurls','imageurl','photos','imagesrc'],
   image_colours:['imagecolours','imagecolors','photocolours','photocolors']
@@ -8491,7 +8493,7 @@ function csvBuildPlan(table,ctx){
   const seen=new Set(),newCats=new Map();
   for(let n=1;n<table.length;n++){
     const r=table[n],get=f=>idx[f]==null?'':String(r[idx[f]]??'').trim();
-    const row={line:n+1,sku:get('sku'),title:get('title'),catName:get('category'),cat:'',newCat:'',vp:null,sell:null,markup:null,mrp:null,stock:'in',
+    const row={line:n+1,sku:get('sku'),title:get('title'),vendor:get('vendor'),catName:get('category'),cat:'',newCat:'',vp:null,sell:null,markup:null,mrp:null,stock:'in',
       desc:get('store_description'),notes:get('notes'),colours:csvList(get('colours'),true),images:csvList(get('images')),imgCols:csvList(get('image_colours')),skip:false,reason:'',warns:[]};
     if(!row.title){row.skip=true;row.reason='No title';out.rows.push(row);continue;}
     const vp=csvNum(get('vendor_price')),pr=csvNum(get('price')),ma=csvNum(get('markup_amount')),mp=csvNum(get('markup_percent')),mrp=csvNum(get('mrp'));
@@ -8519,7 +8521,7 @@ function csvBuildPlan(table,ctx){
 }
 // </csv-pure>
 const CSVI={plan:null,file:'',busy:false};
-const CSV_TEMPLATE='sku,title,category,vendor_price,markup_amount,price,stock,store_description,notes,colours,images,image_colours\nKC-001,"Example abaya","Abayas",1000,400,1400,in,"Text customers see","Private note",Black; Grey,import-images/example-1.jpg,\n';
+const CSV_TEMPLATE='sku,title,category,vendor,vendor_price,markup_amount,price,stock,store_description,notes,colours,images,image_colours\nKC-001,"Example abaya","Abayas","Example vendor",1000,400,1400,in,"Text customers see","Private note",Black; Grey,import-images/example-1.jpg,\n';
 function csvDialogHTML(){
   const p=CSVI.plan;
   const head=`<h2 style="margin-top:0">Import products from a CSV file</h2>`;
@@ -8531,7 +8533,7 @@ function csvDialogHTML(){
   if(p.error)return `<div class="dlg" style="max-width:680px">${head}<p style="color:var(--rose)">${esc(p.error)}</p>${pick}<div class="dlg-actions"><button class="btn" data-act="dlgClose">Close</button></div></div>`;
   const ok=p.rows.filter(r=>!r.skip),bad=p.rows.filter(r=>r.skip),warn=ok.filter(r=>r.warns.length);
   const canPub=isAdmin();
-  const tr=r=>`<tr${r.skip?' style="opacity:.55"':''}><td>${esc(r.sku||'')}</td><td>${esc(r.title||'(no title)')}${r.skip?`<div class="small" style="color:var(--rose)">Skipped: ${esc(r.reason)}</div>`:''}${r.warns.map(w=>`<div class="small muted">${esc(w)}</div>`).join('')}</td>
+  const tr=r=>`<tr${r.skip?' style="opacity:.55"':''}><td>${esc(r.sku||'')}</td><td>${esc(r.title||'(no title)')}${r.vendor&&!r.skip?`<div class="small muted">Vendor: ${esc(r.vendor)}</div>`:''}${r.skip?`<div class="small" style="color:var(--rose)">Skipped: ${esc(r.reason)}</div>`:''}${r.warns.map(w=>`<div class="small muted">${esc(w)}</div>`).join('')}</td>
     <td>${r.newCat?esc(r.newCat)+' <span class="small muted">(new)</span>':esc(r.cat?catById(r.cat).name:'')}</td><td>${r.vp!=null?money(r.vp):''}</td><td>${r.markup!=null?(r.markup>=0?'+':'')+money(r.markup):''}</td><td><b>${r.sell!=null?money(r.sell):'None'}</b></td><td>${r.images.length}</td></tr>`;
   return `<div class="dlg" style="max-width:860px">${head}
     <p style="margin:0"><b>${esc(CSVI.file||'CSV file')}</b>: ${ok.length} product${ok.length===1?'':'s'} ready${bad.length?`, ${bad.length} skipped`:''}${warn.length?`, ${warn.length} with a note`:''}.${p.newCats.length?` New categor${p.newCats.length===1?'y':'ies'} will be created: <b>${esc(p.newCats.join(', '))}</b>.`:''}</p>
@@ -8565,6 +8567,12 @@ async function csvRun(){
     for(const name of plan.newCats){let id=slug(name);while(S.categories.some(c=>c.id===id))id+='-'+Math.random().toString(36).slice(2,5);
       S.categories.push({id,name,keywords:[],enabled:true,priority:false,order:S.categories.length});newIds.set(name,id);}
     if(plan.newCats.length)await saveCats();
+    const vmap=new Map();let newVendors=0;
+    for(const r of rows){const nm=(r.vendor||'').trim();if(!nm)continue;const key=nm.toLowerCase();if(vmap.has(key))continue;
+      let v=S.vendors.find(x=>String(x.name||'').trim().toLowerCase()===key);
+      if(!v){v={id:uid('v'),name:nm,phone:'',contact:'',email:'',tax:'',address:'',notes:'',source:'csv',createdAt:Date.now()};S.vendors.push(v);newVendors++;}
+      vmap.set(key,v.id);}
+    if(newVendors)await saveVendors();
     for(const [k,r] of rows.entries()){
       if(st)st.textContent=`Importing ${k+1} of ${rows.length}: ${r.title}`;
       const cat=r.newCat?newIds.get(r.newCat):r.cat;
@@ -8573,7 +8581,7 @@ async function csvRun(){
         try{const im=await csvLoadImage(r,i);full.push(im.data);fps.push(packFP(fingerprint(im.img)));colors.push(im.colour);if(!th)th=(await compressImage(new URL(r.images[i],location.origin+'/').href,360,0.74)).data;}
         catch(e){failedImg++;}
       }
-      const prod={id:uid('p'),code:'KC'+(seq++),...(r.sku?{myId:r.sku}:{}),vendorId:null,title:r.title,titleManual:true,description:r.desc||r.title,storeDesc:r.desc||'',csvNotes:r.notes||'',
+      const prod={id:uid('p'),code:'KC'+(seq++),...(r.sku?{myId:r.sku}:{}),vendorId:r.vendor?(vmap.get(r.vendor.trim().toLowerCase())||null):null,title:r.title,titleManual:true,description:r.desc||r.title,storeDesc:r.desc||'',csvNotes:r.notes||'',
         vendorPrice:r.vp,sellOverride:r.sell,mrp:r.mrp,category:cat,catManual:true,stock:r.stock,featured:false,published:false,reviewed:false,createdAt:Date.now(),
         imageCount:full.length,fp:fps,colors,source:'manual',addedBy:S.email||(isAdmin()?'Admin':'Employee'),importedFrom:'csv'};
       const pub=publishWanted&&r.sell!=null&&full.length>0&&!publishBlock(prod)&&catOn(catById(cat));
