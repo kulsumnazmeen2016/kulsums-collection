@@ -1621,6 +1621,101 @@ a.wc-pg:hover{border-color:rgba(176,138,62,.5);background:#fff}
 .linkbtn{background:none;border:0;padding:0;color:var(--gold-dark);font-weight:600;text-decoration:underline;cursor:pointer}
 .ca-guest{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px dashed var(--rule)}
 .ca-seg button{padding-left:8px;padding-right:8px;font-size:.92rem}
+
+/* ---------- New post (Instagram-style) ---------- */
+.ign{max-width:560px;margin:0 auto 90px;background:#fff;border-radius:22px;box-shadow:0 22px 50px -32px rgba(60,35,5,.55),0 0 0 1px rgba(176,138,62,.18);overflow:hidden}
+.ign-top{display:grid;grid-template-columns:72px 1fr 72px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--rule);background:#fff;position:sticky;top:0;z-index:3}
+.ign-top b{text-align:center;font-size:1.05rem}
+.ign-tbtn{background:none;border:0;font-size:1.05rem;font-weight:700;color:var(--ink);cursor:pointer;padding:6px;text-decoration:none;justify-self:start}
+.ign-tbtn.go{justify-self:end;color:#1877f2}.ign-tbtn:disabled{opacity:.4}
+.ign-stage{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;aspect-ratio:4/5;background:var(--photo-bg)}
+.ign-stage::-webkit-scrollbar{display:none}
+.ign-stage figure{flex:0 0 100%;margin:0;scroll-snap-align:center;position:relative;display:grid;place-items:center}
+.ign-stage img{width:100%;height:100%;object-fit:contain}
+.ign-main{position:absolute;left:10px;top:10px;background:rgba(21,17,12,.75);color:var(--gold-light);font-size:.75rem;font-weight:700;padding:3px 9px;border-radius:99px}
+.ign-dots{display:flex;justify-content:center;gap:5px;padding:8px 0 0}.ign-dots i{width:6px;height:6px;border-radius:50%;background:#d7cfc1}.ign-dots i.on{background:#1877f2}
+.ign-tools{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px}
+.ign-tool-btns{display:flex;gap:4px;flex-wrap:wrap}
+.ign-strip{display:flex;gap:8px;overflow-x:auto;padding:4px 12px 16px}
+.ign-th{position:relative;flex:0 0 64px;height:80px;border-radius:10px;overflow:hidden;border:2px solid transparent;padding:0;background:var(--photo-bg);cursor:pointer}
+.ign-th img{width:100%;height:100%;object-fit:cover}.ign-th.on{border-color:#1877f2}
+.ign-th span{position:absolute;right:4px;bottom:4px;background:rgba(0,0,0,.6);color:#fff;font-size:.7rem;border-radius:99px;padding:0 6px}
+.ign-th.add{display:grid;place-items:center;font-size:1.8rem;color:var(--gold-dark);border:2px dashed rgba(176,138,62,.5);background:#fffaf0}
+.ign-empty{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:48px 20px 26px;cursor:pointer;background:var(--motif),linear-gradient(170deg,#fffaf2,#fff)}
+.ign-cam{color:var(--ink)}.ign-empty b{font-size:1.15rem}.ign-pick-btns{margin-top:8px}
+.ign .ign-camera{display:block;width:auto;margin:0 16px 18px;text-align:center}
+.ign-capbox{display:flex;gap:12px;padding:14px 14px 4px;align-items:flex-start}
+.ign-capth{width:64px;height:80px;object-fit:cover;border-radius:8px;flex:none}
+.ign-capbox textarea{flex:1;border:0;resize:vertical;font:inherit;font-size:1rem;line-height:1.5;min-height:150px;outline:none;padding:4px 0}
+.ign-tip{padding:0 14px;margin:0 0 6px}
+.ign-rows{border-top:1px solid var(--rule)}
+.ign-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--rule);font-weight:600}
+.ign-row>span{flex:none}.ign-row input:not([type=checkbox]),.ign-row select{flex:1;min-width:0;max-width:62%;text-align:right;border:0;background:transparent;font:inherit;font-weight:500;padding:4px 0;outline:none}
+.ign-row select{text-align-last:right}.ign-row.chk input{width:20px;height:20px}
+.ign-more summary{padding:12px 14px;border-bottom:1px solid var(--rule);cursor:pointer;font-weight:600}
+.ign-prev{padding:14px}.ign-card{display:grid;grid-template-columns:88px 1fr;gap:12px;margin-top:6px;border:1px solid var(--rule);border-radius:14px;padding:10px;background:#fffdf9}
+.ign-card img{width:88px;height:110px;object-fit:cover;border-radius:10px}.ign-card b{font-family:var(--display);font-weight:400;font-size:1.1rem;color:var(--aubergine)}
+.ign-card p{margin:4px 0;font-size:.88rem;line-height:1.45}.ign-pr{display:block;font-weight:700;color:var(--gold-dark);margin:4px 0}.ign-pr s{color:var(--muted);font-weight:400}
+.ign #ignErr{padding:0 14px}.ign .ign-share{display:block;width:auto;margin:4px 14px 18px}
+.ign-done{text-align:center;padding:36px 18px 30px}.ign-ok{display:inline-grid;place-items:center;width:72px;height:72px;border-radius:50%;background:var(--gold-grad);font-size:2.2rem;color:#2a1d07}
+.ign-done h2{margin:12px 0 4px}.ign-done-btns{display:flex;flex-direction:column;gap:8px;max-width:320px;margin:18px auto 0}
+.ign-fab{position:fixed;right:16px;bottom:18px;z-index:40;display:inline-flex;align-items:center;gap:8px;background:var(--gold-grad);color:#2a1d07;text-decoration:none;font-weight:800;border-radius:99px;padding:12px 18px 12px 14px;box-shadow:0 12px 26px -10px rgba(90,60,10,.8)}
+.ign-fab span{font-size:1.4rem;line-height:1}
+@media (max-width:640px){.ign-fab b{display:none}.ign-fab{padding:14px 16px}.ign{border-radius:16px;margin:0 0 80px}}
+.ign-promo{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit;background:linear-gradient(100deg,#fff6e3,#fffdf9 70%);border:1px solid rgba(176,138,62,.4);border-radius:16px;padding:12px 16px;margin:0 0 16px}
+.ign-promo>span:first-child{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:var(--gold-grad);font-size:1.5rem;flex:none}
+.ign-promo>span:nth-child(2){display:flex;flex-direction:column;flex:1}.ign-promo>span:nth-child(2) span{font-size:.88rem;color:var(--muted)}.ign-promo i{font-style:normal;font-size:1.5rem;color:var(--gold-dark)}
+
+/* ================= Instagram-style store ================= */
+.fd{max-width:935px;margin:0 auto}
+.fd-prof{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"av stats" "bio bio" "btns btns";gap:14px 22px;align-items:center;padding:18px 4px 10px}
+.fd-av{grid-area:av;width:96px;height:96px;border-radius:50%;padding:3px;background:conic-gradient(from 200deg,#f3de9c,#c9a14a,#8a6a1f,#e9cf8b,#f3de9c)}
+.fd-av img{width:100%;height:100%;border-radius:50%;border:3px solid var(--paper,#fff);object-fit:contain;background:#15110c}
+.fd-stats{grid-area:stats;display:flex;justify-content:space-around;text-align:center}
+.fd-stats>*{display:flex;flex-direction:column;font-size:.85rem;color:var(--muted);text-decoration:none}.fd-stats b{font-size:1.25rem;color:var(--ink)}
+.fd-bio{grid-area:bio}.fd-bio h1{font-family:var(--body);font-size:1.05rem;font-weight:700;margin:0}.fd-bio p{margin:2px 0 0;line-height:1.45}.fd-bio2{color:var(--muted);font-size:.92rem}
+.fd-pbtns{grid-area:btns;display:flex;gap:8px;flex-wrap:wrap}
+.fd-pbtn{flex:1 1 0;min-width:120px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 12px;border-radius:10px;background:#efe9df;color:var(--ink);font-weight:700;font-size:.92rem;text-decoration:none}
+.fd-pbtn.wa{background:#e7fbe9;color:#11673a}.fd-pbtn svg{width:18px;height:18px}
+@media (min-width:760px){.fd-prof{grid-template-columns:150px 1fr;grid-template-areas:"av stats" "av bio" "av btns";padding:30px 20px 18px}.fd-av{width:150px;height:150px}.fd-stats{justify-content:flex-start;gap:36px}.fd-pbtns{max-width:460px}}
+.fd-hl{display:flex;gap:16px;overflow-x:auto;padding:10px 4px 14px;scrollbar-width:none}.fd-hl::-webkit-scrollbar{display:none}
+.fd-hl a{flex:none;width:72px;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:var(--ink)}
+.fd-hl-ring{width:68px;height:68px;border-radius:50%;padding:2.5px;background:#ddd2c0}.fd-hl a.on .fd-hl-ring{background:conic-gradient(from 200deg,#f3de9c,#c9a14a,#8a6a1f,#e9cf8b,#f3de9c)}
+.fd-hl-ring>span{display:block;width:100%;height:100%;border-radius:50%;overflow:hidden;border:2.5px solid var(--paper,#fff);background:var(--photo-bg)}
+.fd-hl-ring img,.fd-hl-ring .ph{width:100%;height:100%;object-fit:cover}
+.fd-hl a:first-child .fd-hl-ring img{object-fit:contain;background:#15110c;padding:4px}
+.fd-hl-t{font-size:.75rem;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fd-tabs{display:flex;align-items:center;gap:16px;border-top:1px solid var(--rule);margin-top:4px;padding:0 4px}
+.fd-tabs .on{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-top:2px solid var(--ink);margin-top:-1px;padding:12px 0}
+.fd-tabs .on i{font-style:normal;font-weight:600;color:var(--muted);letter-spacing:0}.fd-tabs a{font-size:.85rem;color:var(--gold-dark);font-weight:600}.fd-tabs .fd-search{margin-left:auto;color:var(--ink)}
+.fd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+@media (min-width:760px){.fd-grid{gap:6px}}
+.fd-tile{position:relative;aspect-ratio:4/5;padding:0;border:0;background:var(--photo-bg);overflow:hidden;cursor:pointer;display:block}
+.fd-tile img,.fd-tile .ph{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}.fd-tile:hover img{transform:scale(1.04)}
+.fd-multi{position:absolute;top:6px;right:6px;color:#fff;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.fd-price,.fd-sold{position:absolute;left:5px;bottom:5px;background:rgba(21,17,12,.72);color:#fff;font-size:.72rem;font-weight:700;padding:2px 7px;border-radius:99px;font-variant-numeric:tabular-nums}.fd-sold{background:rgba(160,30,50,.85)}
+.fd-more{text-align:center;margin:16px 0}.fd-empty{text-align:center;color:var(--muted);padding:30px 10px}
+.fd-ov{display:none}.fd-ov.on{display:flex;position:fixed;inset:0;z-index:300;background:rgba(10,8,5,.72);align-items:center;justify-content:center;padding:0}
+.fd-post{background:#fff;width:100%;max-width:480px;max-height:100%;overflow-y:auto;display:flex;flex-direction:column}
+@media (min-width:600px){.fd-ov.on{padding:24px}.fd-post{border-radius:14px;max-height:calc(100vh - 48px)}}
+.fd-ph{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--rule);position:sticky;top:0;background:#fff;z-index:2}
+.fd-ph-av{width:34px;height:34px;border-radius:50%;object-fit:contain;background:#15110c;padding:2px}.fd-ph>span{display:flex;flex-direction:column;flex:1;line-height:1.2}.fd-ph>span span{font-size:.78rem;color:var(--muted)}
+.fd-x{background:none;border:0;font-size:1.3rem;cursor:pointer;padding:4px 8px}
+.fd-car{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;aspect-ratio:4/5;background:var(--photo-bg);scrollbar-width:none;flex:none}.fd-car::-webkit-scrollbar{display:none}
+.fd-car figure{flex:0 0 100%;margin:0;scroll-snap-align:center}.fd-car img{width:100%;height:100%;object-fit:cover}
+.fd-dots{display:flex;justify-content:center;gap:4px;padding:8px 0 0}.fd-dots i{width:6px;height:6px;border-radius:50%;background:#d7cfc1}.fd-dots i.on{background:#1877f2}
+.fd-acts{display:flex;align-items:center;gap:6px;padding:6px 10px}
+.fd-ic{background:none;border:0;padding:6px;cursor:pointer;color:var(--ink);display:inline-grid;place-items:center}.fd-ic svg{width:26px;height:26px}
+.fd-acts .fd-ic.heart{position:static;background:none;width:auto;height:auto;border-radius:0;color:var(--ink)}.fd-post{scroll-padding-top:60px}.fd-ic.heart svg path{fill:none;stroke:currentColor;stroke-width:1.9}.fd-ic.heart.on svg path{fill:#e0245e;stroke:#e0245e}
+.fd-more-l{margin-left:auto;font-size:.85rem;font-weight:700;color:var(--gold-dark)}
+.fd-cap{padding:0 14px 16px}.fd-pr{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.fd-pr b{font-size:1.3rem;color:var(--gold-dark)}
+.fd-cap p{margin:6px 0 0;line-height:1.5}.fd-desc.clip{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.fd-cols{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.fd-col{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--rule);background:#fff;border-radius:99px;padding:5px 10px;font-size:.85rem;cursor:pointer}
+.fd-col i{width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.15)}.fd-col.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.fd-buy{display:flex;flex-direction:column;gap:8px;margin-top:14px}.fd-buy .btn{width:100%;justify-content:center}.fd-wa svg{width:18px;height:18px}
+/* staff menu: everyday pages first */
+.side-more{margin-top:6px;border-top:1px solid rgba(255,255,255,.12);padding-top:6px}
+.side-more summary{cursor:pointer;padding:8px 12px;font-weight:700;opacity:.85;list-style:none}.side-more summary::before{content:"▸ ";}.side-more[open] summary::before{content:"▾ ";}
 </style>
 <!-- generated by scripts/build-seo.mjs -->
 <link rel="canonical" href="https://kulsumscollection.com/wishlist">
@@ -3619,7 +3714,7 @@ function homeRowsHTML(){const vis=visibleProducts();const rows=mainMenus().map(c
 // Categories are listed like WhatsApp chats. Opening one shows its products as messages: photos as an album,
 // the description, the price and the time it was added, with Add to bag and Order on WhatsApp under each.
 // Only the newest 20 load at first, so it stays quick; "Show earlier" loads more.
-const chatShop=()=>S.settings.chatShop!==false;
+const chatShop=()=>typeof storeStyle==='function'?storeStyle()==='chat':S.settings.chatShop!==false;
 const CV={limit:20,cat:'',sub:''};
 const seenAll=()=>lsGet('kc:seen')||{};
 function markSeen(id){const s=seenAll();s[id]=Date.now();lsSet('kc:seen',s);}
@@ -4063,6 +4158,216 @@ document.addEventListener('submit',async e=>{const f=e.target;if(!/^caOtp/.test(
       if(S.customer&&HOSTED&&v.name&&!S.customer.name){try{await custProfileSave({name:v.name.trim()});}catch{}}
       await caSignedIn(true);return;}
   }catch(err){CA.busy=false;CA.err=err.message||String(err);await route();f.id==='caOtpCode'&&$('#caOtpCode [name=code]')?.focus();otpTicker();}});
+// ================= New post: add a product the way you post on Instagram =================
+// 1. Pick photos (up to 10), see them large, reorder, choose the main one.
+// 2. Write a caption. The title, price, category and colours are read from it, and you see the product as customers will.
+// 3. Share. Admins publish straight away; employees send it to Review and publish.
+const IGN_MAX=10;
+const IGN={step:'pick',photos:[],cur:0,caption:'',title:'',titleEdited:false,price:'',priceEdited:false,cat:'',catEdited:false,vendor:'',vp:'',mrp:'',stock:'in',featured:false,publish:true,busy:false,done:null,err:''};
+function ignReset(){Object.assign(IGN,{doneShown:false,step:'pick',photos:[],cur:0,caption:'',title:'',titleEdited:false,price:'',priceEdited:false,cat:'',catEdited:false,vendor:'',vp:'',mrp:'',stock:'in',featured:false,publish:true,busy:false,done:null,err:''});}
+const IGN_PRICE_LINE=/(?:₹|\brs\.?\s*\d|\binr\b|\bprice\b|\brate\b|\bmrp\b|\boffer\s*price\b|\d\s*\/-)/i;
+// What the caption tells us
+function ignRead(cap){const raw=String(cap||'').replace(/\r/g,'');
+  const lines=raw.split('\n').map(l=>l.trim()).filter(Boolean);
+  const tags=[...new Set((raw.match(/#[\p{L}\p{N}_]+/gu)||[]).map(t=>t.toLowerCase()))];
+  const clean=l=>plainLetters(l).replace(/#[\p{L}\p{N}_]+/gu,' ').replace(EMOJI_RE,' ').replace(/[*_~`|]+/g,' ').replace(/\s{2,}/g,' ').trim();
+  // title: the first line that is words, not a price or only hashtags
+  let ti=lines.findIndex(l=>{const c=clean(l);return c.replace(/[^\p{L}]/gu,'').length>=3&&!IGN_PRICE_LINE.test(c);});
+  let title=ti>=0?clean(lines[ti]).replace(/[.!,;:–-]+$/,''):'';
+  if(title.length>70){title=title.slice(0,70);title=title.slice(0,title.lastIndexOf(' ')>30?title.lastIndexOf(' '):70);}
+  title=title?tidyTitleText(title):'';
+  // description: every other line, without prices, phone numbers, links and hashtags
+  const noContact=l=>l.replace(/\b(?:call|contact|whatsapp|wa|ph(?:one)?|mob(?:ile)?|dm)?\s*(?:us|me)?\s*(?:on|at)?\s*[:.-]?\s*\+?\d[\d\s-]{8,}\d/gi,'').replace(/https?:\/\/\S+|wa\.me\/\S*|www\.\S+/gi,'').replace(/[\s,;:–-]+$/,'').trim();
+  const rest=lines.filter((l,i)=>i!==ti).map(l=>noContact(clean(l))).filter(l=>l&&!IGN_PRICE_LINE.test(l)&&l.replace(/[^\p{L}]/gu,'').length>=2);
+  const pr=extractPrice(raw);const price=pr&&pr.value>=50?Math.round(pr.value):null;
+  const mrp=extractMRP(raw);
+  const cs=catSuggest({title,description:raw,storeDesc:rest.join('\n')});
+  return {title,desc:rest.join('\n'),price,mrp:mrp&&price&&mrp>price?mrp:null,cat:cs?.id||'',tags};}
+function ignSync(){const r=ignRead(IGN.caption);
+  if(!IGN.titleEdited)IGN.title=r.title;if(!IGN.priceEdited)IGN.price=r.price!=null?String(r.price):'';if(!IGN.catEdited)IGN.cat=r.cat;if(r.mrp&&!IGN.mrp)IGN.mrp=String(r.mrp);IGN.read=r;}
+// ---------- page ----------
+function pPost(m){if(IGN.step==='done'){if(IGN.doneShown)ignReset();else IGN.doneShown=true;}   // the “Posted” screen shows once; opening New post again starts a new one
+  if(IGN.step==='caption')ignSync();
+  m.innerHTML=`<div class="ign" id="ign">${IGN.step==='done'?ignDoneHTML():IGN.step==='caption'?ignCaptionHTML():ignPickHTML()}</div>`;
+  if(IGN.step==='pick')ignStageScroll();
+  if(IGN.step==='caption')setTimeout(()=>{const t=$('#ignCap');if(t&&!t.value)t.focus();},60);}
+function ignTop(left,title,right){return `<header class="ign-top">${left}<b>${title}</b>${right}</header>`;}
+function ignPickHTML(){const n=IGN.photos.length;
+  return `${ignTop(n?`<button class="ign-tbtn" data-act="ignClear" aria-label="Start again">✕</button>`:`<a class="ign-tbtn" href="#/staff/dashboard" aria-label="Close">✕</a>`,'New post',n?`<button class="ign-tbtn go" data-act="ignNext">Next</button>`:'<span></span>')}
+    ${n?`<div class="ign-stage" id="ignStage">${IGN.photos.map((p,i)=>`<figure><img src="${p.data}" alt="Photo ${i+1} of ${n}">${i===0?'<span class="ign-main">Main photo</span>':''}</figure>`).join('')}</div>
+      ${n>1?`<div class="ign-dots" aria-hidden="true">${IGN.photos.map((p,i)=>`<i class="${i===IGN.cur?'on':''}"></i>`).join('')}</div>`:''}
+      <div class="ign-tools"><span class="small muted">${n} of ${IGN_MAX} photos · photo ${IGN.cur+1}</span>
+        <span class="ign-tool-btns"><button class="btn sm ghost" data-act="ignMove" data-d="-1" ${IGN.cur===0?'disabled':''} aria-label="Move this photo earlier">◀</button><button class="btn sm ghost" data-act="ignMove" data-d="1" ${IGN.cur>=n-1?'disabled':''} aria-label="Move this photo later">▶</button>
+          ${IGN.cur?'<button class="btn sm ghost" data-act="ignMain">★ Make main</button>':''}<button class="btn sm ghost danger" data-act="ignDel" aria-label="Remove this photo">Remove</button></span></div>
+      <div class="ign-strip">${IGN.photos.map((p,i)=>`<button class="ign-th ${i===IGN.cur?'on':''}" data-act="ignGo" data-i="${i}" aria-label="Show photo ${i+1}"><img src="${p.data}" alt=""><span>${i+1}</span></button>`).join('')}
+        ${n<IGN_MAX?`<label class="ign-th add" aria-label="Add more photos">＋<input type="file" accept="image/*" multiple hidden data-ignfiles></label>`:''}</div>`
+    :`<label class="ign-empty" id="ignDrop" tabindex="0"><input type="file" accept="image/*" multiple hidden data-ignfiles><span class="ign-cam" aria-hidden="true"><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg></span>
+        <b>Choose the photos for this product</b><span class="small muted">Up to ${IGN_MAX}. The first one is the main photo. You can also drag photos here or paste one.</span>
+        <span class="ign-pick-btns"><span class="btn primary">Choose from gallery</span></span></label>
+      <label class="btn block ign-camera">📷 Take a photo<input type="file" accept="image/*" capture="environment" hidden data-ignfiles></label>`}
+    ${IGN.busy?'<p class="small muted" role="status">Getting your photos ready…</p>':''}`;}
+function ignPreviewHTML(){const r=IGN.read||{},price=Number(IGN.price)||null,cat=catById(IGN.cat),ph=IGN.photos[0];
+  const desc=tidyOn()?tidyDescText(r.desc||''):(r.desc||'');
+  return `<div class="ign-prev"><span class="small muted">How customers will see it</span><div class="ign-card">${ph?`<img src="${ph.data}" alt="">`:''}<div><b>${esc(IGN.title||'Your title')}</b>
+    ${desc?`<p>${esc(desc).split('\n').slice(0,4).join('<br>')}</p>`:''}<span class="ign-pr">${price?esc(money(price)):'<i>Add the price</i>'}${IGN.mrp&&Number(IGN.mrp)>price?` <s>${esc(money(Number(IGN.mrp)))}</s>`:''}</span>
+    <span class="small muted">${cat&&cat.id===IGN.cat?esc(cat.name):'Choose a category'} · ${IGN.photos.length} photo${IGN.photos.length===1?'':'s'}</span></div></div></div>`;}
+function ignCaptionHTML(){const adm=isAdmin(),ph=IGN.photos[0];
+  return `${ignTop(`<button class="ign-tbtn" data-act="ignBack" aria-label="Back to photos">‹</button>`,'New post',`<button class="ign-tbtn go" data-act="ignShare" ${IGN.busy?'disabled':''}>${IGN.busy?'Sharing…':adm&&IGN.publish?'Share':'Send'}</button>`)}
+    <div class="ign-capbox">${ph?`<img src="${ph.data}" alt="" class="ign-capth">`:''}<textarea id="ignCap" rows="7" placeholder="Write a caption…&#10;&#10;Pink chanderi kurti set with dupatta&#10;Gota work, sizes M to XXL&#10;Price ₹1,299" aria-label="Caption">${esc(IGN.caption)}</textarea></div>
+    <p class="small muted ign-tip">Write it as you would on Instagram. The first line becomes the title, a price like <b>₹1,299</b> becomes the selling price, and hashtags are kept for Instagram but not shown in the store.</p>
+    <div class="ign-rows">
+      <label class="ign-row"><span>Title</span><input id="ignTitle" value="${esc(IGN.title)}" placeholder="From the first line of the caption" data-ptitle></label>
+      <label class="ign-row"><span>Selling price ₹</span><input id="ignPrice" type="number" min="0" inputmode="numeric" value="${esc(IGN.price)}" placeholder="From the caption"></label>
+      <label class="ign-row"><span>Category</span><select id="ignCat"><option value="">Choose…</option>${catOptions(IGN.cat,false)}</select></label>
+      <details class="ign-more" ${IGN.vendor||IGN.vp||IGN.mrp?'open':''}><summary>More options <span class="small muted">vendor, cost, MRP, stock</span></summary>
+        <label class="ign-row"><span>Vendor</span><input id="ignVendor" list="ignVendors" value="${esc(IGN.vendor)}" placeholder="Optional" autocomplete="off"><datalist id="ignVendors">${S.vendors.map(v=>`<option value="${esc(v.name)}">`).join('')}</datalist></label>
+        <label class="ign-row"><span>Vendor price ₹ <i class="small muted">only you see</i></span><input id="ignVP" type="number" min="0" inputmode="numeric" value="${esc(IGN.vp)}" placeholder="Your cost"></label>
+        <label class="ign-row"><span>MRP ₹</span><input id="ignMRP" type="number" min="0" inputmode="numeric" value="${esc(IGN.mrp)}" placeholder="Optional"></label>
+        <label class="ign-row"><span>Stock</span><select id="ignStock"><option value="in" ${IGN.stock!=='out'?'selected':''}>In stock</option><option value="out" ${IGN.stock==='out'?'selected':''}>Sold out</option></select></label>
+        <label class="ign-row chk"><span>Show in the home page banner</span><input type="checkbox" id="ignFeat" ${IGN.featured?'checked':''}></label></details>
+      ${adm?`<label class="ign-row chk"><span>Publish straight away</span><input type="checkbox" id="ignPub" ${IGN.publish?'checked':''}></label>`:'<p class="small muted" style="margin:6px 2px">It goes to Review and publish, and an admin publishes it.</p>'}
+    </div>
+    <div id="ignPrevBox">${ignPreviewHTML()}</div>
+    <p class="ca-err" id="ignErr" role="alert">${esc(IGN.err)}</p>
+    <button class="btn primary block ign-share" data-act="ignShare" ${IGN.busy?'disabled':''}>${IGN.busy?'Sharing…':adm&&IGN.publish?'Share to the store':'Send for review'}</button>`;}
+function ignDoneHTML(){const p=prodById(IGN.done);if(!p)return ignPickHTML();
+  return `${ignTop('<span></span>','Posted','<span></span>')}<div class="ign-done"><span class="ign-ok" aria-hidden="true">✓</span>
+    <h2>${p.published?'Your product is live':'Sent for review'}</h2><p class="muted">${esc(p.title)}${sellPrice(p)!=null?' · '+esc(money(sellPrice(p))):''}</p>
+    <div class="ign-done-btns"><button class="btn primary" data-act="ignAnother">＋ New post</button>
+      ${p.published?`<a class="btn" href="#/p/${p.id}">See it in the store</a><button class="btn" data-act="ignInsta" data-id="${p.id}">Post on Instagram too</button>`:'<a class="btn" href="#/staff/review">Open Review and publish</a>'}
+      <button class="btn ghost" data-act="ignEdit" data-id="${p.id}">Edit details</button></div></div>`;}
+// ---------- photos ----------
+async function ignAdd(files){files=[...files].filter(f=>/^image\//.test(f.type)||/\.(heic|heif)$/i.test(f.name));if(!files.length)return;
+  const room=IGN_MAX-IGN.photos.length;if(room<=0){toast(`Up to ${IGN_MAX} photos in one post.`);return;}
+  if(files.length>room)toast(`Only the first ${room} photo${room===1?'':'s'} were added (${IGN_MAX} at most).`);
+  IGN.busy=true;if(IGN.step==='pick')route();
+  for(const f of files.slice(0,room)){try{const src=typeof readPhotoFile==='function'?await readPhotoFile(f):URL.createObjectURL(f);
+      const {data,img}=await compressImage(src,1100,0.82);IGN.photos.push({data,fp:fingerprint(img),colour:dominantColour(img)});if(String(src).startsWith('blob:'))URL.revokeObjectURL(src);}
+    catch(e){toast('One photo could not be read: '+(e.message||e));}}
+  IGN.busy=false;IGN.cur=Math.max(0,IGN.photos.length-1);if(IGN.step==='pick')route();}
+function ignStageScroll(){const st=$('#ignStage');if(!st)return;requestAnimationFrame(()=>{st.scrollLeft=IGN.cur*st.clientWidth;});
+  st.onscroll=()=>{clearTimeout(st._t);st._t=setTimeout(()=>{const i=Math.round(st.scrollLeft/st.clientWidth);if(i!==IGN.cur&&i>=0&&i<IGN.photos.length){IGN.cur=i;ignPickRefresh(false);}},90);};}
+function ignPickRefresh(scroll=true){const box=$('#ign');if(!box)return;const y=scrollY;box.innerHTML=ignPickHTML();if(scroll)ignStageScroll();else{const st=$('#ignStage');if(st){st.scrollLeft=IGN.cur*st.clientWidth;ignStageScroll();}}scrollTo(0,y);}
+document.addEventListener('change',e=>{const t=e.target;
+  if(t.matches?.('[data-ignfiles]')){ignAdd(t.files);t.value='';return;}
+  if(!$('#ign'))return;
+  if(t.id==='ignCat'){IGN.cat=t.value;IGN.catEdited=true;ignPrev();}
+  else if(t.id==='ignStock')IGN.stock=t.value;else if(t.id==='ignFeat')IGN.featured=t.checked;
+  else if(t.id==='ignPub'){IGN.publish=t.checked;const b=$('.ign-share');if(b)b.textContent=IGN.publish?'Share to the store':'Save without publishing';const tb=$('.ign-tbtn.go');if(tb)tb.textContent=IGN.publish?'Share':'Save';}});
+document.addEventListener('input',e=>{const t=e.target;if(!$('#ign'))return;
+  if(t.id==='ignCap'){IGN.caption=t.value;ignSync();const ti=$('#ignTitle');if(ti&&!IGN.titleEdited)ti.value=IGN.title;const pr=$('#ignPrice');if(pr&&!IGN.priceEdited)pr.value=IGN.price;
+    const c=$('#ignCat');if(c&&!IGN.catEdited)c.value=IGN.cat;const m=$('#ignMRP');if(m&&IGN.mrp&&!m.value)m.value=IGN.mrp;ignPrev();}
+  else if(t.id==='ignTitle'){IGN.title=t.value;IGN.titleEdited=!!t.value.trim();ignPrev();}
+  else if(t.id==='ignPrice'){IGN.price=t.value;IGN.priceEdited=t.value!=='';ignPrev();}
+  else if(t.id==='ignVendor')IGN.vendor=t.value;else if(t.id==='ignVP')IGN.vp=t.value;else if(t.id==='ignMRP'){IGN.mrp=t.value;ignPrev();}});
+function ignPrev(){const b=$('#ignPrevBox');if(b)b.innerHTML=ignPreviewHTML();}
+document.addEventListener('paste',e=>{if(!$('#ign')||IGN.step!=='pick')return;const fs=[...(e.clipboardData?.files||[])];if(fs.length){e.preventDefault();ignAdd(fs);}});
+document.addEventListener('dragover',e=>{if(e.target.closest?.('#ign')){e.preventDefault();}});
+document.addEventListener('drop',e=>{if(!e.target.closest?.('#ign'))return;e.preventDefault();ignAdd(e.dataTransfer?.files||[]);});
+// ---------- share ----------
+async function ignShare(){if(IGN.busy)return;const adm=isAdmin(),publish=adm&&IGN.publish,say=t=>{IGN.err=t;const e=$('#ignErr');if(e)e.textContent=t;};
+  if(!IGN.photos.length){IGN.step='pick';route();toast('Choose at least one photo.');return;}
+  const title=tidyOn()?tidyTitleText(String(IGN.title||'').trim()):String(IGN.title||'').trim(),price=Number(IGN.price)||null;
+  if(!title){say('Write a caption, or type the title.');$('#ignTitle')?.focus();return;}
+  if(!IGN.cat||!catById(IGN.cat)||catById(IGN.cat).id!==IGN.cat){say('Choose the category.');$('#ignCat')?.focus();return;}
+  if(publish&&!price){say('Add the selling price, or untick “Publish straight away”. Products without a price are not shown in the store.');$('#ignPrice')?.focus();return;}
+  if(publish&&!catOn(catById(IGN.cat))){say(`The category “${catById(IGN.cat).name}” is switched off, so customers would not see it. Choose another, or switch it on in Menus and categories.`);return;}
+  IGN.busy=true;say('');const btns=$$('[data-act=ignShare]');btns.forEach(b=>{b.disabled=true;b.textContent='Sharing…';});
+  try{let vendorId=null;const vname=String(IGN.vendor||'').trim();
+    if(vname){let v=S.vendors.find(x=>x.name.trim().toLowerCase()===vname.toLowerCase());if(!v){v={id:uid('v'),name:vname,phone:'',contact:'',email:'',tax:'',address:'',notes:'',createdAt:Date.now()};S.vendors.push(v);await saveVendors();}vendorId=v.id;}
+    const r=IGN.read||ignRead(IGN.caption),now=Date.now(),{id:myId,n}=nextMyId();IDS().next=n+1;
+    const p={id:uid('p'),code:nextCode(),myId,vendorId,title,titleManual:true,caption:IGN.caption,igTags:r.tags||[],description:'',storeDesc:r.desc||'',
+      category:IGN.cat,catManual:true,colors:numberColours(IGN.photos.map(x=>x.colour||{name:'',hex:'#ddd'})),vendorPrice:IGN.vp!==''?Number(IGN.vp):null,
+      mrp:IGN.mrp!==''&&Number(IGN.mrp)>(price||0)?Number(IGN.mrp):null,sellOverride:price,stock:IGN.stock,featured:IGN.featured,
+      published:publish,reviewed:publish,...(publish?{publishedAt:now,listedAt:now,approvedBy:S.email||'Admin',approvedAt:now}:{}),createdAt:now,
+      imageCount:IGN.photos.length,fp:IGN.photos.map(x=>packFP(x.fp)),source:'post',addedBy:S.email||(adm?'Admin':'Employee')};
+    await Media.putProduct(p,(await compressImage(IGN.photos[0].data,360,0.74)).data,IGN.photos.map(x=>x.data));
+    S.products.push(p);const ok=await saveProducts();await saveSettings();
+    if(ok===false)throw new Error('the product could not be saved. Check your internet and try again.');
+    IGN.busy=false;const id=p.id;ignReset();IGN.step='done';IGN.done=id;route();scrollTo(0,0);
+    toast(publish?`Shared: ${title}`:`Sent for review: ${title}`);}
+  catch(e){IGN.busy=false;btns.forEach(b=>{b.disabled=false;});say('Could not share: '+(e.message||e));route();}}
+queueMicrotask(()=>Object.assign(ACT,{
+  ignNext:()=>{if(!IGN.photos.length)return;IGN.step='caption';route();scrollTo(0,0);},
+  ignBack:()=>{IGN.step='pick';route();},
+  ignClear:()=>{if(IGN.photos.length&&!confirm('Remove all the photos and start again?'))return;ignReset();route();},
+  ignGo:el=>{IGN.cur=+el.dataset.i;ignPickRefresh();},
+  ignDel:()=>{IGN.photos.splice(IGN.cur,1);IGN.cur=Math.min(IGN.cur,IGN.photos.length-1);if(IGN.cur<0)IGN.cur=0;ignPickRefresh();},
+  ignMove:el=>{const d=+el.dataset.d,i=IGN.cur,j=i+d;if(j<0||j>=IGN.photos.length)return;[IGN.photos[i],IGN.photos[j]]=[IGN.photos[j],IGN.photos[i]];IGN.cur=j;ignPickRefresh();},
+  ignMain:()=>{const [x]=IGN.photos.splice(IGN.cur,1);IGN.photos.unshift(x);IGN.cur=0;ignPickRefresh();toast('This is now the main photo');},
+  ignShare:()=>ignShare(),
+  ignAnother:()=>{ignReset();route();scrollTo(0,0);},
+  ignInsta:el=>openIG(el.dataset.id),
+  ignEdit:el=>openQuickProduct(prodById(el.dataset.id),false),
+}));
+// ================= Instagram-style store: a profile, highlights and a grid of posts =================
+// Home is your shop's "profile": logo, name, bio and buttons, then round highlights for the collections,
+// then every product as a post in a grid. Tapping a post opens it like Instagram: swipe the photos, read the caption,
+// and add it to the bag or order it on WhatsApp. Settings > Store details > How the store looks switches styles.
+const storeStyle=()=>['feed','chat','classic'].includes(S.settings.storeStyle)?S.settings.storeStyle:'feed';
+const FEED={n:24,cat:'',post:null,colour:''};
+function feedList(catId){const vis=newest(visibleProducts());if(!catId)return vis;if(catId==='new')return newArrivalsList();const c=catById(catId);return c&&c.id===catId?vis.filter(p=>catGroupIds(c).includes(p.category)):vis;}
+function feedProfileHTML(){const st=S.settings,vis=visibleProducts(),ig=igHandle(),wa=supportWA(),cats=mainMenus().filter(c=>vis.some(p=>catGroupIds(c).includes(p.category)));
+  return `<section class="fd-prof"><div class="fd-av"><img src="${logoSrc()}" alt="${esc(st.brand)} logo"></div>
+    <div class="fd-stats"><span><b>${vis.length}</b>posts</span><span><b>${cats.length}</b>collections</span>${S.wish.length?`<a href="#/wishlist"><b>${S.wish.length}</b>saved</a>`:''}</div>
+    <div class="fd-bio"><h1>${esc(st.brand)}</h1><p>${esc(st.tagline||'')}</p>${st.heroText?`<p class="fd-bio2">${esc(st.heroText)}</p>`:''}</div>
+    <div class="fd-pbtns">${wa?`<a class="fd-pbtn wa" href="${waLink(wa,`Hi ${st.brand}, I would like to know about your collection`)}" target="_blank" rel="noopener">${ICON.wa} Message</a>`:''}
+      ${ig?`<a class="fd-pbtn" href="https://instagram.com/${encodeURIComponent(ig.replace(/^@/,''))}" target="_blank" rel="noopener">Instagram</a>`:''}
+      ${photoOrderOn&&photoOrderOn()?'<a class="fd-pbtn" href="#/photo-order">Order with a photo</a>':''}</div></section>`;}
+function feedHighlightsHTML(active){const vis=visibleProducts(),out=[];
+  out.push({h:'#/',id:'',name:'All',img:`<img src="${logoSrc()}" alt="">`});
+  if(S.settings.menus.newArrivals&&vis.length){const p=newArrivalsList()[0];out.push({h:'#/c/new',id:'new',name:'New',img:p?thumbTag(p,'',''):''});}
+  mainMenus().forEach(c=>{const p=newest(vis.filter(x=>catGroupIds(c).includes(x.category)))[0];if(p)out.push({h:`#/c/${c.id}`,id:c.id,name:c.name,img:thumbTag(p,'','')});});
+  if(out.length<3)return '';
+  return `<nav class="fd-hl" aria-label="Collections">${out.map(x=>`<a href="${x.h}" class="${x.id===active?'on':''}" ${x.id===active?'aria-current="page"':''}><span class="fd-hl-ring"><span>${x.img}</span></span><span class="fd-hl-t">${esc(x.name)}</span></a>`).join('')}</nav>`;}
+function feedTileHTML(p){const n=Number(p.imageCount)||1,price=sellPrice(p);
+  return `<button type="button" class="fd-tile" data-act="fdOpen" data-id="${p.id}" aria-label="${esc(p.title)}${price!=null?', '+esc(money(price)):''}">${thumbTag(p,'','')}
+    ${n>1?'<span class="fd-multi" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 3h11a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-5 4v12a2 2 0 0 0 2 2h12v-2H5V7H3z"/></svg></span>':''}
+    ${p.stock==='out'?'<span class="fd-sold">Sold out</span>':price!=null?`<span class="fd-price">${esc(money(price))}</span>`:''}</button>`;}
+function vFeed(main,catId,q){const list=feedList(catId);if(FEED.cat!==catId){FEED.cat=catId;FEED.n=24;}
+  const c=catId&&catId!=='new'?catById(catId):null,title=catId==='new'?'New arrivals':c&&c.id===catId?c.name:'';
+  const shown=list.slice(0,FEED.n);
+  main.innerHTML=`<div class="fd">${feedProfileHTML()}${feedHighlightsHTML(catId)}
+    <div class="fd-tabs" role="tablist"><span class="on" role="tab" aria-selected="true">${title?esc(title):'Posts'}<i>${list.length}</i></span>${catId?'<a href="#/">See all</a>':''}<a href="#/search" class="fd-search" aria-label="Search">${ICON.search}</a></div>
+    ${shown.length?`<div class="fd-grid">${shown.map(feedTileHTML).join('')}</div>`:`<p class="fd-empty">New designs are on the way. ${supportWA()?`<a href="${waLink(supportWA(),'Hi, I would like to know about your collection')}" target="_blank" rel="noopener">Message us on WhatsApp</a> to ask about something specific.`:''}</p>`}
+    ${list.length>shown.length?`<div class="fd-more"><button class="btn" data-act="fdMore">Show more posts (${list.length-shown.length})</button></div>`:''}</div>
+    ${catId?'':newsHomeHTML()+homeCommunityHTML()}`;
+  if(q?.get?.('post'))setTimeout(()=>feedOpen(q.get('post')),50);}
+// ---------- one post, opened over the grid ----------
+async function feedOpen(id){const p=prodById(id);if(!p||!isVisible(p)){go('#/p/'+id);return;}FEED.post=id;
+  const cols=uniqueColours(p),wa=supportWA(),price=sellPrice(p),f=F(),canBuy=f.cart&&price!=null&&p.stock!=='out',on=S.wish.includes(p.id),cat=catById(p.category);
+  if(!cols.some(c=>c.name===FEED.colour))FEED.colour=cols.length>1?cols[0].name:'';
+  const desc=storeDesc(p).split('\n').map(x=>x.trim()).filter(Boolean),long=desc.length>4;
+  let v=$('#fdPost');if(!v){v=document.createElement('div');v.id='fdPost';v.setAttribute('role','dialog');v.setAttribute('aria-modal','true');document.body.appendChild(v);}
+  v.className='fd-ov on';v.setAttribute('aria-label',p.title);
+  v.innerHTML=`<div class="fd-post"><header class="fd-ph"><img class="fd-ph-av" src="${logoSrc()}" alt=""><span><b>${esc(S.settings.brand)}</b><span>${cat?esc(cat.name):''}</span></span><button class="fd-x" data-act="fdClose" aria-label="Close">✕</button></header>
+    <div class="fd-car" id="fdCar">${Array.from({length:Math.max(1,Number(p.imageCount)||1)},(_,i)=>`<figure><img data-full="${p.id}" data-i="${i}" alt="${esc(p.title)} photo ${i+1}"></figure>`).join('')}</div>
+    ${(Number(p.imageCount)||1)>1?`<div class="fd-dots" id="fdDots">${Array.from({length:Number(p.imageCount)},(_,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>`:''}
+    <div class="fd-acts">${f.wishlist?`<button class="fd-ic heart ${on?'on':''}" data-act="wish" data-id="${p.id}" aria-pressed="${on}" aria-label="Save to wishlist"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.5-9.2C1.2 8.6 3.3 5 6.8 5c2 0 3.4 1.1 4.2 2.4h2C13.8 6.1 15.2 5 17.2 5c3.5 0 5.6 3.6 4.3 6.8C19.5 16.4 12 21 12 21z"/></svg></button>`:''}
+      ${wa?`<a class="fd-ic" href="${waLink(wa,waOrderText(p,FEED.colour))}" target="_blank" rel="noopener" aria-label="Ask on WhatsApp">${ICON.wa}</a>`:''}
+      <button class="fd-ic" data-act="fdShare" data-id="${p.id}" aria-label="Share"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M22 3 9.2 10.1M22 3l-6.8 18-3.3-8.3L3.7 9.5z"/></svg></button>
+      <a class="fd-more-l" href="#/p/${p.id}" data-act="fdClose">Full details</a></div>
+    <div class="fd-cap"><div class="fd-pr">${price!=null?`<b>${esc(money(price))}</b>${mrpHTML(p,minPrice(p))}`:'<b>Price on request</b>'}${p.stock==='out'?' <span class="pill bad">Sold out</span>':''}</div>
+      <p><b>${esc(p.title)}</b></p>${desc.length?`<p class="fd-desc ${long?'clip':''}" id="fdDesc">${desc.map(esc).join('<br>')}</p>${long?'<button class="linkbtn" data-act="fdMoreTxt">more</button>':''}`:''}
+      ${cols.length>1?`<div class="fd-cols" role="group" aria-label="Colour">${cols.map(c=>`<button class="fd-col ${c.name===FEED.colour?'on':''}" data-act="fdCol" data-c="${esc(c.name)}" aria-pressed="${c.name===FEED.colour}"><i style="background:${esc(c.hex||'#ddd')}"></i>${esc(c.name)}</button>`).join('')}</div>`:''}
+      <div class="fd-buy">${canBuy?`<button class="btn primary" data-act="fdAdd" data-id="${p.id}">🛍️ Add to bag</button>`:''}${wa?`<a class="btn ${canBuy?'':'primary'} fd-wa" href="${waLink(wa,waOrderText(p,FEED.colour))}" target="_blank" rel="noopener">${ICON.wa} Order on WhatsApp</a>`:''}</div></div></div>`;
+  document.body.style.overflow='hidden';await hydrateFull(v);
+  const car=$('#fdCar');if(car)car.onscroll=()=>{const i=Math.round(car.scrollLeft/car.clientWidth);$$('#fdDots i').forEach((d,k)=>d.classList.toggle('on',k===i));};
+  v.onclick=e=>{if(e.target===v)feedClose();};}
+function feedClose(){const v=$('#fdPost');if(v){v.className='fd-ov';v.innerHTML='';}FEED.post=null;document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&FEED.post)feedClose();});
+queueMicrotask(()=>Object.assign(ACT,{
+  fdOpen:el=>feedOpen(el.dataset.id),
+  fdClose:()=>feedClose(),
+  fdMore:()=>{FEED.n+=24;const y=scrollY;route().then(()=>scrollTo(0,y));},
+  fdMoreTxt:el=>{$('#fdDesc')?.classList.remove('clip');el.remove();},
+  fdCol:el=>{FEED.colour=el.dataset.c;$$('.fd-col').forEach(b=>{const on=b.dataset.c===FEED.colour;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});
+    const p=prodById(FEED.post);if(p)$$('#fdPost a[href*="wa.me"]').forEach(a=>a.href=waLink(supportWA(),waOrderText(p,FEED.colour)));},
+  fdAdd:el=>{addToCart(el.dataset.id,1,FEED.colour||undefined);el.textContent='✓ In your bag';setTimeout(()=>{if(el.isConnected)el.innerHTML='🛍️ Add another';},1500);},
+  fdShare:async el=>{const p=prodById(el.dataset.id);if(!p)return;const url=productURL(p);
+    try{if(navigator.share){await navigator.share({title:p.title,text:`${p.title} at ${S.settings.brand}`,url});return;}}catch(e){if(e?.name==='AbortError')return;}
+    try{await navigator.clipboard.writeText(url);toast('Link copied');}catch{prompt('Copy this link:',url);}},
+}));
 // ---------- several phones and tabs editing at once ----------
 // Each save first fetches what was saved elsewhere since this page loaded, and keeps those changes.
 // A field this page did not change takes the newer value, so an old open tab can no longer undo new photos or prices.
@@ -4540,7 +4845,7 @@ async function renderShop(parts,q){
   $('#app').innerHTML=shopHeader()+'<main class="shop-main" id="main"></main>'+shopFooter()+fabs();
   const main=$('#main');
   stopMotion();
-  const V={account:(m,a,q)=>vAccount(m,q),'photo-order':vPhotoOrder,whatsapp:vWhatsApp,hi:(m,a,q)=>vHi(m,q),emi:(m,a,q)=>vEmi(m,q),notfound:vNotFound,'':vHome,combos:vCombos,news:vNews,stories:vStories,offers:vOffers,videos:vVideos,c:(m,a,q)=>chatShop()&&q?.get?.('grid')!=='1'?vChatThread(m,a,q):vCategory(m,a,q),p:vProduct,search:vSearch,cart:vCart,checkout:vCheckout,order:vOrder,track:vTrack,wishlist:vWish,info:vInfo};
+  const V={account:(m,a,q)=>vAccount(m,q),'photo-order':vPhotoOrder,whatsapp:vWhatsApp,hi:(m,a,q)=>vHi(m,q),emi:(m,a,q)=>vEmi(m,q),notfound:vNotFound,'':vHome,combos:vCombos,news:vNews,stories:vStories,offers:vOffers,videos:vVideos,c:(m,a,q)=>q?.get?.('grid')==='1'?vCategory(m,a,q):storeStyle()==='chat'?vChatThread(m,a,q):storeStyle()==='feed'?vFeed(m,a,q):vCategory(m,a,q),p:vProduct,search:vSearch,cart:vCart,checkout:vCheckout,order:vOrder,track:vTrack,wishlist:vWish,info:vInfo};
   document.body.dataset.view=view||'home';
   if(intlOn())loadRates();
   await (V[view||'']||vHome)(main,arg,q);
@@ -4598,7 +4903,8 @@ function ribbonHTML(){
 function videoCard(v){return `<button class="vcard" data-act="playVideo" data-id="${v.id}" aria-label="Play video: ${esc(v.title)}">
   <span class="poster"><img data-vth="${v.id}" alt=""><span class="play"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>${v.duration?`<span class="dur">${fmtDur(v.duration)}</span>`:''}</span>
   <b>${esc(v.title)}</b></button>`;}
-function vHome(main){
+function vHome(main,a,q){
+  if(storeStyle()==='feed'){vFeed(main,'',q);return;}
   const st=S.settings,vis=visibleProducts();
   const count=ids=>vis.filter(p=>ids.includes(p.category)).length;
   const tiles=[];
@@ -5144,9 +5450,10 @@ const isAdmin=()=>S.role==='admin';
 function can(page){
   if(isAdmin())return true;
   if(S.role!=='employee')return false;
-  return {leads:true,marketing:true,tasks:true,chats:ST().empImport,pricelist:true,import:ST().empImport,orders:ST().empOrders,contacts:ST().empOrders,fix:ST().empEdit,add:ST().empEdit}[page]||false;
+  return {leads:true,marketing:true,tasks:true,chats:ST().empImport,pricelist:true,import:ST().empImport,orders:ST().empOrders,contacts:ST().empOrders,fix:ST().empEdit,add:ST().empEdit,post:ST().empEdit}[page]||false;
 }
-const STAFF_NAV=[['dashboard','Dashboard'],['tasks','Tasks'],['reports','Reports'],['vpay','Vendor payments'],['marketing','Marketing'],['leads','Leads'],['review','Review and publish'],['dupes','Duplicates'],['fix','Quick fix'],['pricelist','Vendor price list'],['import','Import WhatsApp chats'],['chats','Chat archive'],['add','Add a product'],['products','Products'],['videos','Videos'],['news','Announcements'],['community','Reviews and stories'],['offers','Offers and ads'],['menu','Menus and categories'],['orders','Orders'],['contacts','Resellers and vendors'],['team','Team and logins'],['market','Market prices'],['combos','Combo offers'],['settings','Settings']];
+const NAV_MAIN=['post','dashboard','products','review','orders','reports','settings'];   // everyday pages; the rest are under More tools
+const STAFF_NAV=[['post','＋ New post'],['dashboard','Dashboard'],['tasks','Tasks'],['reports','Reports'],['vpay','Vendor payments'],['marketing','Marketing'],['leads','Leads'],['review','Review and publish'],['dupes','Duplicates'],['fix','Quick fix'],['pricelist','Vendor price list'],['import','Import WhatsApp chats'],['chats','Chat archive'],['add','Add a product'],['products','Products'],['videos','Videos'],['news','Announcements'],['community','Reviews and stories'],['offers','Offers and ads'],['menu','Menus and categories'],['orders','Orders'],['contacts','Resellers and vendors'],['team','Team and logins'],['market','Market prices'],['combos','Combo offers'],['settings','Settings']];
 const reviewCount=()=>S.products.filter(awaitingReview).length+S.videos.filter(v=>!v.published&&!v.reviewed).length;
 const vendorById=id=>S.vendors.find(v=>v.id===id);
 
@@ -5205,13 +5512,14 @@ async function renderStaff(parts,q){
         <datalist id="idList">${S.products.filter(p=>p.myId).map(p=>`<option value="${esc(p.myId)}">${esc(p.title.slice(0,40))}</option>`).join('')}</datalist></form>
       <button type="button" class="side-menu-btn" data-act="sideMenu" aria-expanded="false" aria-controls="sideNav"><span aria-hidden="true">☰</span> Menu<b>${esc((nav.find(x=>x[0]===page)||[])[1]||'')}</b></button>
       <nav class="side-nav" id="sideNav" aria-label="Staff menu">
-      ${nav.map(([id,l])=>`<a href="#/staff/${id}" class="${page===id?'on':''}">${l}${id==='review'&&reviewCount()?`<span class="badge">${reviewCount()}</span>`:''}${id==='fix'&&S.products.some(fxTest('attention'))?`<span class="badge">${S.products.filter(fxTest('attention')).length}</span>`:''}${id==='community'&&S.pendingPosts?`<span class="badge">${S.pendingPosts}</span>`:''}${id==='dupes'&&dupRequests().length?`<span class="badge">${dupRequests().length}</span>`:''}</a>`).join('')}
+      ${(()=>{const navItem=([id,l])=>`<a href="#/staff/${id}" class="${page===id?'on':''}">${l}${id==='review'&&reviewCount()?`<span class="badge">${reviewCount()}</span>`:''}${id==='fix'&&S.products.some(fxTest('attention'))?`<span class="badge">${S.products.filter(fxTest('attention')).length}</span>`:''}${id==='community'&&S.pendingPosts?`<span class="badge">${S.pendingPosts}</span>`:''}${id==='dupes'&&dupRequests().length?`<span class="badge">${dupRequests().length}</span>`:''}</a>`;const main=nav.filter(([id])=>NAV_MAIN.includes(id)),more=nav.filter(([id])=>!NAV_MAIN.includes(id)),open=more.some(([id])=>id===page);
+        return main.map(navItem).join('')+(more.length?`<details class="side-more" ${open?'open':''}><summary>More tools <span class="small">${more.length}</span></summary>${more.map(navItem).join('')}</details>`:'');})()}
       <div class="spacer"></div>
       <a href="#/" target="_blank" rel="noopener">View store</a>
       <a href="#/staff" data-act="logout">Log out</a></nav>
-    </aside><main class="staff-main" id="smain">${S.storageKind==='memory'?'<div class="panel" style="border-color:var(--rose);margin-bottom:18px"><b>This browser is not saving anything.</b> Everything will disappear when you refresh. Open the site from its web address (or connect Supabase) instead of opening the file directly.</div>':''}${S.offline?'<div class="panel" style="border-color:var(--rose);margin-bottom:18px"><b>Could not reach the online database.</b> Check your internet connection and refresh. Changes made now may not save.</div>':''}</main></div>`;
-  const P={team:pTeam,leads:pLeads,vpay:(m,q)=>{RP.tab='settle';return pReports(m,q);},marketing:pMarketing,tasks:pTasks,chats:pChats,reports:pReports,contacts:pContacts,dupes:pDupes,add:pAddProduct,combos:pCombos,fix:pFix,market:pMarket,dashboard:pDashboard,review:pReview,videos:pVideos,news:pNews,community:pCommunity,offers:pOffers,pricelist:pPriceList,import:pImport,products:pProducts,menu:pMenu,orders:pOrders,settings:pSettings};
-  const warn=$('#smain').innerHTML;await P[page]($('#smain'),q);if(warn)$('#smain').insertAdjacentHTML('afterbegin',warn);
+    </aside>${page!=='post'&&can('post')?'<a class="ign-fab" href="#/staff/post" aria-label="New post: add a product with photos and a caption"><span aria-hidden="true">＋</span><b>New post</b></a>':''}<main class="staff-main" id="smain">${S.storageKind==='memory'?'<div class="panel" style="border-color:var(--rose);margin-bottom:18px"><b>This browser is not saving anything.</b> Everything will disappear when you refresh. Open the site from its web address (or connect Supabase) instead of opening the file directly.</div>':''}${S.offline?'<div class="panel" style="border-color:var(--rose);margin-bottom:18px"><b>Could not reach the online database.</b> Check your internet connection and refresh. Changes made now may not save.</div>':''}</main></div>`;
+  const P={team:pTeam,leads:pLeads,vpay:(m,q)=>{RP.tab='settle';return pReports(m,q);},marketing:pMarketing,tasks:pTasks,chats:pChats,reports:pReports,contacts:pContacts,dupes:pDupes,add:pAddProduct,post:pPost,combos:pCombos,fix:pFix,market:pMarket,dashboard:pDashboard,review:pReview,videos:pVideos,news:pNews,community:pCommunity,offers:pOffers,pricelist:pPriceList,import:pImport,products:pProducts,menu:pMenu,orders:pOrders,settings:pSettings};
+  const warn=$('#smain').innerHTML;await P[page]($('#smain'),q);S._lastStaffPage=page;if(warn)$('#smain').insertAdjacentHTML('afterbegin',warn);
   if(!['dashboard','tasks'].includes(page)&&!$('#smain .motiv'))$('#smain').insertAdjacentHTML('afterbegin',motivationHTML().replace('class="motiv"','class="motiv mini"'));   // today's dua on every staff page
   const sec=q.get('s');if(sec)setTimeout(()=>document.getElementById(sec)?.scrollIntoView({block:'start'}),60);
   hydrate($('#smain'));hydratePosters($('#smain'));
@@ -5560,7 +5868,7 @@ function pProducts(m,q){
     <select data-act-change="bulkCat" aria-label="Move to category"><option value="">Move to category…</option>${catOptions('',false)}</select>
     ${sel.length>1?'<button class="btn sm" data-act="pfMerge">Group as colours of one product</button>':''}
     <button class="btn sm danger" data-act="bulk" data-op="delete">Delete</button><button class="btn sm ghost" data-act="bulk" data-op="clear">Clear selection</button></div>`:''}
-  <div class="filters" style="margin-top:-6px"><a class="btn sm primary" href="#/staff/add">Add a product</a><button class="btn sm primary" data-act="csvImport">Import products from CSV</button><button class="btn sm" data-act="pfManualExport">Spreadsheet of products added by hand (${S.products.filter(isManual).length})</button></div>
+  <div class="filters" style="margin-top:-6px"><a class="btn sm primary" href="#/staff/post">＋ New post</a><a class="btn sm" href="#/staff/add">Add a product</a><button class="btn sm primary" data-act="csvImport">Import products from CSV</button><button class="btn sm" data-act="pfManualExport">Spreadsheet of products added by hand (${S.products.filter(isManual).length})</button></div>
   <p class="small muted">${list.length} products${list.length>PAGE_SIZE?`, showing ${pgd.from} to ${pgd.to}`:''} ${list.length>pgd.items.length&&sel.length<list.length?`<button class="btn sm ghost" data-act="pfSelEvery">Select all ${list.length} on every page</button>`:''} <button class="btn sm ghost" data-act="tidyTitles" title="Rebuild titles from descriptions for products whose title you have not typed yourself">Tidy titles from descriptions</button></p>
   ${pagerButtons(pgd.pg,pgd.pages,'pfPage')}
   ${list.length?`<div style="overflow-x:auto"><table class="tbl ptbl"><thead><tr><th><input type="checkbox" data-act-change="selAll" aria-label="Select all shown" ${pgd.items.length&&pgd.items.every(p=>PF.sel.has(p.id))?'checked':''}></th><th></th><th>Product</th><th>Category</th><th>Vendor price</th><th>Selling price</th><th>Stock</th><th>In store</th></tr></thead><tbody>
@@ -6060,7 +6368,8 @@ function pSettings(m){
     ${S.settings.accounts?.otp?`<label class="field" style="max-width:260px">Code is sent by<select data-set="accounts.otpChannel"><option ${S.settings.accounts.otpChannel!=='WhatsApp'?'selected':''}>SMS</option><option ${S.settings.accounts.otpChannel==='WhatsApp'?'selected':''}>WhatsApp</option></select></label>`:''}
     ${sw('accounts.enabled','Customer accounts','Shoppers can create an account with their mobile number and a password, see their complete order history and check out faster. Needs the setup in README Part 57.')}
     ${sw('tidyText','Tidy capitals and fonts automatically','Titles are shown in Title Case and descriptions in normal sentences, even when the vendor wrote in CAPITALS or fancy letters. Sizes (XL, 3XL), short forms (KC, USA) and names like Banarasi or Eid stay right. Your saved text is not changed except titles.')}
-    ${sw('chatShop','WhatsApp-style shop','Collections are listed like WhatsApp chats, and each opens as a chat with every design shown as a message: photos, description, price and the time it was added. Turn off for the classic grid of products.')}
+    <label class="field" style="max-width:420px"><b>How the store looks</b><span class="hint">Instagram feed: your profile, round collection highlights and a grid of posts. Tap a post to swipe its photos and order.</span>
+      <select data-set="storeStyle"><option value="feed" ${storeStyle()==='feed'?'selected':''}>Instagram feed (simplest)</option><option value="chat" ${storeStyle()==='chat'?'selected':''}>WhatsApp chats</option><option value="classic" ${storeStyle()==='classic'?'selected':''}>Classic shop with categories</option></select></label>
     ${fld('brand','Brand name')}${fld('tagline','Tagline')}${fld('heroText','Home page message','text','Shown under the tagline on the home page.')}
     ${fld('currency','Currency symbol','text','','maxlength="4" style="width:90px"')}
     <div><b>Logo</b><div style="display:flex;align-items:center;gap:14px;margin-top:8px"><img src="${logoSrc()}" alt="Current logo" style="width:84px;height:84px;border-radius:50%;object-fit:cover;background:#000">
@@ -8352,6 +8661,7 @@ function apPhotoHTML(){
 }
 function pAddProduct(m){
   m.innerHTML=`<h1>Add a product</h1><p class="lede">For products that did not come from a WhatsApp chat. Give the photos, the vendor’s message and the vendor’s name; everything else is filled in, and you check it before publishing.</p>
+  <a class="ign-promo" href="#/staff/post"><span aria-hidden="true">＋</span><span><b>New post</b><span>The quickest way: choose photos, write a caption with the price, and share. Just like posting on Instagram.</span></span><i aria-hidden="true">›</i></a>
   ${quickAddHTML()}
   <details class="ap-more"><summary><b>Or enter every detail yourself</b></summary>
   <form class="panel ap-form" id="apForm" novalidate>
@@ -10017,7 +10327,11 @@ const IG=()=>S.settings.insta||(S.settings.insta={id:'',token:'',hashtags:'',cap
 const IG_CAPTION="✨ New Arrival at {brand} ✨\n\n{title}\n\n{desc}\n\nPrice: {price}\n\nDM us to order 🤍\n🛍️ {link}\n\n{hashtags}";
 const igReady=()=>HOSTED&&!!IGS.conn?.connected&&!IGS.conn?.expired;   // connection lives on the server
 const igHost=()=>String(IG().token).startsWith('IG')?'https://graph.instagram.com':'https://graph.facebook.com';
-function igCaption(p){const tag=s=>'#'+String(s).toLowerCase().replace(/[^a-z0-9]+/g,'');
+function igCaption(p){if(p.caption&&String(p.caption).trim()){const own=String(p.caption).trim(),wa=supportWA();
+    const add=[`🛍️ Shop it here: ${productURL(p)}`,wa?`💬 Order on WhatsApp: ${wa}`:''].filter(Boolean).join('\n');
+    return (own+'\n\n'+add).slice(0,2200);}
+  return igCaptionAuto(p);}
+function igCaptionAuto(p){const tag=s=>'#'+String(s).toLowerCase().replace(/[^a-z0-9]+/g,'');
   const tags=[...new Set([...(IG().hashtags||`#${S.settings.brand.replace(/[^A-Za-z0-9]+/g,'')} #NewArrival #IndianFashion #OnlineShopping`).split(/\s+/).filter(Boolean),p.category!=='others'?tag(catById(p.category)?.name||''):''])].filter(t=>t.length>1).join(' ');
   const d=storeDesc(p).split('\n').slice(0,6).join('\n');
   const V={title:p.title,desc:d,price:sellPrice(p)!=null?money(sellPrice(p)):'Message us for the price',link:productURL(p),whatsapp:supportWA()||'',code:p.code,brand:S.settings.brand,hashtags:tags};
