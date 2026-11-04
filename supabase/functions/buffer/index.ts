@@ -26,10 +26,11 @@ function serverKey(): string {
 }
 const db = createClient(SUPABASE_URL, serverKey(), { auth: { persistSession: false, autoRefreshToken: false } });
 const BUFFER = "https://api.buffer.com";
-const SITE_URL = (Deno.env.get("SITE_URL") ?? "").replace(/\/+$/, "");
 
+// Any website address may call this function: every request still needs a signed-in staff login (and admins to post),
+// so the browser check does not need to match SITE_URL exactly (www. or not, .com or .in all work).
 const cors = (origin: string | null) => ({
-  "Access-Control-Allow-Origin": SITE_URL && origin && !origin.startsWith(SITE_URL) && !/^https?:\/\/(localhost|127\.0\.0\.1)/.test(origin) ? SITE_URL : (origin ?? "*"),
+  "Access-Control-Allow-Origin": origin || "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Vary": "Origin",
