@@ -1909,7 +1909,7 @@ const DEFAULT_SETTINGS={
   loyalty:{enabled:true,earnPer100:2,pointValue:1,minRedeem:100,minOrder:500,maxPercent:20,expiryDays:365},
   emi:{enabled:true,minOrder:10000,maxMonths:12,feePercent:0},
   leads:{dailyCap:40},
-  pricing:{mode:'percent',value:40,round:'9'},
+  pricing:{enabled:false,mode:'percent',value:40,round:'9'},
   shipping:{fee:79,freeAbove:1499,days:'4–7 working days'},
   payments:{upi:{enabled:true,id:'',name:'Kulsums Collection',qrLimit:2000},cod:{enabled:true,fee:49,max:5000},bank:{enabled:false,details:''}},
   support:{phone:'',whatsapp:'',email:'',hours:'Monday to Saturday, 10 am to 7 pm'},
@@ -1994,12 +1994,15 @@ async function loadAll(){
   if(PRE&&!S.role){st=st||PRE.settings;cats=cats||PRE.categories;const have=new Set((prods||[]).map(p=>p.id));prods=[...(prods||[]),...(PRE.products||[]).filter(p=>!have.has(p.id))];}
   if(st?.announcement&&typeof st.announcement.text==='string'&&!st.announcement.messages){st.announcement.messages=[st.announcement.text];delete st.announcement.text;}
   S.settings=deepMerge(clone(DEFAULT_SETTINGS),st||{});
+  // Stores set up before the store markup could be switched off keep it on until the admin chooses to lock their prices (offerMarkupLock).
+  S._legacyMarkup=false;if(st&&st.pricing&&st.pricing.enabled===undefined){S.settings.pricing.enabled=true;S._legacyMarkup=true;}
   if(S.settings.expiry&&!S.settings.expiry.v3){if(Number(S.settings.expiry.days)===6)S.settings.expiry.days=3;S.settings.expiry.v3=true;S._saveExpiry=true;}   // products now stay 3 days
   S._catSig=JSON.stringify([S.settings.pricing,S.settings.market,S.settings.catMarkup]);S.videos=vids||[];
   S.categories=cats||clone(DEFAULT_CATS);
   if(!S.categories.some(c=>c.id==='others'))S.categories.push(clone(OTHERS));
   S.products=prods||[];try{S._tidyN=tidyCatalogueText();}catch(e){console.error(e);}setProdBase();FPS.loaded=false;FPS.saved=null;if(S.role)setTimeout(()=>fpReady(),1500);S.vendors=vens||[];S.cart=cart||[];S.wish=wish||[];S.myOrders=my||[];S.recent=recent||[];markLive();
   if(typeof loadPosts==='function')await loadPosts();
+  if(S._legacyMarkup&&S.role==='admin')setTimeout(()=>offerMarkupLock(),2500);
 }
 async function persist(key,val,shared=true){
   try{if(HOSTED&&shared)await Remote.set(key,val);else await DB.set(key,val,shared);return true;}
@@ -2043,8 +2046,13 @@ function roundPrice(x,mode){
   if(mode==='99'){let r=Math.ceil(x/100)*100-1;if(r<x)r+=100;return r;}
   let r=Math.ceil(x/10)*10-1;if(r<x)r+=10;return r; // ends in 9
 }
+// The store-wide markup is off unless the admin switches it on (Settings, Selling price). With it off, a vendor price
+// with no price of its own is shown as it is, and an imported or typed selling price is always used exactly as given.
+const storeMarkupOn=()=>S.settings.pricing?.enabled===true;
+function pricePreviewHTML(){return storeMarkupOn()?[300,450,1250].map(v=>`${money(v)} becomes <b>${money(autoSell(v))}</b>`).join(', '):'The store markup is off: a vendor price of '+money(450)+' sells at '+money(autoSell(450))+' unless the product has its own price.';}
 function autoSell(vp){
   if(vp==null||vp==='')return null;const pr=S.settings.pricing;const v=Number(vp);
+  if(!storeMarkupOn())return v;
   return roundPrice(pr.mode==='fixed'?v+Number(pr.value||0):v*(1+Number(pr.value||0)/100),pr.round);
 }
 // Price order: a price set by hand, then this product's markup, then its category's markup, then the store markup.
@@ -2055,6 +2063,26 @@ function sellPrice(p){
   if(p.markup!=null&&p.markup!=='')return roundPrice(v*(1+Number(p.markup)/100),pr.round);
   if(cm!=null&&cm!=='')return roundPrice(v*(1+Number(cm)/100),pr.round);
   return autoSell(v);
+}
+
+// Older stores added a store-wide markup to every vendor price. That markup is now off by default. Every price that still
+// comes from it is locked at its current value first, so nothing changes for customers, then the store markup is switched off.
+let MARKUP_ASKED=false;
+async function offerMarkupLock(){
+  if(MARKUP_ASKED||!S._legacyMarkup||S.role!=='admin')return;MARKUP_ASKED=true;
+  const cmk=S.settings.catMarkup||{},blank=v=>v==null||v==='';
+  const own=p=>!blank(p.markup)||!blank(cmk[p.category]);
+  const needs=p=>!own(p)&&((blank(p.sellOverride)&&!blank(p.vendorPrice))||(p.colors||[]).some(c=>c&&!blank(c.vendorPrice)&&blank(c.sellOverride)));
+  const todo=S.products.filter(needs),pr=S.settings.pricing,pct=pr.mode==='fixed'?'+'+money(pr.value):pr.value+'%';
+  if(!confirm(`The store-wide markup (${pct}) is now switched off. From now on the price you set or import is the selling price, with nothing added on top.\n\n${todo.length} existing product${todo.length===1?'':'s'} still get their price from that markup. Lock their current prices so nothing changes for your customers?\n\nOK: lock the current prices and switch the store markup off.\nCancel: keep the store markup on for now (you will be asked again next time you sign in).`)){return;}
+  for(const p of todo){
+    if(blank(p.sellOverride)&&!blank(p.vendorPrice))p.sellOverride=sellPrice(p);
+    for(const c of p.colors||[])if(c&&!blank(c.vendorPrice)&&blank(c.sellOverride))c.sellOverride=autoSell(c.vendorPrice);
+  }
+  if(!await saveProducts()){toast('Could not lock the prices, so the store markup stays on. Try again later.');MARKUP_ASKED=false;return;}
+  S.settings.pricing.enabled=false;S._legacyMarkup=false;
+  if(await saveSettings()){toast(`Prices locked for ${todo.length} product${todo.length===1?'':'s'}. The store markup is off.`);route();}
+  else{S.settings.pricing.enabled=true;S._legacyMarkup=true;MARKUP_ASKED=false;toast('Prices were locked, but the setting could not be saved. Try again.');}
 }
 
 // ================= categorisation =================
@@ -5527,7 +5555,7 @@ function pProducts(m,q){
     <select data-act-change="bulkCat" aria-label="Move to category"><option value="">Move to category…</option>${catOptions('',false)}</select>
     ${sel.length>1?'<button class="btn sm" data-act="pfMerge">Group as colours of one product</button>':''}
     <button class="btn sm danger" data-act="bulk" data-op="delete">Delete</button><button class="btn sm ghost" data-act="bulk" data-op="clear">Clear selection</button></div>`:''}
-  <div class="filters" style="margin-top:-6px"><a class="btn sm primary" href="#/staff/add">Add a product</a><button class="btn sm" data-act="pfManualExport">Spreadsheet of products added by hand (${S.products.filter(isManual).length})</button></div>
+  <div class="filters" style="margin-top:-6px"><a class="btn sm primary" href="#/staff/add">Add a product</a><button class="btn sm primary" data-act="csvImport">Import products from CSV</button><button class="btn sm" data-act="pfManualExport">Spreadsheet of products added by hand (${S.products.filter(isManual).length})</button></div>
   <p class="small muted">${list.length} products${list.length>PAGE_SIZE?`, showing ${pgd.from} to ${pgd.to}`:''} ${list.length>pgd.items.length&&sel.length<list.length?`<button class="btn sm ghost" data-act="pfSelEvery">Select all ${list.length} on every page</button>`:''} <button class="btn sm ghost" data-act="tidyTitles" title="Rebuild titles from descriptions for products whose title you have not typed yourself">Tidy titles from descriptions</button></p>
   ${pagerButtons(pgd.pg,pgd.pages,'pfPage')}
   ${list.length?`<div style="overflow-x:auto"><table class="tbl ptbl"><thead><tr><th><input type="checkbox" data-act-change="selAll" aria-label="Select all shown" ${pgd.items.length&&pgd.items.every(p=>PF.sel.has(p.id))?'checked':''}></th><th></th><th>Product</th><th>Category</th><th>Vendor price</th><th>Selling price</th><th>Stock</th><th>In store</th></tr></thead><tbody>
@@ -6119,12 +6147,13 @@ function pSettings(m){
   </section>
 
   <section class="panel" id="pricing"><h2>Selling price</h2><div class="stack">
-    <p class="small muted" style="margin:0">Customer prices are worked out from each vendor price. You can still set any product’s price by hand on the Products page.</p>
+    <p class="small muted" style="margin:0">The price you set on a product, or the price in an imported CSV file, is the selling price. Nothing is added on top of it.</p>
+    ${sw('pricing.enabled','Add a store-wide markup','Off (recommended): products with only a vendor price sell at that price. On: every product that has no price of its own gets the markup below.')}
     <div class="seg" role="group" aria-label="Markup type"><button class="${pr.mode==='percent'?'on':''}" data-act="priceMode" data-v="percent">Add a percentage</button><button class="${pr.mode==='fixed'?'on':''}" data-act="priceMode" data-v="fixed">Add a fixed amount</button></div>
     ${fld('pricing.value',pr.mode==='percent'?'Markup (%)':'Markup ('+st.currency+')','number','','min="0"')}
     <label class="field">Round prices<select data-set="pricing.round">${[['9','End in 9 (e.g. 639)'],['99','End in 99 (e.g. 699)'],['10','Nearest 10 up'],['50','Nearest 50 up'],['none','No rounding']].map(([k,l])=>`<option value="${k}" ${pr.round===k?'selected':''}>${l}</option>`).join('')}</select></label>
     <p class="small muted" style="margin:0">To see what other shops charge and get a recommended markup, open <a href="#/staff/market">Market prices</a>. Only staff can see these settings.</p>
-    <p id="pricePreview" class="muted" style="margin:0">${[300,450,1250].map(v=>`${money(v)} becomes <b>${money(autoSell(v))}</b>`).join(', ')}</p>
+    <p id="pricePreview" class="muted" style="margin:0">${pricePreviewHTML()}</p>
   </div></section>
 
   <section class="panel" id="shipping"><h2>Shipping</h2><div class="stack">
@@ -6592,7 +6621,7 @@ document.addEventListener('change',async e=>{
   if(el.dataset.set){let v=el.type==='checkbox'?el.checked:el.type==='number'?(el.value===''?0:Number(el.value)):el.value;
     if(el.dataset.set==='announcement.messages')v=el.value.split('\n').map(x=>x.trim()).filter(Boolean);
     setPath(S.settings,el.dataset.set,v);queueSettingsSave();
-    if(el.dataset.set.startsWith('pricing')){const pp=$('#pricePreview');if(pp)pp.innerHTML=[300,450,1250].map(x=>`${money(x)} becomes <b>${money(autoSell(x))}</b>`).join(', ');}
+    if(el.dataset.set.startsWith('pricing')){const pp=$('#pricePreview');if(pp)pp.innerHTML=pricePreviewHTML();}
     return;}
   if(el.dataset.list){const it=getPath(S.settings,el.dataset.list)[+el.dataset.i];let v=el.type==='checkbox'?el.checked:el.type==='number'?Number(el.value):el.value;
     if(el.dataset.k==='code')v=v.toUpperCase().replace(/\s+/g,'');it[el.dataset.k]=v;queueSettingsSave();return;}
@@ -7487,6 +7516,7 @@ function markupFor(p){
   if(p.sellOverride!=null&&p.sellOverride!=='')return {src:'hand',label:'Set by hand'};
   if(p.markup!=null&&p.markup!=='')return {src:'product',value:Number(p.markup),mode:'percent',label:`Product markup ${p.markup}%`};
   const cm=(S.settings.catMarkup||{})[p.category];if(cm!=null&&cm!=='')return {src:'category',value:Number(cm),mode:'percent',label:`${catById(p.category).name} markup ${cm}%`};
+  if(!storeMarkupOn())return {src:'store',value:0,mode:'percent',label:'No markup (the vendor price as it is)'};
   const s=S.settings.pricing;return {src:'store',value:Number(s.value),mode:s.mode,label:s.mode==='fixed'?`Store markup +${money(s.value)}`:`Store markup ${s.value}%`};
 }
 
@@ -8405,6 +8435,174 @@ function exportDialogManual(){
     try{await exportManualProducts(f?new Date(f+'T00:00:00').getTime():0,t?new Date(t+'T23:59:59').getTime():0);d.close();}catch(err){toast('Could not make the spreadsheet: '+err.message);b.disabled=false;b.textContent='Download spreadsheet';}};
   d.showModal();
 }
+
+// ---------- import products from a CSV file ----------
+// One row per product. The price in the file is the selling price and is used exactly as written:
+// the store-wide markup is never added on top of an imported price.
+// Columns (any order, extra columns are ignored):
+//   title (required), category, price (final selling price), vendor_price (your cost),
+//   markup_amount (rupees added to the cost) or markup_percent (% added to the cost), mrp, stock (in or out),
+//   store_description (shown to customers), notes (private), colours, images, image_colours, sku.
+// If a row has no price, the price is vendor_price + markup_amount (or markup_percent). With no markup at all it sells at vendor_price.
+// images: photo addresses separated by ; (a full web address, or a path on your own site such as import-images/abayas/kca001-1.jpg).
+// image_colours: the colour of each photo, in the same order as images. It gives the product page its colour choices.
+// <csv-pure>
+const CSV_COLS={
+  sku:['sku','myid','productcode','code','id','productid'],
+  title:['title','name','productname','product'],
+  category:['category','categories','collection','producttype'],
+  vendor_price:['vendorprice','costprice','cost','dealerprice','purchaseprice','wholesaleprice','buyprice','cp'],
+  markup_amount:['markupamount','markupinr','markuprs','markupfixed','markupvalue'],
+  markup_percent:['markuppercent','markuppct','markupperc','markup'],
+  price:['price','sellingprice','sellprice','saleprice','finalprice','sp'],
+  mrp:['mrp','compareatprice','originalprice','listprice'],
+  stock:['stock','availability','instock'],
+  store_description:['storedescription','customerdescription','description','desc','body','bodyhtml'],
+  notes:['notes','note','internalnotes','privatenotes','vendornotes'],
+  colours:['colours','colors','colour','color'],
+  images:['images','image','imageurls','imageurl','photos','imagesrc'],
+  image_colours:['imagecolours','imagecolors','photocolours','photocolors']
+};
+function csvParse(text){
+  text=String(text||'').replace(/^﻿/,'');
+  const first=text.split(/\r?\n/,1)[0]||'';
+  const n=c=>first.split(c).length;
+  const delim=n('\t')>n(',')?'\t':(n(';')>n(',')?';':',');
+  const rows=[];let row=[],cur='',q=false;
+  const endRow=()=>{row.push(cur);cur='';if(row.some(x=>x.trim()!==''))rows.push(row);row=[];};
+  for(let i=0;i<text.length;i++){const ch=text[i];
+    if(q){if(ch==='"'){if(text[i+1]==='"'){cur+='"';i++;}else q=false;}else cur+=ch;}
+    else if(ch==='"'&&cur==='')q=true;
+    else if(ch===delim){row.push(cur);cur='';}
+    else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&text[i+1]==='\n')i++;endRow();}
+    else cur+=ch;}
+  if(cur!==''||row.length)endRow();
+  return rows;
+}
+function csvNum(v){const s=String(v??'').replace(/₹|rs\.?|inr|,|\s/gi,'');if(s==='')return null;const x=Number(s);return Number.isFinite(x)?x:NaN;}
+function csvList(v,extraSep){const s=String(v||'').trim();if(!s)return [];let a=s.split(/[;|\n]/).map(x=>x.trim()).filter(Boolean);if(extraSep&&a.length===1&&a[0].includes(','))a=a[0].split(',').map(x=>x.trim()).filter(Boolean);return a;}
+// ctx: {findCat(name) -> category id or '', guessCat(text) -> category id, taken(sku) -> true if that ID is already used}
+function csvBuildPlan(table,ctx){
+  const out={rows:[],error:'',newCats:[]};
+  if(!table||!table.length){out.error='The file is empty.';return out;}
+  const head=table[0].map(h=>String(h).toLowerCase().replace(/[^a-z0-9]/g,''));
+  const idx={};for(const [f,al] of Object.entries(CSV_COLS)){for(const a of al){const i=head.indexOf(a);if(i>=0){idx[f]=i;break;}}}
+  if(idx.title==null){out.error='The first row must have column names, and one of them must be "title". Download the template to see the layout.';return out;}
+  const seen=new Set(),newCats=new Map();
+  for(let n=1;n<table.length;n++){
+    const r=table[n],get=f=>idx[f]==null?'':String(r[idx[f]]??'').trim();
+    const row={line:n+1,sku:get('sku'),title:get('title'),catName:get('category'),cat:'',newCat:'',vp:null,sell:null,markup:null,mrp:null,stock:'in',
+      desc:get('store_description'),notes:get('notes'),colours:csvList(get('colours'),true),images:csvList(get('images')),imgCols:csvList(get('image_colours')),skip:false,reason:'',warns:[]};
+    if(!row.title){row.skip=true;row.reason='No title';out.rows.push(row);continue;}
+    const vp=csvNum(get('vendor_price')),pr=csvNum(get('price')),ma=csvNum(get('markup_amount')),mp=csvNum(get('markup_percent')),mrp=csvNum(get('mrp'));
+    if([vp,pr,ma,mp,mrp].some(x=>Number.isNaN(x))){row.skip=true;row.reason='A price or markup is not a number';out.rows.push(row);continue;}
+    if([vp,pr,ma,mp,mrp].some(x=>x!=null&&x<0)){row.skip=true;row.reason='A price or markup is negative';out.rows.push(row);continue;}
+    row.vp=vp;row.mrp=mrp;
+    if(pr!=null){row.sell=pr;if(vp!=null)row.markup=Math.round((pr-vp)*100)/100;}
+    else if(vp!=null){
+      if(ma!=null){row.sell=Math.round((vp+ma)*100)/100;row.markup=ma;}
+      else if(mp!=null){row.sell=Math.round(vp*(1+mp/100)*100)/100;row.markup=Math.round((row.sell-vp)*100)/100;}
+      else{row.sell=vp;row.markup=0;row.warns.push('No markup, so it sells at your cost');}
+    }else row.warns.push('No price, so it stays a draft');
+    if(row.sell===0)row.warns.push('Price is 0');
+    const st=get('stock').toLowerCase();if(/^(out|out of stock|out_of_stock|sold out|no|0|false)$/.test(st))row.stock='out';
+    if(row.sku){const k=row.sku.toLowerCase();if(seen.has(k)){row.skip=true;row.reason='Same ID '+row.sku+' appears twice in the file';out.rows.push(row);continue;}seen.add(k);
+      if(ctx.taken(row.sku)){row.skip=true;row.reason=row.sku+' is already in your store';out.rows.push(row);continue;}}
+    if(row.catName){row.cat=ctx.findCat(row.catName);
+      if(!row.cat){const k=row.catName.toLowerCase();if(!newCats.has(k))newCats.set(k,row.catName);row.newCat=newCats.get(k);}}
+    else{row.cat=ctx.guessCat(row.title+' '+row.desc);row.warns.push('No category, so it was sorted by its words');}
+    if(row.colours.length&&row.imgCols.length&&row.images.length&&row.imgCols.length!==row.images.length)row.warns.push('image_colours has '+row.imgCols.length+' entries but there are '+row.images.length+' images');
+    out.rows.push(row);
+  }
+  out.newCats=[...newCats.values()];
+  return out;
+}
+// </csv-pure>
+const CSVI={plan:null,file:'',busy:false};
+const CSV_TEMPLATE='sku,title,category,vendor_price,markup_amount,price,stock,store_description,notes,colours,images,image_colours\nKC-001,"Example abaya","Abayas",1000,400,1400,in,"Text customers see","Private note",Black; Grey,import-images/example-1.jpg,\n';
+function csvDialogHTML(){
+  const p=CSVI.plan;
+  const head=`<h2 style="margin-top:0">Import products from a CSV file</h2>`;
+  const pick=`<div class="stack" style="gap:10px">
+      <label class="vp-drop" tabindex="0"><input type="file" id="csvFile" data-act-change="csvFile" accept=".csv,.tsv,.txt,text/csv" hidden><b>Choose a CSV file</b><span class="small muted">From your computer or phone</span></label>
+      <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap"><label class="field" style="flex:1;min-width:220px;margin:0">Or load one from your site<input id="csvUrl" placeholder="import/abayas-2026-10-30.csv" aria-label="CSV address"></label><button type="button" class="btn" data-act="csvLoadUrl">Load</button></div>
+      <p class="small muted" style="margin:0">One row per product. The <b>price</b> in the file is the selling price and is used exactly as written. No store markup is added. If a row has <b>vendor_price</b> and <b>markup_amount</b> (or <b>markup_percent</b>) but no price, the price is worked out from those. Photos come from the <b>images</b> column. <button type="button" class="linkish" data-act="csvTemplate">Download a template</button></p></div>`;
+  if(!p)return `<div class="dlg" style="max-width:680px">${head}${pick}<div class="dlg-actions"><button class="btn" data-act="dlgClose">Close</button></div></div>`;
+  if(p.error)return `<div class="dlg" style="max-width:680px">${head}<p style="color:var(--rose)">${esc(p.error)}</p>${pick}<div class="dlg-actions"><button class="btn" data-act="dlgClose">Close</button></div></div>`;
+  const ok=p.rows.filter(r=>!r.skip),bad=p.rows.filter(r=>r.skip),warn=ok.filter(r=>r.warns.length);
+  const canPub=isAdmin();
+  const tr=r=>`<tr${r.skip?' style="opacity:.55"':''}><td>${esc(r.sku||'')}</td><td>${esc(r.title||'(no title)')}${r.skip?`<div class="small" style="color:var(--rose)">Skipped: ${esc(r.reason)}</div>`:''}${r.warns.map(w=>`<div class="small muted">${esc(w)}</div>`).join('')}</td>
+    <td>${r.newCat?esc(r.newCat)+' <span class="small muted">(new)</span>':esc(r.cat?catById(r.cat).name:'')}</td><td>${r.vp!=null?money(r.vp):''}</td><td>${r.markup!=null?(r.markup>=0?'+':'')+money(r.markup):''}</td><td><b>${r.sell!=null?money(r.sell):'None'}</b></td><td>${r.images.length}</td></tr>`;
+  return `<div class="dlg" style="max-width:860px">${head}
+    <p style="margin:0"><b>${esc(CSVI.file||'CSV file')}</b>: ${ok.length} product${ok.length===1?'':'s'} ready${bad.length?`, ${bad.length} skipped`:''}${warn.length?`, ${warn.length} with a note`:''}.${p.newCats.length?` New categor${p.newCats.length===1?'y':'ies'} will be created: <b>${esc(p.newCats.join(', '))}</b>.`:''}</p>
+    <div style="overflow:auto;max-height:46vh;margin:10px 0"><table class="tbl" style="width:100%;font-size:.88rem"><thead><tr><th>ID</th><th>Title</th><th>Category</th><th>Cost</th><th>Markup</th><th>Selling price</th><th>Photos</th></tr></thead><tbody>${p.rows.map(tr).join('')}</tbody></table></div>
+    ${canPub?`<label class="switch" style="margin:0 0 8px"><span class="txt"><b>Publish products that have a photo and a price</b><span>Others are saved as drafts. Products stay in the store for the number of days set in your store settings.</span></span><input type="checkbox" id="csvPublish" checked></label>`:`<p class="small muted">An admin approves these before they go live.</p>`}
+    <div id="csvStatus" class="small muted" role="status"></div>
+    <div class="dlg-actions"><button class="btn" data-act="dlgClose">Cancel</button><button class="btn" data-act="csvAgain">Choose another file</button><button class="btn primary" data-act="csvRun" ${ok.length&&!CSVI.busy?'':'disabled'}>Import ${ok.length} product${ok.length===1?'':'s'}</button></div></div>`;
+}
+function csvOpen(){const d=$('#dlg');d.classList.remove('video-dlg');CSVI.plan=null;CSVI.file='';CSVI.busy=false;d.innerHTML=csvDialogHTML();if(!d.open)d.showModal();}
+function csvShowPlan(text,name){
+  const ctx={findCat:n=>{const k=String(n).trim().toLowerCase();const c=S.categories.find(c=>String(c.id).toLowerCase()===k||String(c.name||'').trim().toLowerCase()===k);return c?c.id:'';},
+    guessCat:t=>{try{return categorize(t)||'others';}catch{return 'others';}},taken:s=>idTaken(s)};
+  CSVI.plan=csvBuildPlan(csvParse(text),ctx);CSVI.file=name||'';$('#dlg').innerHTML=csvDialogHTML();
+}
+async function csvLoadImage(row,i){
+  const src=new URL(row.images[i],location.origin+'/').href;
+  const {data,img}=await compressImage(src,1100,0.8);
+  const name=row.imgCols[i]||'';let colour={name:'',hex:'#ddd'};
+  if(name){const dc=(()=>{try{return dominantColour(img);}catch{return null;}})();colour={...(dc||{hex:'#ddd'}),name};}
+  return {data,img,colour};
+}
+async function csvRun(){
+  const plan=CSVI.plan;if(!plan||CSVI.busy)return;
+  const rows=plan.rows.filter(r=>!r.skip);if(!rows.length)return;
+  const publishWanted=isAdmin()&&!!$('#csvPublish')?.checked,st=$('#csvStatus');
+  CSVI.busy=true;$('#dlg [data-act=csvRun]')?.setAttribute('disabled','');
+  let made=0,live=0,noPhoto=0,failedImg=0,seq=Math.max(1000,...S.products.map(p=>parseInt(String(p.code).replace(/\D/g,''))||0))+1;
+  try{
+    const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||uid('c');
+    const newIds=new Map();
+    for(const name of plan.newCats){let id=slug(name);while(S.categories.some(c=>c.id===id))id+='-'+Math.random().toString(36).slice(2,5);
+      S.categories.push({id,name,keywords:[],enabled:true,priority:false,order:S.categories.length});newIds.set(name,id);}
+    if(plan.newCats.length)await saveCats();
+    for(const [k,r] of rows.entries()){
+      if(st)st.textContent=`Importing ${k+1} of ${rows.length}: ${r.title}`;
+      const cat=r.newCat?newIds.get(r.newCat):r.cat;
+      const full=[],fps=[],colors=[];let th=null;
+      for(let i=0;i<Math.min(r.images.length,12);i++){
+        try{const im=await csvLoadImage(r,i);full.push(im.data);fps.push(packFP(fingerprint(im.img)));colors.push(im.colour);if(!th)th=(await compressImage(new URL(r.images[i],location.origin+'/').href,360,0.74)).data;}
+        catch(e){failedImg++;}
+      }
+      const prod={id:uid('p'),code:'KC'+(seq++),...(r.sku?{myId:r.sku}:{}),vendorId:null,title:r.title,titleManual:true,description:r.desc||r.title,storeDesc:r.desc||'',csvNotes:r.notes||'',
+        vendorPrice:r.vp,sellOverride:r.sell,mrp:r.mrp,category:cat,catManual:true,stock:r.stock,featured:false,published:false,reviewed:false,createdAt:Date.now(),
+        imageCount:full.length,fp:fps,colors,source:'manual',addedBy:S.email||(isAdmin()?'Admin':'Employee'),importedFrom:'csv'};
+      const pub=publishWanted&&r.sell!=null&&full.length>0&&!publishBlock(prod)&&catOn(catById(cat));
+      prod.published=!!pub;prod.reviewed=!!pub;
+      if(th)await Media.putProduct(prod,th,full);else noPhoto++;
+      S.products.push(prod);made++;if(pub)live++;
+      if(made%5===0)await saveProducts();
+    }
+    const ok=await saveProducts();
+    CSVI.busy=false;
+    if(!ok){toast('Some products could not be saved. Check your connection and try again.');$('#dlg').innerHTML=csvDialogHTML();return;}
+    $('#dlg').close();
+    toast(`Imported ${made} product${made===1?'':'s'}${live?`, ${live} live in the store`:''}${made-live?`, ${made-live} saved as draft${made-live===1?'':'s'}`:''}${noPhoto?` (${noPhoto} without a photo)`:''}${failedImg?`. ${failedImg} photo${failedImg===1?'':'s'} could not be loaded`:''}.`);
+    PF.status='';PF.sort='new';PF.page=1;route();
+  }catch(e){CSVI.busy=false;console.error(e);if(st)st.textContent='Could not finish: '+(e.message||'try again')+'. Products imported so far are kept.';await saveProducts();$('#dlg [data-act=csvRun]')?.removeAttribute('disabled');}
+}
+Object.assign(ACT,{
+  csvImport:()=>csvOpen(),
+  csvAgain:()=>{CSVI.plan=null;CSVI.file='';$('#dlg').innerHTML=csvDialogHTML();},
+  csvTemplate:()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+CSV_TEMPLATE],{type:'text/csv'}));a.download='products-template.csv';document.body.appendChild(a);a.click();a.remove();},
+  csvLoadUrl:async()=>{const u=($('#csvUrl')?.value||'').trim();if(!u){toast('Type the address of a CSV file first.');return;}
+    try{const r=await fetch(new URL(u,location.origin+'/').href,{cache:'no-store'});if(!r.ok)throw new Error('The file was not found ('+r.status+')');csvShowPlan(await r.text(),u.split('/').pop());}
+    catch(e){toast('Could not load that file: '+e.message);}},
+  csvRun:()=>csvRun(),
+});
+Object.assign(CHG,{
+  csvFile:async el=>{const f=el.files&&el.files[0];if(!f)return;try{csvShowPlan(await f.text(),f.name);}catch(e){toast('Could not read that file.');}},
+});
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches?.('.vp-drop')&&e.target.querySelector('#csvFile')){e.preventDefault();e.target.querySelector('#csvFile').click();}});
 
 // ---------- orders: add, edit, delete, activity log ----------
 const OE={o:null,isNew:false};
