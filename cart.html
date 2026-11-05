@@ -2007,7 +2007,7 @@ const DEFAULT_SETTINGS={
   logo:'',
   chatShop:true,
   buffer:{on:true,channels:[],mode:'shareNow'},
-  waPost:{on:true,community:''},
+  waPost:{on:true,community:'',app:'business'},
   tidyText:true,
   accounts:{enabled:true,required:true,otp:false,otpChannel:'SMS'},
   intl:{enabled:false,switcher:true,autoDetect:true,rateMode:'auto',manual:{},markup:{},countryMarkup:{},off:[],zones:{},itemKg:0.5,catKg:{},packKg:0.2,freeAbove:0,payNote:'We will message you on WhatsApp with the payment details (bank transfer, Wise or PayPal) and the courier tracking.',paypal:''},
@@ -4478,6 +4478,11 @@ const waSafe=(u,re)=>{u=String(u||'').trim();return re.test(u)?u:'';};
 const waChannelLink=()=>waSafe(S.settings.social?.whatsappChannel,/^https:\/\/(www\.)?whatsapp\.com\/channel\/[\w-]+/i);
 const waCommunityLink=()=>waSafe(WAPCFG().community,/^https:\/\/chat\.whatsapp\.com\/[\w-]+/i);
 const waPostOn=()=>WAPCFG().on!==false;
+const waBiz=()=>WAPCFG().app!=='whatsapp';   // WhatsApp Business (default) or normal WhatsApp
+const waAppName=()=>waBiz()?'WhatsApp Business':'WhatsApp';
+// On Android the links can say which app opens them. (iPhones always open the links in the app that owns them.)
+function waAppLink(u){if(!u||!/Android/i.test(navigator.userAgent))return u;const m=u.match(/^https:\/\/(.+)$/);if(!m)return u;
+  return `intent://${m[1]}#Intent;scheme=https;package=${waBiz()?'com.whatsapp.w4b':'com.whatsapp'};S.browser_fallback_url=${encodeURIComponent(u)};end`;}
 const waTargets=()=>[waChannelLink()&&'Channel',waCommunityLink()&&'Community chat'].filter(Boolean).join(' and ')||'Channel and Community chat';
 // Same caption as Instagram, without the lines that are only hashtags (they do nothing on WhatsApp)
 function waCaption(p){return igCaption(p).split('\n').filter(l=>!/^\s*(#[\p{L}\p{N}_]+[\s,]*)+$/u.test(l)).join('\n').replace(/\n{3,}/g,'\n\n').trim();}
@@ -4502,9 +4507,9 @@ async function waShare(p,auto){const text=waCaption(p);if(!auto)waCopy(p);
 function waPostCardHTML(p){if(!waPostOn()||!p?.published)return '';const ch=waChannelLink(),cm=waCommunityLink();
   setTimeout(()=>waPrep(p),0);
   return `<div class="wap" data-id="${p.id}"><b>${ICON.wa} Post on WhatsApp</b>
-    <p class="small muted">Tap Share, choose <b>WhatsApp</b>, tick your ${esc(waTargets())} and send. The caption is copied too: if it does not show in WhatsApp, long-press and Paste.</p>
+    <p class="small muted">Tap Share, choose <b>${waAppName()}</b>${waBiz()?' (the icon with the <b>B</b>)':''}, tick your ${esc(waTargets())} and send. The caption is copied too: if it does not show in WhatsApp, long-press and Paste.</p>
     <button class="btn primary block wap-go" data-act="waShare" data-id="${p.id}">${p.waPost?.at?'✓ Shared · Share again':'Share photos and caption'}</button>
-    <div class="wap-links">${ch?`<a class="btn sm" href="${esc(ch)}" target="_blank" rel="noopener">Open my Channel</a>`:''}${cm?`<a class="btn sm" href="${esc(cm)}" target="_blank" rel="noopener">Open Community chat</a>`:''}<button class="btn sm ghost" data-act="waSave" data-id="${p.id}">Save photos</button></div>
+    <div class="wap-links">${ch?`<a class="btn sm" href="${esc(waAppLink(ch))}" ${waAppLink(ch)===(ch)?'target="_blank" rel="noopener"':''}>Open my Channel</a>`:''}${cm?`<a class="btn sm" href="${esc(waAppLink(cm))}" ${waAppLink(cm)===(cm)?'target="_blank" rel="noopener"':''}>Open Community chat</a>`:''}<button class="btn sm ghost" data-act="waSave" data-id="${p.id}">Save photos</button></div>
     ${ch&&cm?'':`<p class="small">${ch||cm?'Add your other WhatsApp link':'Add your WhatsApp Channel and Community chat links'} for quick buttons here: <button type="button" class="linkbtn" data-act="waSettings">Settings → WhatsApp</button></p>`}
     <p class="small wap-note" role="status"></p></div>`;}
 function waOpen(id){const p=prodById(id);if(!p)return;const d=$('#dlg');d.classList.remove('video-dlg');
@@ -4516,6 +4521,7 @@ function waPostPanelHTML(){return `<section class="panel" id="wapost"><h2>WhatsA
     <p class="small muted" style="margin:0">After every New post, the website gets the photos and caption ready and opens WhatsApp, so you tick your Channel and your Community chat and send. (WhatsApp does not let any website or app post there on its own, so this one tap is needed.)</p>
     ${fld('social.whatsappChannel','Your WhatsApp Channel link','url','In WhatsApp: Updates → your channel → its name → Share link. It starts with https://whatsapp.com/channel/ (customers see this link in the store, so they can follow you).','placeholder="https://whatsapp.com/channel/…" inputmode="url"')}
     ${fld('waPost.community','Your Community chat link','url','In WhatsApp: open the community’s announcements chat or group → its name → Invite via link → Copy link. It starts with https://chat.whatsapp.com/ (only staff see this).','placeholder="https://chat.whatsapp.com/…" inputmode="url"')}
+    <label class="field" style="max-width:340px">Which WhatsApp you post from<select data-set="waPost.app"><option value="business" ${waBiz()?'selected':''}>WhatsApp Business</option><option value="whatsapp" ${waBiz()?'':'selected'}>WhatsApp</option></select><span class="hint">On Android phones, Open my Channel and Open Community chat open this app. In the share screen, choose its icon.</span></label>
     ${sw('waPost.on','Offer the WhatsApp step after every New post','Also adds a WhatsApp button next to each product in the staff area.')}
     ${S.settings.social?.whatsappChannel&&!waChannelLink()?'<p class="small" style="color:var(--rose)">The Channel link does not look right. It should start with https://whatsapp.com/channel/</p>':''}
     ${WAPCFG().community&&!waCommunityLink()?'<p class="small" style="color:var(--rose)">The Community chat link does not look right. It should start with https://chat.whatsapp.com/</p>':''}
