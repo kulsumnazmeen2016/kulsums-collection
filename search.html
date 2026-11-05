@@ -4477,8 +4477,8 @@ const WAPCFG=()=>S.settings.waPost||{};
 const waSafe=(u,re)=>{u=String(u||'').trim();return re.test(u)?u:'';};
 const waChannelLink=()=>waSafe(S.settings.social?.whatsappChannel,/^https:\/\/(www\.)?whatsapp\.com\/channel\/[\w-]+/i);
 const waCommunityLink=()=>waSafe(WAPCFG().community,/^https:\/\/chat\.whatsapp\.com\/[\w-]+/i);
-const waPostOn=()=>WAPCFG().on!==false&&!!(waChannelLink()||waCommunityLink());
-const waTargets=()=>[waChannelLink()&&'Channel',waCommunityLink()&&'Community chat'].filter(Boolean).join(' and ');
+const waPostOn=()=>WAPCFG().on!==false;
+const waTargets=()=>[waChannelLink()&&'Channel',waCommunityLink()&&'Community chat'].filter(Boolean).join(' and ')||'Channel and Community chat';
 // Same caption as Instagram, without the lines that are only hashtags (they do nothing on WhatsApp)
 function waCaption(p){return igCaption(p).split('\n').filter(l=>!/^\s*(#[\p{L}\p{N}_]+[\s,]*)+$/u.test(l)).join('\n').replace(/\n{3,}/g,'\n\n').trim();}
 async function waFiles(p,srcs){const list=(srcs&&srcs.length?srcs:((await getImages(p.id))||[await getThumb(p.id)])).filter(Boolean).slice(0,10),out=[];
@@ -4505,9 +4505,10 @@ function waPostCardHTML(p){if(!waPostOn()||!p?.published)return '';const ch=waCh
     <p class="small muted">Tap Share, choose <b>WhatsApp</b>, tick your ${esc(waTargets())} and send. The caption is copied too: if it does not show in WhatsApp, long-press and Paste.</p>
     <button class="btn primary block wap-go" data-act="waShare" data-id="${p.id}">${p.waPost?.at?'✓ Shared · Share again':'Share photos and caption'}</button>
     <div class="wap-links">${ch?`<a class="btn sm" href="${esc(ch)}" target="_blank" rel="noopener">Open my Channel</a>`:''}${cm?`<a class="btn sm" href="${esc(cm)}" target="_blank" rel="noopener">Open Community chat</a>`:''}<button class="btn sm ghost" data-act="waSave" data-id="${p.id}">Save photos</button></div>
+    ${ch&&cm?'':`<p class="small">${ch||cm?'Add your other WhatsApp link':'Add your WhatsApp Channel and Community chat links'} for quick buttons here: <button type="button" class="linkbtn" data-act="waSettings">Settings → WhatsApp</button></p>`}
     <p class="small wap-note" role="status"></p></div>`;}
 function waOpen(id){const p=prodById(id);if(!p)return;const d=$('#dlg');d.classList.remove('video-dlg');
-  d.innerHTML=`<div class="dlg" style="max-width:480px"><h2 style="margin-top:0">Post on WhatsApp</h2>${!p.published?'<p>Publish this product first, so the link in the caption works.</p>':waPostOn()?waPostCardHTML(p):'<p>Add your WhatsApp Channel link and your Community chat link in <b>Settings → WhatsApp Channel and Community</b> first.</p>'}
+  d.innerHTML=`<div class="dlg" style="max-width:480px"><h2 style="margin-top:0">Post on WhatsApp</h2>${!p.published?'<p>Publish this product first, so the link in the caption works.</p>':waPostOn()?waPostCardHTML(p):'<p>The WhatsApp step is switched off. Switch it on in <b>Settings → WhatsApp Channel and Community</b>.</p>'}
     <div class="dlg-actions"><button class="btn" data-act="dlgClose">Close</button>${waPostOn()?'':'<a class="btn primary" href="#/staff/settings" data-act="dlgClose">Open Settings</a>'}</div></div>`;d.showModal();}
 // Opening the Channel or the chat copies the caption, ready to paste
 document.addEventListener('click',e=>{const a=e.target.closest?.('.wap-links a');if(!a)return;const p=prodById(a.closest('.wap')?.dataset.id);if(p){waCopy(p);toast('Caption copied. In WhatsApp, attach the photos and paste it.');}});
@@ -4521,6 +4522,7 @@ function waPostPanelHTML(){return `<section class="panel" id="wapost"><h2>WhatsA
   </div></section>`;}
 queueMicrotask(()=>Object.assign(ACT,{
   waOpen:el=>waOpen(el.dataset.id),
+  waSettings:()=>{$('#dlg')?.open&&$('#dlg').close();go('#/staff/settings');const t=Date.now(),f=()=>{const w=$('#wapost');if(w){const y=w.getBoundingClientRect().top;if(Math.abs(y-80)>40){w.style.scrollMarginTop='80px';w.scrollIntoView({block:'start'});}}if(Date.now()-t<2500)setTimeout(f,250);else w?.querySelector('input')?.focus({preventScroll:true});};setTimeout(f,150);},
   waShare:async el=>{const p=prodById(el.dataset.id);if(!p)return;const note=el.closest('.wap')?.querySelector('.wap-note'),say=t=>{if(note)note.textContent=t;};
     if(!WAP.files||WAP.id!==p.id){el.disabled=true;say('Getting the photos ready…');}
     const r=await waShare(p,false);el.disabled=false;
