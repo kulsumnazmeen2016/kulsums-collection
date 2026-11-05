@@ -1725,6 +1725,9 @@ a.wc-pg:hover{border-color:rgba(176,138,62,.5);background:#fff}
 .bf-ch:has(input:checked){border-color:var(--gold-dark);background:#fffaf0}
 .bf-when{display:flex;flex-direction:column;gap:6px;margin:8px 0}.bf-when label{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .bf-b{border-color:#2c4bff33}
+.wap{border:1px solid #cfe9d6;border-radius:14px;padding:12px;background:#f3fbf5;text-align:left;margin:14px auto 4px;display:grid;gap:8px;max-width:440px}
+.wap>b{display:flex;gap:8px;align-items:center;color:#128c4a}.wap>b svg{width:20px;height:20px;flex:none}
+.wap p{margin:0}.wap-links{display:flex;flex-wrap:wrap;gap:8px}.wap-note:empty{display:none}
 </style>
 </head>
 <body>
@@ -1999,6 +2002,7 @@ const DEFAULT_SETTINGS={
   logo:'',
   chatShop:true,
   buffer:{on:true,channels:[],mode:'shareNow'},
+  waPost:{on:true,community:''},
   tidyText:true,
   accounts:{enabled:true,required:true,otp:false,otpChannel:'SMS'},
   intl:{enabled:false,switcher:true,autoDetect:true,rateMode:'auto',manual:{},markup:{},countryMarkup:{},off:[],zones:{},itemKg:0.5,catKg:{},packKg:0.2,freeAbove:0,payNote:'We will message you on WhatsApp with the payment details (bank transfer, Wise or PayPal) and the courier tracking.',paypal:''},
@@ -4168,8 +4172,8 @@ document.addEventListener('submit',async e=>{const f=e.target;if(!/^caOtp/.test(
 // 2. Write a caption. The title, price, category and colours are read from it, and you see the product as customers will.
 // 3. Share. Admins publish straight away; employees send it to Review and publish.
 const IGN_MAX=10;
-const IGN={bf:true,step:'pick',photos:[],cur:0,caption:'',title:'',titleEdited:false,price:'',priceEdited:false,cat:'',catEdited:false,vendor:'',vp:'',mrp:'',stock:'in',featured:false,publish:true,busy:false,done:null,err:''};
-function ignReset(){Object.assign(IGN,{bf:true,doneShown:false,step:'pick',photos:[],cur:0,caption:'',title:'',titleEdited:false,price:'',priceEdited:false,cat:'',catEdited:false,vendor:'',vp:'',mrp:'',stock:'in',featured:false,publish:true,busy:false,done:null,err:''});}
+const IGN={bf:true,wa:true,step:'pick',photos:[],cur:0,caption:'',title:'',titleEdited:false,price:'',priceEdited:false,cat:'',catEdited:false,vendor:'',vp:'',mrp:'',stock:'in',featured:false,publish:true,busy:false,done:null,err:''};
+function ignReset(){Object.assign(IGN,{bf:true,wa:true,doneShown:false,step:'pick',photos:[],cur:0,caption:'',title:'',titleEdited:false,price:'',priceEdited:false,cat:'',catEdited:false,vendor:'',vp:'',mrp:'',stock:'in',featured:false,publish:true,busy:false,done:null,err:''});}
 const IGN_PRICE_LINE=/(?:₹|\brs\.?\s*\d|\binr\b|\bprice\b|\brate\b|\bmrp\b|\boffer\s*price\b|\d\s*\/-)/i;
 // What the caption tells us
 function ignRead(cap){const raw=String(cap||'').replace(/\r/g,'');
@@ -4232,6 +4236,7 @@ function ignCaptionHTML(){const adm=isAdmin(),ph=IGN.photos[0];
         <label class="ign-row"><span>Stock</span><select id="ignStock"><option value="in" ${IGN.stock!=='out'?'selected':''}>In stock</option><option value="out" ${IGN.stock==='out'?'selected':''}>Sold out</option></select></label>
         <label class="ign-row chk"><span>Show in the home page banner</span><input type="checkbox" id="ignFeat" ${IGN.featured?'checked':''}></label></details>
       ${adm&&bfOn()&&(BFCFG().channels||[]).length?`<label class="ign-row chk"><span>Also post on ${esc((BF.status?.channels||[]).filter(c=>(BFCFG().channels||[]).includes(c.id)).map(c=>bfServiceName(c.service)).filter((x,i,a)=>a.indexOf(x)===i).join(', ')||'my social channels')} <i class="small muted">via Buffer</i></span><input type="checkbox" id="ignBf" ${IGN.bf?'checked':''}></label>`:''}
+      ${adm&&waPostOn()?`<label class="ign-row chk"><span>Also post on WhatsApp <i class="small muted">${esc(waTargets())}</i></span><input type="checkbox" id="ignWa" ${IGN.wa?'checked':''}></label>`:''}
       ${adm?`<label class="ign-row chk"><span>Publish straight away</span><input type="checkbox" id="ignPub" ${IGN.publish?'checked':''}></label>`:'<p class="small muted" style="margin:6px 2px">It goes to Review and publish, and an admin publishes it.</p>'}
     </div>
     <div id="ignPrevBox">${ignPreviewHTML()}</div>
@@ -4240,6 +4245,7 @@ function ignCaptionHTML(){const adm=isAdmin(),ph=IGN.photos[0];
 function ignDoneHTML(){const p=prodById(IGN.done);if(!p)return ignPickHTML();
   return `${ignTop('<span></span>','Posted','<span></span>')}<div class="ign-done"><span class="ign-ok" aria-hidden="true">✓</span>
     <h2>${p.published?'Your product is live':'Sent for review'}</h2><p class="muted">${esc(p.title)}${sellPrice(p)!=null?' · '+esc(money(sellPrice(p))):''}</p>
+    ${waPostCardHTML(p)}
     <div class="ign-done-btns"><button class="btn primary" data-act="ignAnother">＋ New post</button>
       ${p.published?`<a class="btn" href="#/p/${p.id}">See it in the store</a>${bfOn()&&isAdmin()?`<button class="btn ign-bf" data-act="bfOpen" data-id="${p.id}">${p.buffer?.at?'✓ On social channels':'Post to Facebook, Instagram, WhatsApp'}</button>`:`<button class="btn" data-act="ignInsta" data-id="${p.id}">Post on Instagram too</button>`}`:'<a class="btn" href="#/staff/review">Open Review and publish</a>'}
       <button class="btn ghost" data-act="ignEdit" data-id="${p.id}">Edit details</button></div></div>`;}
@@ -4259,7 +4265,7 @@ document.addEventListener('change',e=>{const t=e.target;
   if(t.matches?.('[data-ignfiles]')){ignAdd(t.files);t.value='';return;}
   if(!$('#ign'))return;
   if(t.id==='ignCat'){IGN.cat=t.value;IGN.catEdited=true;ignPrev();}
-  else if(t.id==='ignBf')IGN.bf=t.checked;
+  else if(t.id==='ignBf')IGN.bf=t.checked;else if(t.id==='ignWa')IGN.wa=t.checked;
   else if(t.id==='ignStock')IGN.stock=t.value;else if(t.id==='ignFeat')IGN.featured=t.checked;
   else if(t.id==='ignPub'){IGN.publish=t.checked;const b=$('.ign-share');if(b)b.textContent=IGN.publish?'Share to the store':'Save without publishing';const tb=$('.ign-tbtn.go');if(tb)tb.textContent=IGN.publish?'Share':'Save';}});
 document.addEventListener('input',e=>{const t=e.target;if(!$('#ign'))return;
@@ -4292,8 +4298,9 @@ async function ignShare(){if(IGN.busy)return;const adm=isAdmin(),publish=adm&&IG
     await Media.putProduct(p,(await compressImage(IGN.photos[0].data,360,0.74)).data,IGN.photos.map(x=>x.data));
     S.products.push(p);const ok=await saveProducts();await saveSettings();
     if(ok===false)throw new Error('the product could not be saved. Check your internet and try again.');
-    IGN.busy=false;const id=p.id,bfNow=publish&&IGN.bf&&bfOn()&&(BFCFG().channels||[]).length;ignReset();IGN.step='done';IGN.done=id;route();scrollTo(0,0);
+    IGN.busy=false;const id=p.id,bfNow=publish&&IGN.bf&&bfOn()&&(BFCFG().channels||[]).length,waNow=publish&&IGN.wa&&waPostOn(),srcs=IGN.photos.map(x=>x.data);if(publish&&waPostOn())waPrep(p,srcs);ignReset();IGN.step='done';IGN.done=id;route();scrollTo(0,0);
     if(bfNow)setTimeout(()=>bfAutoPost(p),400);
+    if(waNow)waShare(p,true).then(r=>{const n=$('.wap-note');if(n&&r==='shared')n.textContent='Sent to WhatsApp.';const b=$('.wap-go');if(b&&r==='shared')b.textContent='✓ Shared · Share again';});
     toast(publish?`Shared: ${title}`:`Sent for review: ${title}`);}
   catch(e){IGN.busy=false;btns.forEach(b=>{b.disabled=false;});say('Could not share: '+(e.message||e));route();}}
 queueMicrotask(()=>Object.assign(ACT,{
@@ -4454,6 +4461,69 @@ queueMicrotask(()=>Object.assign(ACT,{
 }));
 queueMicrotask(()=>Object.assign(CHG,{
   bfDefault:async()=>{const ids=$$('#bfPanel [data-act-change=bfDefault]:checked').map(i=>i.value);S.settings.buffer={...BFCFG(),channels:ids};await saveSettings();toast(ids.length?`${ids.length} default channel${ids.length===1?'':'s'} saved`:'No default channels');},
+}));
+// ================= WhatsApp: post a product to your Channel and your Community chat =================
+// WhatsApp has no official way for a website (or Buffer) to post into a Channel or a Community by itself.
+// So when you share a product, the website gets its photos and caption ready and opens your phone's share screen:
+// choose WhatsApp, tick your Channel and your Community chat, and send. The caption is copied too, and the two
+// links in Settings > WhatsApp Channel and Community open the Channel and the chat directly.
+const WAP={id:null,files:null,prom:null};
+const WAPCFG=()=>S.settings.waPost||{};
+const waSafe=(u,re)=>{u=String(u||'').trim();return re.test(u)?u:'';};
+const waChannelLink=()=>waSafe(S.settings.social?.whatsappChannel,/^https:\/\/(www\.)?whatsapp\.com\/channel\/[\w-]+/i);
+const waCommunityLink=()=>waSafe(WAPCFG().community,/^https:\/\/chat\.whatsapp\.com\/[\w-]+/i);
+const waPostOn=()=>WAPCFG().on!==false&&!!(waChannelLink()||waCommunityLink());
+const waTargets=()=>[waChannelLink()&&'Channel',waCommunityLink()&&'Community chat'].filter(Boolean).join(' and ');
+// Same caption as Instagram, without the lines that are only hashtags (they do nothing on WhatsApp)
+function waCaption(p){return igCaption(p).split('\n').filter(l=>!/^\s*(#[\p{L}\p{N}_]+[\s,]*)+$/u.test(l)).join('\n').replace(/\n{3,}/g,'\n\n').trim();}
+async function waFiles(p,srcs){const list=(srcs&&srcs.length?srcs:((await getImages(p.id))||[await getThumb(p.id)])).filter(Boolean).slice(0,10),out=[];
+  const base=(prodSlug(p)||'product').slice(0,40);
+  for(const [i,s] of list.entries()){try{const b=/^data:/.test(s)?await dataURLtoBlob(s):await (await fetch(s)).blob();out.push(new File([b],`${base}-${i+1}.jpg`,{type:b.type||'image/jpeg'}));}catch{}}
+  return out;}
+// Photos are got ready in the background, so the Share tap can open WhatsApp at once
+function waPrep(p,srcs){if(WAP.id===p.id&&WAP.prom)return WAP.prom;WAP.id=p.id;WAP.files=null;
+  WAP.prom=waFiles(p,srcs).then(f=>(WAP.files=f)).catch(()=>{WAP.prom=null;return [];});return WAP.prom;}
+const waCanShare=f=>{try{return !!(navigator.share&&navigator.canShare&&f?.length&&navigator.canShare({files:f}));}catch{return false;}};
+function waCopy(p){try{navigator.clipboard?.writeText(waCaption(p))?.catch?.(()=>{});}catch{}}
+function waSave(files){files.forEach((f,i)=>setTimeout(()=>{const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000);},i*250));}
+async function waMark(p){p.waPost={at:Date.now()};try{await saveProducts();}catch{}}
+// returns 'shared', 'aborted', 'blocked' (the phone wants another tap) or 'saved' (computer: photos downloaded)
+async function waShare(p,auto){const text=waCaption(p);if(!auto)waCopy(p);
+  const files=await waPrep(p);
+  if(waCanShare(files)){try{await navigator.share({files,text});waMark(p);return 'shared';}
+    catch(e){if(e?.name==='AbortError')return 'aborted';if(auto||e?.name==='NotAllowedError')return 'blocked';}}
+  if(auto)return 'blocked';
+  waSave(files);return 'saved';}
+function waPostCardHTML(p){if(!waPostOn()||!p?.published)return '';const ch=waChannelLink(),cm=waCommunityLink();
+  setTimeout(()=>waPrep(p),0);
+  return `<div class="wap" data-id="${p.id}"><b>${ICON.wa} Post on WhatsApp</b>
+    <p class="small muted">Tap Share, choose <b>WhatsApp</b>, tick your ${esc(waTargets())} and send. The caption is copied too: if it does not show in WhatsApp, long-press and Paste.</p>
+    <button class="btn primary block wap-go" data-act="waShare" data-id="${p.id}">${p.waPost?.at?'✓ Shared · Share again':'Share photos and caption'}</button>
+    <div class="wap-links">${ch?`<a class="btn sm" href="${esc(ch)}" target="_blank" rel="noopener">Open my Channel</a>`:''}${cm?`<a class="btn sm" href="${esc(cm)}" target="_blank" rel="noopener">Open Community chat</a>`:''}<button class="btn sm ghost" data-act="waSave" data-id="${p.id}">Save photos</button></div>
+    <p class="small wap-note" role="status"></p></div>`;}
+function waOpen(id){const p=prodById(id);if(!p)return;const d=$('#dlg');d.classList.remove('video-dlg');
+  d.innerHTML=`<div class="dlg" style="max-width:480px"><h2 style="margin-top:0">Post on WhatsApp</h2>${!p.published?'<p>Publish this product first, so the link in the caption works.</p>':waPostOn()?waPostCardHTML(p):'<p>Add your WhatsApp Channel link and your Community chat link in <b>Settings → WhatsApp Channel and Community</b> first.</p>'}
+    <div class="dlg-actions"><button class="btn" data-act="dlgClose">Close</button>${waPostOn()?'':'<a class="btn primary" href="#/staff/settings" data-act="dlgClose">Open Settings</a>'}</div></div>`;d.showModal();}
+// Opening the Channel or the chat copies the caption, ready to paste
+document.addEventListener('click',e=>{const a=e.target.closest?.('.wap-links a');if(!a)return;const p=prodById(a.closest('.wap')?.dataset.id);if(p){waCopy(p);toast('Caption copied. In WhatsApp, attach the photos and paste it.');}});
+function waPostPanelHTML(){return `<section class="panel" id="wapost"><h2>WhatsApp Channel and Community</h2><div class="stack">
+    <p class="small muted" style="margin:0">After every New post, the website gets the photos and caption ready and opens WhatsApp, so you tick your Channel and your Community chat and send. (WhatsApp does not let any website or app post there on its own, so this one tap is needed.)</p>
+    ${fld('social.whatsappChannel','Your WhatsApp Channel link','url','In WhatsApp: Updates → your channel → its name → Share link. It starts with https://whatsapp.com/channel/ (customers see this link in the store, so they can follow you).','placeholder="https://whatsapp.com/channel/…" inputmode="url"')}
+    ${fld('waPost.community','Your Community chat link','url','In WhatsApp: open the community’s announcements chat or group → its name → Invite via link → Copy link. It starts with https://chat.whatsapp.com/ (only staff see this).','placeholder="https://chat.whatsapp.com/…" inputmode="url"')}
+    ${sw('waPost.on','Offer the WhatsApp step after every New post','Also adds a WhatsApp button next to each product in the staff area.')}
+    ${S.settings.social?.whatsappChannel&&!waChannelLink()?'<p class="small" style="color:var(--rose)">The Channel link does not look right. It should start with https://whatsapp.com/channel/</p>':''}
+    ${WAPCFG().community&&!waCommunityLink()?'<p class="small" style="color:var(--rose)">The Community chat link does not look right. It should start with https://chat.whatsapp.com/</p>':''}
+  </div></section>`;}
+queueMicrotask(()=>Object.assign(ACT,{
+  waOpen:el=>waOpen(el.dataset.id),
+  waShare:async el=>{const p=prodById(el.dataset.id);if(!p)return;const note=el.closest('.wap')?.querySelector('.wap-note'),say=t=>{if(note)note.textContent=t;};
+    if(!WAP.files||WAP.id!==p.id){el.disabled=true;say('Getting the photos ready…');}
+    const r=await waShare(p,false);el.disabled=false;
+    if(r==='shared'){say('Sent to WhatsApp.');el.textContent='✓ Shared · Share again';}
+    else if(r==='blocked')say('The photos are ready. Tap Share again.');
+    else if(r==='saved')say('This device cannot share to WhatsApp directly, so the photos were saved and the caption copied. Open your Channel or Community chat, attach the photos and paste.');
+    else say('');},
+  waSave:async el=>{const p=prodById(el.dataset.id);if(!p)return;waCopy(p);waSave(await waPrep(p));toast('Photos saved and caption copied');},
 }));
 // ---------- several phones and tabs editing at once ----------
 // Each save first fetches what was saved elsewhere since this page loaded, and keeps those changes.
@@ -6497,7 +6567,7 @@ function pSettings(m){
   ${typeof seoPanelHTML==='function'?seoPanelHTML():''}
   ${typeof aiPanelHTML==='function'?aiPanelHTML():''}
   ${typeof billsPanelHTML==='function'?billsPanelHTML():''}
-  ${isAdmin()?loyaltyPanelHTML()+bufferPanelHTML()+instaPanelHTMLSecure()+socialPanelHTML()+charactersPanelHTML():''}
+  ${isAdmin()?loyaltyPanelHTML()+bufferPanelHTML()+waPostPanelHTML()+instaPanelHTMLSecure()+socialPanelHTML()+charactersPanelHTML():''}
   ${isAdmin()?messagesPanelHTML():''}
 
   <section class="panel" id="guide"><h2>Shopping guide</h2>
@@ -10849,7 +10919,7 @@ async function openSocial(id,net){
       ${ready?`<button class="btn primary" data-act="${fb?'fbPost':'igPost'}">Post now</button>`:''}</div>
     ${prev?.at?`<p class="small muted" style="margin:0">Posted before on ${new Date(prev.at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}${prev.link?` (<a href="${esc(prev.link)}" target="_blank" rel="noopener">see the post</a>)`:''}.</p>`:''}</div>`;
   d._igImgs=imgs;if(!d.open)d.showModal();igCount();}
-const socBtns=p=>`<span class="soc">${bfOn()&&isAdmin()?`<button type="button" class="btn sm soc-b bf-b" data-act="bfOpen" data-id="${p.id}" title="Post to Facebook, Instagram and WhatsApp through Buffer">${p.buffer?.at?'Buffer ✓':'Buffer'}</button>`:''}<button type="button" class="btn sm soc-b" data-act="socPost" data-net="ig" data-id="${p.id}" title="Post on Instagram">${igBadge(p)}</button><button type="button" class="btn sm soc-b" data-act="socPost" data-net="fb" data-id="${p.id}" title="Post on Facebook">${p.fb?.at?'Facebook ✓':'Facebook'}</button></span>`;
+const socBtns=p=>`<span class="soc">${bfOn()&&isAdmin()?`<button type="button" class="btn sm soc-b bf-b" data-act="bfOpen" data-id="${p.id}" title="Post to Facebook, Instagram and WhatsApp through Buffer">${p.buffer?.at?'Buffer ✓':'Buffer'}</button>`:''}${waPostOn()&&p.published?`<button type="button" class="btn sm soc-b" data-act="waOpen" data-id="${p.id}" title="Post on your WhatsApp Channel and Community">${p.waPost?.at?'WhatsApp ✓':'WhatsApp'}</button>`:''}<button type="button" class="btn sm soc-b" data-act="socPost" data-net="ig" data-id="${p.id}" title="Post on Instagram">${igBadge(p)}</button><button type="button" class="btn sm soc-b" data-act="socPost" data-net="fb" data-id="${p.id}" title="Post on Facebook">${p.fb?.at?'Facebook ✓':'Facebook'}</button></span>`;
 function socialPanelHTML(){return `<section class="panel" id="social"><h2>Facebook page</h2><div class="stack">
   <p class="small muted" style="margin:0">Connect your Facebook page to post products straight from the store pages. Without it, the Facebook button gets the photos ready and copies the caption. Steps are in the README (Part 27). The caption wording and hashtags are shared with Instagram (below).</p>
   <div class="grid2">${fld('fb.pageId','Facebook page ID','text','A long number from your page’s About section.')}${fld('fb.token','Page access token','password','Kept private: only admins can see it.')}</div>

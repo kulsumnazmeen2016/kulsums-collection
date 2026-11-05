@@ -1568,3 +1568,17 @@ When the key expires, Buffer emails you. Make a new key and replace the `BUFFER_
 - **Team:** 6,000 a day.
 
 Each post to one channel is one request, plus a couple to read your channels. Exact figures are on developers.buffer.com/guides/api-limits.
+
+## Part 62: Post to your WhatsApp Channel and Community chat
+
+WhatsApp does not let any website, Buffer or app post into a Channel or a Community by itself. So the website does everything up to the last tap.
+
+**Set up once:** Settings → **WhatsApp Channel and Community**
+- **Channel link:** in WhatsApp, Updates → your channel → its name → Share link (`https://whatsapp.com/channel/…`). Customers see this link in the store.
+- **Community chat link:** open the community's announcements chat or group → its name → Invite via link → Copy link (`https://chat.whatsapp.com/…`). Only staff see this.
+
+**Every New post:** "Also post on WhatsApp" is ticked. When you press Share, the product goes live and your phone's share screen opens with the photos and caption. Choose **WhatsApp**, tick your Channel and your Community chat, and send. If the phone asks for another tap, press **Share photos and caption** on the Posted screen.
+- The caption is your caption plus the shop link, without hashtag-only lines. It is also copied, so you can paste it if WhatsApp drops it.
+- **Open my Channel** and **Open Community chat** open them directly (with the caption copied). **Save photos** downloads the photos.
+- On a computer that cannot share to WhatsApp, the photos are downloaded and the caption copied.
+- Any published product can be posted later with the **WhatsApp** button next to it in Products.
