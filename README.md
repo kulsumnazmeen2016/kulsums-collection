@@ -1582,3 +1582,19 @@ WhatsApp does not let any website, Buffer or app post into a Channel or a Commun
 - **Open my Channel** and **Open Community chat** open them directly (with the caption copied). **Save photos** downloads the photos.
 - On a computer that cannot share to WhatsApp, the photos are downloaded and the caption copied.
 - Any published product can be posted later with the **WhatsApp** button next to it in Products.
+
+## Part 63: Razorpay online payments (UPI, cards, net banking, wallets)
+
+Customers choose **Pay online** at checkout and pay in Razorpay's window straight after placing the order. The order is marked **Paid** by itself, with the Razorpay payment ID as the reference.
+
+The Key Secret is never put in the website. It lives only in the `razorpay` Supabase Edge Function. The amount always comes from the saved order, and every payment's signature is checked on the server before the order is marked paid.
+
+1. **Razorpay:** Dashboard → Account & Settings → **API Keys** → Generate key. Copy the **Key ID** and the **Key Secret** (the secret is shown only once). Use Test mode keys (`rzp_test_…`) first, then Live keys (`rzp_live_…`) once your account is activated.
+2. **Supabase:** Edge Functions → **Secrets** → add `RAZORPAY_KEY_ID` (the Key ID) and `RAZORPAY_KEY_SECRET` (the Key Secret).
+3. **Website:** Settings → Payments → switch on **Razorpay**. It shows "Connected (test mode)" or "Connected (live)".
+4. **Optional webhook** (confirms payments even if a customer closes the page too early): Razorpay → Account & Settings → **Webhooks** → Add.
+   - URL: `https://omnlnjzoeylhgjowkfsb.supabase.co/functions/v1/razorpay`
+   - Secret: type any long password. Events: `payment.captured` and `order.paid`.
+   - Then add the same password in Supabase as `RAZORPAY_WEBHOOK_SECRET`.
+
+The `razorpay` function is deployed with "Verify JWT" off: customers pay without logging in, and Razorpay's webhook has no Supabase login.
